@@ -1,0 +1,9 @@
+[submodule "Setup"]
+	path = Setup
+	url = https://github.com/GabrielFrigo4/setup.git
+[submodule "Shell"]
+	path = Shell
+	url = https://github.com/GabrielFrigo4/shell.git
+[submodule "Profile"]
+	path = Profile
+	url = https://github.com/GabrielFrigo4/profile.git
