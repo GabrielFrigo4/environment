@@ -1,0 +1,7 @@
+Vault/
+Text.txt
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
