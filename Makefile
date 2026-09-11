@@ -1,4 +1,4 @@
-.PHONY: help status audit sync pull test ci doctor clone hooks format lint-md bench uped editors-status editors-hooks
+.PHONY: help status audit sync pull test ci doctor clone hooks format lint-md bench uped upgit editors-status editors-hooks
 
 REPOS := Setup Shell Vault Profile
 EDITORS := Editor/Emacs Editor/Helix Editor/NeoVim Editor/Vim
@@ -12,6 +12,7 @@ help:
 	@echo "  make hooks    - Configura e torna executáveis os ganchos .githooks em todos os repos"
 	@echo "  make status   - Exibe status Git resumido de todo o ecossistema (Core + Editores)"
 	@echo "  make uped     - Atualiza os 4 repositórios da Suíte de Editores com o GitHub"
+	@echo "  make upgit    - Atualiza todos os repositórios Git encontrados recursivamente"
 	@echo "  make audit    - Executa suites de auditoria estática e validação em todos os repos"
 	@echo "  make format   - Formata todos os arquivos Markdown com Prettier"
 	@echo "  make lint-md  - Valida formatação de Markdown com Prettier"
@@ -89,6 +90,18 @@ uped:
 		fi; \
 	done
 	@echo "✅ Suíte de Editores atualizada!"
+
+upgit:
+	@echo "🔄 Atualizando repositórios Git..."
+	@find . -maxdepth 3 -name ".git" 2> "/dev/null" | while read -r g; do \
+		d="$$(dirname "$$g")"; \
+		echo "# ----------------------------------------------------------------"; \
+		echo "# $$d"; \
+		echo "# ----------------------------------------------------------------"; \
+		git -C "$$d" pull --ff-only 2> "/dev/null" || git -C "$$d" pull || echo "⚠️  Falha ao atualizar $$d"; \
+		echo ""; \
+	done
+	@echo "✅ Repositórios Git atualizados!"
 
 format:
 	@echo "🎨 Formatando arquivos Markdown com Prettier..."
