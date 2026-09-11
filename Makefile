@@ -1,7 +1,7 @@
 .POSIX:
 .SILENT:
 
-MAKEFLAGS += --no-print-directory
+MAKEFLAGS += --no-print-directory -s
 
 # ----------------------------------------------------------------
 # Makefile: Universal Environment
@@ -179,11 +179,11 @@ audit:
 	echo "🔍 [4/5] Validando sintaxe do Vault..."
 	sh -n Vault/vault.sh
 	echo "🔍 [5/5] Validando a Suíte de Editores (Sintaxe & Headless)..."
-	make -C Editor/Helix test
+	$(MAKE) -C Editor/Helix test
 	find Editor -name "*.sh" -not -path "*/.git/*" -exec sh -n {} + && echo "  ✅ Editor Shell Scripts: sintaxe POSIX OK"
-	make -C Editor/NeoVim test
-	make -C Editor/Vim test
-	make -C Editor/Emacs test
+	$(MAKE) -C Editor/NeoVim test
+	$(MAKE) -C Editor/Vim test
+	$(MAKE) -C Editor/Emacs test
 	echo "🎉 Todas as auditorias estáticas foram aprovadas com sucesso!"
 
 test:
