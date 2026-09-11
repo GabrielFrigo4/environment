@@ -17,16 +17,16 @@ Este guia detalha o fluxo operacional para gerenciar, estender e auditar o repos
 
 Antes de criar qualquer arquivo, verifique se ele pertence ao Environment ou a um sub-repo:
 
-| Conteúdo | Pertence ao | Justificativa |
-| :--- | :--- | :--- |
-| Makefile global | Environment | Orquestra operações nos 4 repos |
-| ENVIRONMENT.md / PRINCIPLES.md | Environment (canônico) | Fonte da verdade do ecossistema |
-| README.md do hub | Environment | Portal de entrada do ecossistema |
-| AGENTS.md do hub | Environment | Briefing para IAs sobre o hub |
-| Receitas de provisionamento | Setup | Código executável de SO |
-| Scripts de shell/prompts | Shell | Motor interativo de terminal |
-| Segredos e chaves | Vault | Cofre privado criptografado |
-| Dotfiles e skills de IA | Profile | Identidade do desenvolvedor |
+| Conteúdo                       | Pertence ao            | Justificativa                    |
+| :----------------------------- | :--------------------- | :------------------------------- |
+| Makefile global                | Environment            | Orquestra operações nos 4 repos  |
+| ENVIRONMENT.md / PRINCIPLES.md | Environment (canônico) | Fonte da verdade do ecossistema  |
+| README.md do hub               | Environment            | Portal de entrada do ecossistema |
+| AGENTS.md do hub               | Environment            | Briefing para IAs sobre o hub    |
+| Receitas de provisionamento    | Setup                  | Código executável de SO          |
+| Scripts de shell/prompts       | Shell                  | Motor interativo de terminal     |
+| Segredos e chaves              | Vault                  | Cofre privado criptografado      |
+| Dotfiles e skills de IA        | Profile                | Identidade do desenvolvedor      |
 
 ---
 

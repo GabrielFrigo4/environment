@@ -1,0 +1,55 @@
+#!/usr/bin/env sh
+
+### ================================
+### ENVIRONMENT PRE-COMMIT HOOK
+### ================================
+
+set -e
+
+_repo_root="$(git rev-parse --show-toplevel 2> "/dev/null" || pwd)"
+cd "${_repo_root}"
+
+echo "🔍 [pre-commit] Executing Universal Environment hub quality gates..."
+
+### --------------------------------
+### Whitespace & Formatting Check
+### --------------------------------
+echo "  ↳ Checking whitespace and formatting (git diff --check)..."
+if ! git diff --check --cached; then
+	echo "❌ [pre-commit] Whitespace or EOF formatting error detected!" >&2
+	echo "   Run 'git diff --check --cached' to inspect issues." >&2
+	exit 1
+fi
+
+### --------------------------------
+### Submodules Integrity Check
+### --------------------------------
+echo "  ↳ Validating git submodules status..."
+git submodule status
+
+### --------------------------------
+### Shell Scripts Syntax Check
+### --------------------------------
+echo "  ↳ Validating shell scripts syntax..."
+find . -name "*.sh" -not -path "*/.git/*" -exec sh -n {} +
+
+### --------------------------------
+### Markdown Prettier Validation
+### --------------------------------
+if command -v prettier > "/dev/null" 2>&1; then
+	echo "  ↳ Validating staged Markdown files with Prettier..."
+	_unformatted_md=""
+	for _md_file in $(git diff --cached --name-only --diff-filter=d | grep '\.md$' || true); do
+		if [ -f "${_md_file}" ] && ! prettier --check "${_md_file}" > "/dev/null" 2>&1; then
+			_unformatted_md="${_unformatted_md} ${_md_file}"
+		fi
+	done
+	if [ -n "${_unformatted_md}" ]; then
+		echo "❌ [pre-commit] Unformatted Markdown files detected:${_unformatted_md}" >&2
+		echo "   Run 'prettier --write <file>' or 'make format' to fix." >&2
+		exit 1
+	fi
+fi
+
+echo "✅ [pre-commit] Universal Environment quality gates passed cleanly!"
+exit 0

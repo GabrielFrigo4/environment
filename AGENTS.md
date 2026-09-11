@@ -15,14 +15,25 @@ O **Environment** é o **orquestrador e ponto de entrada** do ecossistema. Ele *
 
 ---
 
-## 📦 Os 4 Repositórios Federados
+## 📦 Os Repositórios Federados
 
-| Repo | Visibilidade | Papel | Mecanismo no Environment |
-|:--|:--|:--|:--|
-| **[Setup](Setup/)** | Público | Provisionamento de SO com privilégios (`sudo`/`doas`) | Git Submodule |
-| **[Shell](Shell/)** | Público | Motor interativo de terminal, prompts < 50ms | Git Submodule |
-| **[Vault](Vault/)** | **Privado** | Cofre criptográfico de segredos e chaves SSH | Clone privado (`.gitignored`) |
-| **[Profile](Profile/)** | Público | Dotfiles declarativos, editores, skills de IA | Git Submodule |
+### 🏛️ O Quarteto de Infraestrutura (Core)
+
+| Repo                    | Visibilidade | Papel                                                 | Mecanismo no Environment      |
+| :---------------------- | :----------- | :---------------------------------------------------- | :---------------------------- |
+| **[Setup](Setup/)**     | Público      | Provisionamento de SO com privilégios (`sudo`/`doas`) | Git Submodule                 |
+| **[Shell](Shell/)**     | Público      | Motor interativo de terminal, prompts < 50ms          | Git Submodule                 |
+| **[Vault](Vault/)**     | **Privado**  | Cofre criptográfico de segredos e chaves SSH          | Clone privado (`.gitignored`) |
+| **[Profile](Profile/)** | Público      | Dotfiles declarativos, editores, skills de IA         | Git Submodule                 |
+
+### 📝 A Suíte de Editores (Tools)
+
+| Repo                         | Visibilidade | Papel                                                    | Mecanismo no Environment |
+| :--------------------------- | :----------- | :------------------------------------------------------- | :----------------------- |
+| **[Emacs](Editor/Emacs/)**   | Público      | Ambiente extensível Elisp, Org-mode, EAF e IA            | Git Submodule            |
+| **[Helix](Editor/Helix/)**   | Público      | Editor modal pós-moderno em Rust com LSP nativo          | Git Submodule            |
+| **[NeoVim](Editor/NeoVim/)** | Público      | Editor modal em Lua, FHS, Lazy.nvim, Mason LSP, Kanagawa | Git Submodule            |
+| **[Vim](Editor/Vim/)**       | Público      | Editor clássico UNIX, Vim-Plug e tema CodeDark           | Git Submodule            |
 
 ---
 
