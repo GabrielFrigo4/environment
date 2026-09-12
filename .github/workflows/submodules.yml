@@ -1,0 +1,52 @@
+name: Universal Environment CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  submodules-and-quality:
+    name: 🏛️ Submodules Integrity & Quality Gates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Superproject with Submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Validate Submodules Status
+        run: |
+          echo "🔍 Checking submodules status..."
+          git submodule status
+          git submodule status | while read -r sha name rest; do
+            case "$sha" in
+              -*)
+                echo "❌ Submodule $name is not initialized!" >&2
+                exit 1
+                ;;
+              U*)
+                echo "❌ Submodule $name has merge conflicts!" >&2
+                exit 1
+                ;;
+              *)
+                echo "✅ Submodule $name is clean at $sha"
+                ;;
+            esac
+          done
+
+      - name: Validate Makefile Syntax
+        run: |
+          echo "🔍 Checking Makefile syntax..."
+          make -n
+
+      - name: Validate Git Hooks Syntax
+        run: |
+          echo "🔍 Checking githooks syntax..."
+          find .githooks -type f -exec sh -n {} +
