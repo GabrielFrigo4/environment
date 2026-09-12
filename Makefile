@@ -9,31 +9,36 @@ MAKEFLAGS += --no-print-directory -s
 
 .PHONY: help status audit sync pull test ci doctor clone hooks format lint-md bench uped upgit
 
-REPOS := Setup Shell Vault Profile
-EDITORS := Editor/Emacs Editor/Helix Editor/NeoVim Editor/Vim
-ALL_REPOS := $(REPOS) $(EDITORS)
+REPOS     = Setup Shell Vault Profile
+EDITORS   = Editor/Emacs Editor/Helix Editor/NeoVim Editor/Vim
+ALL_REPOS = $(REPOS) $(EDITORS)
 
 ### ================================
 ### HELP & DOCUMENTATION
 ### ================================
 help:
-	echo "🏛️  O Quarteto de Produtividade & Suíte de Editores — Orquestrador Global"
-	echo ""
-	echo "Comandos disponíveis:"
-	echo "  make clone    - Inicializa submódulos e clona o Vault (defensivo)"
-	echo "  make hooks    - Configura e torna executáveis os ganchos .githooks em todos os repos"
-	echo "  make status   - Exibe status Git resumido de todo o ecossistema (Core + Editores)"
-	echo "  make uped     - Atualiza os 4 repositórios da Suíte de Editores com o GitHub"
-	echo "  make upgit    - Atualiza todos os repositórios Git encontrados recursivamente"
-	echo "  make audit    - Executa suites de auditoria estática e validação em todos os repos"
-	echo "  make format   - Formata todos os arquivos Markdown com Prettier"
-	echo "  make lint-md  - Valida formatação de Markdown com Prettier"
-	echo "  make sync     - Sincroniza dotfiles, editores e skills de IA no sistema"
-	echo "  make pull     - Atualiza submódulos e repositórios com o GitHub"
-	echo "  make bench    - Mede latência de inicialização de shells e módulos"
-	echo "  make test     - Valida sintaxe POSIX e Zsh em todos os scripts"
-	echo "  make ci       - Executa auditoria completa e quality gates locais"
-	echo "  make doctor   - Executa diagnóstico pós-boot do sistema"
+	cmd() { printf "    \033[36mmake %-22s\033[0m %s\n" "$$1" "$$2"; }; \
+	sec() { printf "\n  \033[1;33m%s\033[0m\n" "$$1"; }; \
+	sub() { printf "  \033[1;34m  ── %s ──\033[0m\n" "$$1"; }; \
+	printf "\n  \033[1;37mUniversal Environment — Orquestrador Global do Ecossistema\033[0m\n"; \
+	printf "  ============================================================\n"; \
+	sec "Sincronização & Submódulos:"; \
+	cmd "clone"          "Inicializa submódulos públicos e clona o Vault defensivamente"; \
+	cmd "pull"           "Atualiza todos os submódulos e repositórios com o GitHub"; \
+	cmd "sync"           "Sincroniza dotfiles, suíte de editores e skills de IA no sistema"; \
+	cmd "uped"           "Atualiza os 4 repositórios da Suíte de Editores com o upstream"; \
+	cmd "upgit"          "Atualiza todos os repositórios Git encontrados recursivamente"; \
+	sec "Diagnóstico & Status:"; \
+	cmd "status"         "Exibe status Git resumido de todo o ecossistema (Core + Editores)"; \
+	cmd "hooks"          "Configura e aplica permissões canônicas em .githooks em todos os repos"; \
+	cmd "bench"          "Mede latência de inicialização de shells e módulos (alvo <50ms)"; \
+	cmd "doctor"         "Executa diagnóstico de saúde e sanity check pós-boot do sistema"; \
+	sec "Qualidade, Testes & CI:"; \
+	cmd "test"           "Valida sintaxe POSIX e Zsh em todos os scripts do ecossistema"; \
+	cmd "audit"          "Executa suítes de auditoria estática e conformidade em todos os repos"; \
+	cmd "format"         "Formata todos os arquivos Markdown com Prettier"; \
+	cmd "lint-md"        "Valida formatação de Markdown sem alterar arquivos"; \
+	cmd "ci"             "Executa pipeline completa de testes, auditoria e pre-commit"; \
 	echo ""
 
 ### ================================
