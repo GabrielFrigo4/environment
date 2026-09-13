@@ -25,11 +25,12 @@
 
 ## 🧠 O que é o Environment?
 
-O **Environment** é o **repositório raiz** que centraliza e orquestra os 4 componentes do Quarteto de Produtividade e os 4 repositórios da Suíte de Editores. Ele não é um monorepo — cada componente mantém seu próprio repositório Git independente. O Environment funciona como:
+O **Environment** é o **meta-repositório e hub orquestrador** que centraliza os 4 componentes do Quarteto de Produtividade e os 4 repositórios da Suíte de Editores. **Ele NÃO é um monorepo e NÃO é uma dependência runtime de produção**:
 
-1. **Ponto de Entrada Único:** Clone este repositório e tenha acesso imediato a todo o ecossistema via `make clone`.
-2. **Orquestrador de Operações:** Comandos globais (`make status`, `make pull`, `make uped`, `make audit`, `make ci`) operam simultaneamente em todo o ecossistema.
-3. **Fonte Canônica de Documentação:** O [ENVIRONMENT.md](ENVIRONMENT.md) e [PRINCIPLES.md](PRINCIPLES.md) nesta raiz são as versões autoritativas do ecossistema.
+- **Em Produção (Descentralizado & Standalone):** O Environment **não precisa existir nem ser clonado**. Cada ferramenta (`Shell`, `Emacs`, `NeoVim`, `Profile`, `Vault`) é clonada diretamente em seu caminho canônico (`~/.shell`, `~/.emacs.d`, `~/.config/nvim`, etc.) e opera de maneira 100% autônoma e desacoplada.
+- **No Desenvolvimento (Hub do Arquiteto):** O Environment serve como o quartel-general de engenharia de Gabriel Frigo. Ele reúne os submódulos para permitir manutenção simultânea, auditoria cruzada (`make audit`), testes de sintaxe em lote (`make test`) e propagação da documentação canônica (`make sync-docs`).
+- **O que é o `make deploy`?** É um comando opcional de conveniência para a máquina de trabalho do arquiteto: ele cria links simbólicos do `$HOME` para os submódulos locais do Environment, permitindo que edições no workspace tenham efeito imediato no sistema operacional durante o desenvolvimento.
+- **Axioma da Precedência Local sobre Global (Local > Global):** Em todo o ecossistema, o escopo mais específico prevalece: CLI > Variáveis de Ambiente (`$SHELL_REPO_DIR`, `$VAULT_DIR`) > Projeto Local (`.agents/skills/`) > Usuário (`~/.shell`, `~/.vault`, `~/.gemini/config/skills/`) > Sistema Global (`/usr/local/share/`).
 
 ```mermaid
 flowchart TD

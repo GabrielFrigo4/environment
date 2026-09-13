@@ -7,7 +7,7 @@ MAKEFLAGS += --no-print-directory -s
 # Makefile: Universal Environment
 # ----------------------------------------------------------------
 
-.PHONY: help status audit sync pull test ci doctor clone hooks format lint-md bench uped upgit strip deploy
+.PHONY: help status audit sync sync-docs pull test ci doctor clone hooks format lint-md bench uped upgit strip deploy
 
 REPOS     = Setup Shell Vault Profile
 EDITORS   = Editor/Emacs Editor/Helix Editor/NeoVim Editor/Vim
@@ -27,6 +27,7 @@ help:
 	cmd "pull"           "Atualiza todos os submódulos e repositórios com o GitHub"; \
 	cmd "deploy"         "Implanta links canônicos no sistema (~/.shell, editores, profile)"; \
 	cmd "sync"           "Sincroniza dotfiles declarativos e link unificado de skills de IA"; \
+	cmd "sync-docs"      "Propaga ENVIRONMENT.md e PRINCIPLES.md para todos os repositórios"; \
 	cmd "uped"           "Atualiza os 4 repositórios da Suíte de Editores com o upstream"; \
 	cmd "upgit"          "Atualiza todos os repositórios Git encontrados recursivamente"; \
 	cmd "strip"          "Purga metadados (.git*, .agents, *.md) para modo Zero-Bloat (TARGET=<dir>)"; \
@@ -154,6 +155,22 @@ sync:
 	sh Profile/scripts/sync/sync-dotfiles.sh
 	echo "🧠 Sincronizando skills de IA..."
 	sh Profile/scripts/sync/sync-skills.sh
+
+sync-docs:
+	echo "📖 Sincronizando documentação canônica (ENVIRONMENT.md & PRINCIPLES.md)..."
+	for r in $(ALL_REPOS); do \
+		if [ -d "$$r" ]; then \
+			cp ENVIRONMENT.md "$$r/ENVIRONMENT.md"; \
+			cp PRINCIPLES.md "$$r/PRINCIPLES.md"; \
+			echo "  ✅ $$r: documentação sincronizada"; \
+		fi; \
+	done
+	if [ -d "Vault" ]; then \
+		cp ENVIRONMENT.md Vault/ENVIRONMENT.md; \
+		cp PRINCIPLES.md Vault/PRINCIPLES.md; \
+		echo "  ✅ Vault: documentação sincronizada"; \
+	fi
+	echo "🎉 Documentação canônica propagada para todos os repositórios!"
 
 deploy:
 	echo "🚀 Implantando o ecossistema nas posições canônicas do sistema..."
