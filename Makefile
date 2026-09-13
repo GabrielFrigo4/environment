@@ -31,7 +31,7 @@ help:
 	sec "Diagnóstico & Status:"; \
 	cmd "status"         "Exibe status Git resumido de todo o ecossistema (Core + Editores)"; \
 	cmd "hooks"          "Configura e aplica permissões canônicas em .githooks em todos os repos"; \
-	cmd "bench"          "Mede latência de inicialização de shells e módulos (alvo <50ms)"; \
+	cmd "bench"          "Mede latência de inicialização de shells e módulos (alvo binário <64ms)"; \
 	cmd "doctor"         "Executa diagnóstico de saúde e sanity check pós-boot do sistema"; \
 	sec "Qualidade, Testes & CI:"; \
 	cmd "test"           "Valida sintaxe POSIX e Zsh em todos os scripts do ecossistema"; \

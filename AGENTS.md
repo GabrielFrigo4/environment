@@ -22,7 +22,7 @@ O **Environment** é o **orquestrador e ponto de entrada** do ecossistema. Ele *
 | Repo                    | Visibilidade | Papel                                                 | Mecanismo no Environment      |
 | :---------------------- | :----------- | :---------------------------------------------------- | :---------------------------- |
 | **[Setup](Setup/)**     | Público      | Provisionamento de SO com privilégios (`sudo`/`doas`) | Git Submodule                 |
-| **[Shell](Shell/)**     | Público      | Motor interativo de terminal, prompts < 50ms          | Git Submodule                 |
+| **[Shell](Shell/)**     | Público      | Motor interativo de terminal, prompts < 64ms          | Git Submodule                 |
 | **[Vault](Vault/)**     | **Privado**  | Cofre criptográfico de segredos e chaves SSH          | Clone privado (`.gitignored`) |
 | **[Profile](Profile/)** | Público      | Dotfiles declarativos, editores, skills de IA         | Git Submodule                 |
 
