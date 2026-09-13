@@ -20,10 +20,10 @@ flowchart TD
     end
 
     subgraph EDITORS ["📝 A Suíte de Editores"]
-        EMACS["🔮 Emacs (.emacs.d)<br/>• Elisp, Org-mode, Elpaca<br/>• EAF, IA e Cascatas Modulares"]
+        EMACS["🔮 Emacs (emacs)<br/>• Elisp, Org-mode, Elpaca<br/>• EAF, IA e Cascatas Modulares"]
         HELIX["🧬 Helix (helix)<br/>• Rust, Modal Pós-Moderno<br/>• Tree-sitter & LSP Nativo"]
-        NVIM["⚡ NeoVim (nvim)<br/>• Lua, Lazy, Mason, LSP<br/>• Kanagawa & FHS Modular"]
-        VIM["📜 Vim (vimfiles)<br/>• Vimscript, Vim-Plug<br/>• CodeDark & Onipresença UNIX"]
+        NVIM["⚡ NeoVim (neovim)<br/>• Lua, Lazy, Mason, LSP<br/>• Kanagawa & FHS Modular"]
+        VIM["📜 Vim (vim)<br/>• Vimscript, Vim-Plug<br/>• CodeDark & Onipresença UNIX"]
     end
 
     subgraph HOST ["💻 Sistema Operacional Host (Clean Host)"]
@@ -59,12 +59,12 @@ flowchart TD
 
 ### 📝 A Suíte de Editores (Tools)
 
-| Repositório                                            | Visibilidade | Papel Central                                                                                                  | Linguagem & Motor       | Integração no Profile                                   | Local Canônico                      |
-| :----------------------------------------------------- | :----------- | :------------------------------------------------------------------------------------------------------------- | :---------------------- | :------------------------------------------------------ | :---------------------------------- |
-| **[Emacs](https://github.com/GabrielFrigo4/.emacs.d)** | Público      | **Ambiente Extensível Lisp**: Org-mode, Elpaca package manager, EAF, árvore sintática e IA.                    | Emacs Lisp (Elisp)      | Sincronizado para `${HOME}/.emacs.d`                    | `Editor/Emacs` ou `~/.emacs.d`      |
-| **[Helix](https://github.com/GabrielFrigo4/helix)**    | Público      | **Editor Modal Pós-Moderno**: Mapeamentos ergonômicos, seleção múltipla nativa, Tree-sitter e zero-plugin LSP. | TOML declarativo / Rust | Sincronizado para `${HOME}/.config/helix`               | `Editor/Helix` ou `~/.config/helix` |
-| **[NeoVim](https://github.com/GabrielFrigo4/nvim)**    | Público      | **Editor Modal Moderno**: Arquitetura modular FHS em Lua, Lazy.nvim, Mason LSP, Telescope e tema Kanagawa.     | Lua / Neovim runtime    | Sincronizado para `${HOME}/.config/nvim`                | `Editor/NeoVim` ou `~/.config/nvim` |
-| **[Vim](https://github.com/GabrielFrigo4/vimfiles)**   | Público      | **Editor Clássico Resiliente**: Onipresença UNIX, Vim-Plug, syntax highlighting, CodeDark e fallback seguro.   | Vimscript puro          | Sincronizado para `${HOME}/.vimrc` e `${HOME}/vimfiles` | `Editor/Vim` ou `~/vimfiles`        |
+| Repositório                                           | Visibilidade | Papel Central                                                                                                  | Linguagem & Motor       | Integração no Profile                                   | Local Canônico                      |
+| :---------------------------------------------------- | :----------- | :------------------------------------------------------------------------------------------------------------- | :---------------------- | :------------------------------------------------------ | :---------------------------------- |
+| **[Emacs](https://github.com/GabrielFrigo4/emacs)**   | Público      | **Ambiente Extensível Lisp**: Org-mode, Elpaca package manager, EAF, árvore sintática e IA.                    | Emacs Lisp (Elisp)      | Sincronizado para `${HOME}/.emacs.d`                    | `Editor/Emacs` ou `~/.emacs.d`      |
+| **[Helix](https://github.com/GabrielFrigo4/helix)**   | Público      | **Editor Modal Pós-Moderno**: Mapeamentos ergonômicos, seleção múltipla nativa, Tree-sitter e zero-plugin LSP. | TOML declarativo / Rust | Sincronizado para `${HOME}/.config/helix`               | `Editor/Helix` ou `~/.config/helix` |
+| **[NeoVim](https://github.com/GabrielFrigo4/neovim)** | Público      | **Editor Modal Moderno**: Arquitetura modular FHS em Lua, Lazy.nvim, Mason LSP, Telescope e tema Kanagawa.     | Lua / Neovim runtime    | Sincronizado para `${HOME}/.config/nvim`                | `Editor/NeoVim` ou `~/.config/nvim` |
+| **[Vim](https://github.com/GabrielFrigo4/vim)**       | Público      | **Editor Clássico Resiliente**: Onipresença UNIX, Vim-Plug, syntax highlighting, CodeDark e fallback seguro.   | Vimscript puro          | Sincronizado para `${HOME}/.vimrc` e `${HOME}/vimfiles` | `Editor/Vim` ou `~/vimfiles`        |
 
 ---
 
@@ -170,7 +170,7 @@ Baseados nos 17 Princípios UNIX (_The Art of UNIX Programming_, Eric S. Raymond
 
 ### 📝 A Suíte de Editores
 
-- 🔮 **[Emacs (.emacs.d)](https://github.com/GabrielFrigo4/.emacs.d)**
+- 🔮 **[Emacs (emacs)](https://github.com/GabrielFrigo4/emacs)**
 - 🧬 **[Helix (helix)](https://github.com/GabrielFrigo4/helix)**
-- ⚡ **[NeoVim (nvim)](https://github.com/GabrielFrigo4/nvim)**
-- 📜 **[Vim (vimfiles)](https://github.com/GabrielFrigo4/vimfiles)**
+- ⚡ **[NeoVim (neovim)](https://github.com/GabrielFrigo4/neovim)**
+- 📜 **[Vim (vim)](https://github.com/GabrielFrigo4/vim)**

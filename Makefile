@@ -7,7 +7,7 @@ MAKEFLAGS += --no-print-directory -s
 # Makefile: Universal Environment
 # ----------------------------------------------------------------
 
-.PHONY: help status audit sync pull test ci doctor clone hooks format lint-md bench uped upgit
+.PHONY: help status audit sync pull test ci doctor clone hooks format lint-md bench uped upgit strip
 
 REPOS     = Setup Shell Vault Profile
 EDITORS   = Editor/Emacs Editor/Helix Editor/NeoVim Editor/Vim
@@ -28,6 +28,7 @@ help:
 	cmd "sync"           "Sincroniza dotfiles, suíte de editores e skills de IA no sistema"; \
 	cmd "uped"           "Atualiza os 4 repositórios da Suíte de Editores com o upstream"; \
 	cmd "upgit"          "Atualiza todos os repositórios Git encontrados recursivamente"; \
+	cmd "strip"          "Purga metadados (.git*, .agents, *.md) para modo Zero-Bloat (TARGET=<dir>)"; \
 	sec "Diagnóstico & Status:"; \
 	cmd "status"         "Exibe status Git resumido de todo o ecossistema (Core + Editores)"; \
 	cmd "hooks"          "Configura e aplica permissões canônicas em .githooks em todos os repos"; \
@@ -152,6 +153,21 @@ sync:
 	sh Profile/scripts/sync/sync-dotfiles.sh
 	echo "🧠 Sincronizando skills de IA..."
 	sh Profile/scripts/sync/sync-skills.sh
+
+strip:
+	if [ -z "$${TARGET}" ]; then \
+		echo "Uso: make strip TARGET=<diretorio>"; \
+		echo "Exemplo: make strip TARGET=~/.emacs.d"; \
+		exit 1; \
+	fi; \
+	if [ ! -d "$${TARGET}" ]; then \
+		echo "❌ Diretório '$${TARGET}' não encontrado."; \
+		exit 1; \
+	fi; \
+	echo "🧹 Aplicando purga Zero-Bloat em $${TARGET}..."; \
+	rm -rf "$${TARGET}/.git"* "$${TARGET}/.agents" "$${TARGET}/docs"; \
+	find "$${TARGET}" -maxdepth 1 -name "*.md" -delete 2> "/dev/null" || true; \
+	echo "✅ $${TARGET} purgado para modo Standalone Limpo (Zero-Bloat)!"
 
 ### ================================
 ### CODE QUALITY & AUDITING

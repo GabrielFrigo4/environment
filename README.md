@@ -13,10 +13,10 @@
 
 ### 📝 A Suíte de Editores
 
-[![Emacs](https://img.shields.io/badge/🔮_Emacs-Elisp_%26_Org--Mode-indigo)](https://github.com/GabrielFrigo4/.emacs.d)
+[![Emacs](https://img.shields.io/badge/🔮_Emacs-Elisp_%26_Org--Mode-indigo)](https://github.com/GabrielFrigo4/emacs)
 [![Helix](https://img.shields.io/badge/🧬_Helix-Modal_%26_LSP-black)](https://github.com/GabrielFrigo4/helix)
-[![NeoVim](https://img.shields.io/badge/⚡_NeoVim-Lua_%26_Kanagawa-green)](https://github.com/GabrielFrigo4/nvim)
-[![Vim](https://img.shields.io/badge/📜_Vim-Vimscript_%26_CodeDark-darkgreen)](https://github.com/GabrielFrigo4/vimfiles)
+[![NeoVim](https://img.shields.io/badge/⚡_NeoVim-Lua_%26_Kanagawa-green)](https://github.com/GabrielFrigo4/neovim)
+[![Vim](https://img.shields.io/badge/📜_Vim-Vimscript_%26_CodeDark-darkgreen)](https://github.com/GabrielFrigo4/vim)
 
 > 📖 **Arquitetura Unificada do Ecossistema:** Conheça a matriz completa de responsabilidades, ciclo de boot e segregação de privilégios em [ENVIRONMENT.md](ENVIRONMENT.md).
 > 📜 **Princípios de Engenharia:** Conheça os 18 princípios UNIX e boas práticas Clean Code em [PRINCIPLES.md](PRINCIPLES.md).
@@ -68,10 +68,10 @@ flowchart TD
 | **[Shell](https://github.com/GabrielFrigo4/shell)**     | Git Submodule | 🟢 Público   | `git submodule update --init`                 |
 | **[Profile](https://github.com/GabrielFrigo4/profile)** | Git Submodule | 🟢 Público   | `git submodule update --init`                 |
 | **[Vault](https://github.com/GabrielFrigo4/vault)**     | Clone Privado | 🔴 Privado   | `git clone` via SSH (requer chave autorizada) |
-| **[Emacs](https://github.com/GabrielFrigo4/.emacs.d)**  | Git Submodule | 🟢 Público   | `git submodule update --init`                 |
+| **[Emacs](https://github.com/GabrielFrigo4/emacs)**     | Git Submodule | 🟢 Público   | `git submodule update --init`                 |
 | **[Helix](https://github.com/GabrielFrigo4/helix)**     | Git Submodule | 🟢 Público   | `git submodule update --init`                 |
-| **[NeoVim](https://github.com/GabrielFrigo4/nvim)**     | Git Submodule | 🟢 Público   | `git submodule update --init`                 |
-| **[Vim](https://github.com/GabrielFrigo4/vimfiles)**    | Git Submodule | 🟢 Público   | `git submodule update --init`                 |
+| **[NeoVim](https://github.com/GabrielFrigo4/neovim)**   | Git Submodule | 🟢 Público   | `git submodule update --init`                 |
+| **[Vim](https://github.com/GabrielFrigo4/vim)**         | Git Submodule | 🟢 Público   | `git submodule update --init`                 |
 
 > 💡 **Setup**, **Shell**, **Profile** e os 4 repositórios da **Suíte de Editores** são submódulos públicos acessíveis a qualquer visitante. O **Vault** é um repositório privado clonado separadamente — visitantes sem acesso receberão um aviso amigável sem interromper a operação.
 

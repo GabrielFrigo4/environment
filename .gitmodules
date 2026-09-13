@@ -9,13 +9,13 @@
 	url = https://github.com/GabrielFrigo4/profile.git
 [submodule "Editor/Emacs"]
 	path = Editor/Emacs
-	url = https://github.com/GabrielFrigo4/.emacs.d
+	url = https://github.com/GabrielFrigo4/emacs.git
 [submodule "Editor/Helix"]
 	path = Editor/Helix
-	url = https://github.com/GabrielFrigo4/helix
+	url = https://github.com/GabrielFrigo4/helix.git
 [submodule "Editor/NeoVim"]
 	path = Editor/NeoVim
-	url = https://github.com/GabrielFrigo4/nvim
+	url = https://github.com/GabrielFrigo4/neovim.git
 [submodule "Editor/Vim"]
 	path = Editor/Vim
-	url = https://github.com/GabrielFrigo4/vimfiles
+	url = https://github.com/GabrielFrigo4/vim.git
