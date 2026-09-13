@@ -34,7 +34,7 @@ help:
 	cmd "bench"          "Mede latência de inicialização de shells e módulos (alvo binário <64ms)"; \
 	cmd "doctor"         "Executa diagnóstico de saúde e sanity check pós-boot do sistema"; \
 	sec "Qualidade, Testes & CI:"; \
-	cmd "test"           "Valida sintaxe POSIX e Zsh em todos os scripts do ecossistema"; \
+	cmd "test"           "Valida sintaxe Zsh, Bash e POSIX em todos os scripts do ecossistema"; \
 	cmd "audit"          "Executa suítes de auditoria estática e conformidade em todos os repos"; \
 	cmd "format"         "Formata todos os arquivos Markdown com Prettier"; \
 	cmd "lint-md"        "Valida formatação de Markdown sem alterar arquivos"; \
