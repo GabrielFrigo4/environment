@@ -7,7 +7,7 @@ MAKEFLAGS += --no-print-directory -s
 # Makefile: Universal Environment
 # ----------------------------------------------------------------
 
-.PHONY: help status audit sync pull test ci doctor clone hooks format lint-md bench uped upgit strip
+.PHONY: help status audit sync pull test ci doctor clone hooks format lint-md bench uped upgit strip deploy
 
 REPOS     = Setup Shell Vault Profile
 EDITORS   = Editor/Emacs Editor/Helix Editor/NeoVim Editor/Vim
@@ -25,7 +25,8 @@ help:
 	sec "Sincronização & Submódulos:"; \
 	cmd "clone"          "Inicializa submódulos públicos e clona o Vault defensivamente"; \
 	cmd "pull"           "Atualiza todos os submódulos e repositórios com o GitHub"; \
-	cmd "sync"           "Sincroniza dotfiles, suíte de editores e skills de IA no sistema"; \
+	cmd "deploy"         "Implanta links canônicos no sistema (~/.shell, editores, profile)"; \
+	cmd "sync"           "Sincroniza dotfiles declarativos e link unificado de skills de IA"; \
 	cmd "uped"           "Atualiza os 4 repositórios da Suíte de Editores com o upstream"; \
 	cmd "upgit"          "Atualiza todos os repositórios Git encontrados recursivamente"; \
 	cmd "strip"          "Purga metadados (.git*, .agents, *.md) para modo Zero-Bloat (TARGET=<dir>)"; \
@@ -149,10 +150,39 @@ pull:
 	fi
 
 sync:
-	echo "🎨 Sincronizando dotfiles e editores..."
+	echo "🎨 Sincronizando dotfiles declarativos..."
 	sh Profile/scripts/sync/sync-dotfiles.sh
 	echo "🧠 Sincronizando skills de IA..."
 	sh Profile/scripts/sync/sync-skills.sh
+
+deploy:
+	echo "🚀 Implantando o ecossistema nas posições canônicas do sistema..."
+	echo ""
+	echo "🐚 1. Shell -> ~/.shell..."
+	mkdir -p "$${HOME}/.shell"
+	ln -sfn "$$(pwd)/Shell" "$${HOME}/.shell"
+	echo "  ✅ Shell implantado!"
+	echo ""
+	echo "📝 2. Suíte de Editores -> ~/.emacs.d, ~/.config/nvim, ~/.config/helix, ~/vimfiles..."
+	mkdir -p "$${HOME}/.config"
+	ln -sfn "$$(pwd)/Editor/Emacs" "$${HOME}/.emacs.d"
+	ln -sfn "$$(pwd)/Editor/NeoVim" "$${HOME}/.config/nvim"
+	ln -sfn "$$(pwd)/Editor/Helix" "$${HOME}/.config/helix"
+	ln -sfn "$$(pwd)/Editor/Vim" "$${HOME}/vimfiles"
+	ln -sfn "$$(pwd)/Editor/Vim" "$${HOME}/.vim"
+	ln -sf "$$(pwd)/Editor/Vim/vimrc" "$${HOME}/.vimrc"
+	echo "  ✅ Suíte de Editores implantada!"
+	echo ""
+	echo "🎨 3. Profile -> Dotfiles declarativos e Skills de IA..."
+	sh Profile/scripts/sync/sync-dotfiles.sh
+	sh Profile/scripts/sync/sync-skills.sh
+	echo ""
+	if [ -d "Vault/.git" ]; then \
+		echo "🔐 4. Vault -> ~/.vault..."; \
+		ln -sfn "$$(pwd)/Vault" "$${HOME}/.vault"; \
+		echo "  ✅ Vault conectado!"; \
+	fi
+	echo "🎉 Implantação canônica concluída com sucesso!"
 
 strip:
 	if [ -z "$${TARGET}" ]; then \

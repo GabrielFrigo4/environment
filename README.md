@@ -77,42 +77,55 @@ flowchart TD
 
 ---
 
-## 🚀 Instalação Rápida
+## 🚀 Instalação Rápida & Autonomia Reentrante
 
-### 📥 Clone Completo (com Submódulos)
+### 📦 Modo 1: Instalação Individual (Projetos 100% Autônomos)
+
+Cada módulo opera de forma totalmente independente e pode ser clonado isoladamente sem qualquer dependência obrigatória ou aviso de erro:
+
+| Módulo      | Comando de Instalação Rápida (One-Liner)                                                                                                       | Destino Canônico                       |
+| :---------- | :--------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------- |
+| **Shell**   | `git clone "https://github.com/GabrielFrigo4/shell" "${HOME}/.shell" && sh "${HOME}/.shell/install.sh"`                                        | `~/.shell` ou `/usr/local/share/shell` |
+| **Profile** | `git clone "https://github.com/GabrielFrigo4/profile" "${HOME}/.config/profile" && sh "${HOME}/.config/profile/scripts/sync/sync-dotfiles.sh"` | `~/.config/profile`                    |
+| **Emacs**   | `git clone "https://github.com/GabrielFrigo4/emacs" "${HOME}/.emacs.d"`                                                                        | `~/.emacs.d`                           |
+| **NeoVim**  | `git clone "https://github.com/GabrielFrigo4/neovim" "${HOME}/.config/nvim"`                                                                   | `~/.config/nvim`                       |
+| **Helix**   | `git clone "https://github.com/GabrielFrigo4/helix" "${HOME}/.config/helix"`                                                                   | `~/.config/helix`                      |
+| **Vim**     | `git clone "https://github.com/GabrielFrigo4/vim" "${HOME}/vimfiles" && ln -sf "${HOME}/vimfiles/vimrc" "${HOME}/.vimrc"`                      | `~/vimfiles` e `~/.vimrc`              |
+| **Vault**   | `git clone "git@github.com:GabrielFrigo4/vault" "${HOME}/.vault" && chmod 0700 "${HOME}/.vault"`                                               | `~/.vault`                             |
+
+### 🏛️ Modo 2: Hub Central (Estação de Trabalho Completa)
+
+Para gerenciar, auditar, aprimorar ou implantar todo o ecossistema a partir do repositório central:
 
 ```sh
 git clone --recurse-submodules "https://github.com/GabrielFrigo4/environment"
 cd environment
 make clone
-```
-
-O `git clone --recurse-submodules` traz automaticamente os 3 repos públicos. O `make clone` tenta clonar o Vault via SSH (falha silenciosamente se não autorizado).
-
-### 🔄 Atualizar Tudo
-
-```sh
-make pull
+make deploy
 ```
 
 ---
 
 ## ⚙️ Comandos do Makefile
 
-| Comando        | Ação                                                       |
-| :------------- | :--------------------------------------------------------- |
-| `make clone`   | Inicializa submódulos públicos e clona o Vault (defensivo) |
-| `make hooks`   | Configura `.githooks` executáveis em todos os repos        |
-| `make status`  | Exibe status Git resumido dos 4 repositórios               |
-| `make pull`    | Atualiza submódulos e puxa todos os repos                  |
-| `make audit`   | Executa suites de auditoria estática e validação           |
-| `make format`  | Formata todos os arquivos Markdown com Prettier            |
-| `make lint-md` | Valida formatação de Markdown com Prettier                 |
-| `make sync`    | Sincroniza dotfiles e skills de IA no sistema              |
-| `make bench`   | Mede latência de inicialização de shells e módulos         |
-| `make test`    | Valida sintaxe POSIX e Zsh em todos os scripts             |
-| `make ci`      | Executa auditoria completa e quality gates locais          |
-| `make doctor`  | Executa diagnóstico pós-boot do sistema                    |
+| Comando        | Ação                                                                  |
+| :------------- | :-------------------------------------------------------------------- |
+| `make clone`   | Inicializa submódulos públicos e clona o Vault (defensivo)            |
+| `make deploy`  | Implanta links canônicos no sistema (`~/.shell`, editores, profile)   |
+| `make pull`    | Atualiza submódulos e sincroniza todos os repos com o upstream        |
+| `make sync`    | Sincroniza dotfiles declarativos e link unificado de skills de IA     |
+| `make uped`    | Atualiza individualmente os 4 repositórios da Suíte de Editores       |
+| `make upgit`   | Atualiza recursivamente todos os repositórios Git encontrados         |
+| `make strip`   | Purga metadados (`.git*`, `*.md`) para modo Zero-Bloat                |
+| `make status`  | Exibe status Git resumido de todo o ecossistema (Core + Editores)     |
+| `make hooks`   | Configura `.githooks` executáveis em todos os repositórios            |
+| `make audit`   | Executa suítes de auditoria estática e conformidade em todos os repos |
+| `make test`    | Valida sintaxe POSIX, Zsh e headless em todos os scripts e editores   |
+| `make bench`   | Mede latência de inicialização de shells e módulos (&lt; 64ms)        |
+| `make doctor`  | Executa diagnóstico de integridade e sanity check pós-boot            |
+| `make format`  | Formata todos os arquivos Markdown com Prettier                       |
+| `make lint-md` | Valida formatação de Markdown com Prettier sem alterar arquivos       |
+| `make ci`      | Executa pipeline completa de testes, auditoria e pre-commit           |
 
 ---
 
@@ -122,14 +135,18 @@ make pull
 Environment/
 ├── Setup/          ← Submodule público (provisionamento de SO)
 ├── Shell/          ← Submodule público (motor de terminal)
-├── Profile/        ← Submodule público (dotfiles & IA)
+├── Profile/        ← Submodule público (dotfiles, linters & IA)
 ├── Vault/          ← Clone privado (segredos, .gitignored)
+├── Editor/
+│   ├── Emacs/      ← Submodule público (GNU Emacs, Org, EAF, IA)
+│   ├── Helix/      ← Submodule público (Helix modal em Rust)
+│   ├── NeoVim/     ← Submodule público (Neovim modular em Lua)
+│   └── Vim/        ← Submodule público (Vim clássico UNIX)
 ├── Makefile        ← Orquestrador global de operações
 ├── ENVIRONMENT.md  ← Manifesto canônico de arquitetura
-├── PRINCIPLES.md   ← 18 Princípios de Engenharia
+├── PRINCIPLES.md   ← 19 Princípios de Engenharia
 ├── AGENTS.md       ← Briefing para agentes de IA
-├── LICENSE         ← MIT License
-└── .agents/        ← Skills e regras para IAs
+└── .agents/        ← Skills e regras operacionais para IAs
 ```
 
 ---
@@ -137,5 +154,5 @@ Environment/
 ## 🔗 Documentação Canônica
 
 - 🏛️ **[ENVIRONMENT.md](ENVIRONMENT.md)**: Arquitetura federada, matriz de responsabilidades e ciclo de boot.
-- 📜 **[PRINCIPLES.md](PRINCIPLES.md)**: Os 18 Princípios de Engenharia e Clean Code do ecossistema.
+- 📜 **[PRINCIPLES.md](PRINCIPLES.md)**: Os 19 Princípios de Engenharia e Clean Code do ecossistema.
 - 🤖 **[AGENTS.md](AGENTS.md)**: Guia de contexto para agentes de IA (Antigravity, Claude, GPT).
