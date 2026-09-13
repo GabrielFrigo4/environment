@@ -22,6 +22,8 @@ O agente nunca deve agir de forma passiva diante de inconsistências entre docum
     - Se os submódulos estiverem atrás do upstream, proponha `git submodule update --remote --merge`.
 3. **Vault Defensivo:**
     - NUNCA tente forçar o clone do Vault em ambientes sem chave SSH autorizada.
+4. **Arquitetura de Comentários & Clean Code:**
+    - Auditar periodicamente se arquivos de scripts, dotfiles e configurações obedecem à regra de réguas estruturais (64 no topo, 32 no corpo), zero comentários narrativos e zero código morto via `audit_comments.py`.
 
 ---
 
@@ -30,6 +32,7 @@ O agente nunca deve agir de forma passiva diante de inconsistências entre docum
 - [ ] **Submódulos Atualizados:** Setup, Shell e Profile no commit mais recente.
 - [ ] **ENVIRONMENT.md Sincronizado:** Conteúdo idêntico em todos os 5 repos.
 - [ ] **PRINCIPLES.md Sincronizado:** Conteúdo idêntico (adaptado) em todos os 5 repos.
+- [ ] **Arquitetura de Comentários:** Réguas de 64/32 colunas sem vazamento nem parênteses, zero comentários narrativos (`python3 Profile/skills/clean-code-refactor/scripts/audit_comments.py .`).
 - [ ] **Makefile Funcional:** `make status` retorna sem erros.
 - [ ] **Vault Ignorado:** `Vault/` presente no `.gitignore`.
 - [ ] **AGENTS.md Presente:** Existe em todos os 5 repos.
