@@ -7,7 +7,7 @@ MAKEFLAGS += --no-print-directory -s
 # Makefile: Universal Environment
 # ----------------------------------------------------------------
 
-.PHONY: help status audit sync sync-docs pull test ci doctor clone hooks format lint-md bench uped upgit strip deploy bootstrap
+.PHONY: help status audit sync sync-docs pull test fix-banners ci doctor clone hooks format lint-md bench uped upgit strip deploy bootstrap
 
 REPOS     = Setup Shell Vault Profile
 EDITORS   = Editor/Emacs Editor/Helix Editor/NeoVim Editor/Vim
@@ -59,9 +59,7 @@ clone:
 	elif git clone "git@github.com:GabrielFrigo4/vault.git" Vault 2> "/dev/null"; then \
 		echo "  ✅ Vault clonado com sucesso!"; \
 	else \
-		echo "  ⚠️  Vault: clone via SSH falhou (chave SSH não autorizada ou repositório privado)."; \
-		echo "      Se você é o mantenedor, configure sua chave SSH e execute:"; \
-		echo "      git clone \"git@github.com:GabrielFrigo4/vault.git\" Vault"; \
+		echo "  ⚠️  Vault: clone via SSH falhou (configure sua chave SSH para clonar Vault)."; \
 	fi
 	echo ""
 	echo "🎉 Ecossistema pronto!"
@@ -76,10 +74,7 @@ hooks:
 	git config core.hooksPath .githooks 2> "/dev/null" || true
 	echo "  ✅ Environment: core.hooksPath -> .githooks"
 	for r in $(ALL_REPOS); do \
-		if [ -e "$$r/.git" ]; then \
-			git -C $$r config core.hooksPath .githooks; \
-			echo "  ✅ $$r: core.hooksPath -> .githooks"; \
-		fi; \
+		[ -e "$$r/.git" ] && git -C $$r config core.hooksPath .githooks && echo "  ✅ $$r: core.hooksPath -> .githooks"; \
 	done
 
 status:
@@ -234,14 +229,16 @@ audit:
 test:
 	echo "🧪 Testando sintaxe de scripts do ecossistema..."
 	for dir in Setup Vault Profile Editor; do \
-		if [ -d "$$dir" ]; then \
-			find "$$dir" -name "*.sh" -not -path "*/.git/*" -exec sh -n {} +; \
-		fi; \
+		[ -d "$$dir" ] && find "$$dir" -name "*.sh" -not -path "*/.git/*" -exec sh -n {} +; \
 	done
-	if [ -d "Shell" ]; then \
-		$(MAKE) -C Shell test; \
-	fi
+	[ -d "Shell" ] && $(MAKE) -C Shell test
 	echo "✅ Sintaxe de todos os scripts está perfeita!"
+
+fix-banners:
+	echo "📏 Normalizando réguas de banners em Setup e Profile..."
+	python3 Setup/scripts/audit/banners.py --fix
+	python3 Profile/audit/banners.py --fix
+	echo "✅ Réguas de banners normalizadas com sucesso!"
 
 bench:
 	sh Shell/benchmark.sh
@@ -251,5 +248,5 @@ doctor:
 
 ci: test audit lint-md
 	echo "⚡ Medindo benchmark de inicialização do Shell..."
-	cd Shell && sh .githooks/pre-commit
+	(cd Shell && sh .githooks/pre-commit)
 	echo "🚀 Ecossistema 100% pronto para produção e commits!"
