@@ -67,4 +67,5 @@ jobs:
             - name: Validate Markdown Formatting
               run: |
                   npm install -g prettier
+                  cp Profile/tools/.prettierrc ~/.prettierrc
                   make lint-md
