@@ -43,6 +43,7 @@ O **Environment** é o **orquestrador e ponto de entrada** do ecossistema. Ele *
 2. **Documentação canônica aqui:** O `ENVIRONMENT.md` e `PRINCIPLES.md` **nesta raiz** são as versões autoritativas. Os sub-repos contêm cópias que referenciam estas.
 3. **Vault é privado:** NUNCA mencione conteúdos específicos do Vault em commits públicos do Environment.
 4. **Makefile é o orquestrador:** Operações globais (`make pull`, `make status`, `make audit`) devem ser executadas a partir da raiz do Environment.
+5. **Hermetismo de Produção & Invariante `rm -rf .agents`:** O ecossistema é 100% soberano e independente de ferramentas de IA. É estritamente proibido criar dependências em código de produção (scripts executáveis, Makefiles, hooks, dotfiles, loaders, aliases) para arquivos em `.agents/` ou `skills/`. Se o diretório `.agents/` for sumariamente deletado (`rm -rf .agents`), 100% do repositório deve continuar funcionando com perfeição.
 
 ---
 

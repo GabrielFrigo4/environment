@@ -152,10 +152,8 @@ pull:
 	fi
 
 sync:
-	echo "🎨 Sincronizando dotfiles declarativos..."
-	sh Profile/scripts/sync/sync-dotfiles.sh
-	echo "🧠 Sincronizando skills de IA..."
-	sh Profile/scripts/sync/sync-skills.sh
+	echo "🎨 Sincronizando dotfiles declarativos e skills de IA..."
+	sh Profile/profile.sh sync
 
 sync-docs:
 	echo "📖 Sincronizando documentação canônica (ENVIRONMENT.md & PRINCIPLES.md)..."
@@ -220,7 +218,7 @@ audit:
 	echo "🔍 [1/5] Auditando Setup..."
 	python3 Setup/scripts/audit/all.py
 	echo "🔍 [2/5] Auditando Profile..."
-	python3 Profile/scripts/audit/all.py
+	python3 Profile/audit/all.py
 	echo "🔍 [3/5] Validando sintaxe do Shell..."
 	find Shell -name "*.sh" -not -path "*/.git/*" -exec sh -n {} +
 	echo "🔍 [4/5] Validando sintaxe do Vault..."
@@ -246,7 +244,7 @@ test:
 	echo "✅ Sintaxe de todos os scripts está perfeita!"
 
 bench:
-	sh Shell/scripts/benchmark.sh
+	sh Shell/benchmark.sh
 
 doctor:
 	sh Setup/scripts/audit/doctor.sh
