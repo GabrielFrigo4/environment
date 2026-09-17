@@ -87,29 +87,42 @@ flowchart TD
 
 ## 🚀 Instalação Rápida & Autonomia Reentrante
 
+### 🗺️ Matriz Global de Caminhos e Resolução do Ecossistema
+
+| Localização Canônica          | Paradigma / Privilégios        |          Shell           |      Profile       |       Vault        | Casos de Uso & Filosofia                                                                       |
+| :---------------------------- | :----------------------------- | :----------------------: | :----------------: | :----------------: | :--------------------------------------------------------------------------------------------- |
+| **`/usr/local/share/<repo>`** | Global / FHS (`root` / `sudo`) | 🟢 **Padrão de Sistema** | ⚠️ Não Recomendado | 🚫 Não Recomendado | Paridade de login entre `root` e admin. Desaconselhado para dotfiles e proibido para segredos. |
+| **`~/.local/share/<repo>`**   | XDG Data (Rootless)            |    ⭐ **Recomendado**    | ⭐ **Recomendado** | ⭐ **Recomendado** | Isolamento total de usuário, conformidade XDG e padrão limpo para Linux, BSDs, macOS e MSYS2.  |
+| **`~/.config/<repo>`**        | XDG Config (Rootless)          |      🔵 Alternativa      |   🔵 Alternativa   |   🔵 Alternativa   | Centralização sob `~/.config` para usuários que agrupam configurações no mesmo diretório.      |
+| **`~/.<repo>`**               | Home Direta (Clássico UNIX)    |    ⚪ Fallback Legado    | ⚪ Fallback Legado | ⚪ Fallback Legado | Compatibilidade tradicional para sistemas UNIX legados sem XDG ou dotdirs na raiz da `$HOME`.  |
+
+---
+
 ### 📦 Modo 1: Instalação Individual (Projetos 100% Autônomos)
 
 Cada módulo opera de forma totalmente independente e pode ser clonado isoladamente sem qualquer dependência obrigatória ou aviso de erro:
 
-| Módulo      | Comando de Instalação Rápida (One-Liner)                                                                                               | Destino Canônico                                                                    |
-| :---------- | :------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------- |
-| **Shell**   | `git clone "https://github.com/GabrielFrigo4/shell" "${HOME}/.local/share/shell" && sh "${HOME}/.local/share/shell/install.sh --pure"` | `~/.local/share/shell` (recomendado), `~/.config/shell` ou `/usr/local/share/shell` |
-| **Profile** | `git clone "https://github.com/GabrielFrigo4/profile" "${HOME}/.config/profile" && sh "${HOME}/.config/profile/profile.sh sync"`       | `~/.config/profile` (ou `~/.local/share/profile`)                                   |
-| **Emacs**   | `git clone "https://github.com/GabrielFrigo4/emacs" "${HOME}/.emacs.d"`                                                                | `~/.emacs.d`                                                                        |
-| **NeoVim**  | `git clone "https://github.com/GabrielFrigo4/neovim" "${HOME}/.config/nvim"`                                                           | `~/.config/nvim`                                                                    |
-| **Helix**   | `git clone "https://github.com/GabrielFrigo4/helix" "${HOME}/.config/helix"`                                                           | `~/.config/helix`                                                                   |
-| **Vim**     | `git clone "https://github.com/GabrielFrigo4/vim" "${HOME}/.vim" && ln -sf "${HOME}/.vim/vimrc" "${HOME}/.vimrc"`                      | `~/.vim` e `~/.vimrc` (ou `~/vimfiles` no Windows)                                  |
-| **Vault**   | `git clone "git@github.com:GabrielFrigo4/vault" "${HOME}/.local/share/vault" && chmod 0700 "${HOME}/.local/share/vault"`               | `~/.local/share/vault`, `~/.config/vault` ou `~/.vault`                             |
+| Módulo      | Comando de Instalação Rápida (One-Liner)                                                                                                   | Destino Canônico                                                                    |
+| :---------- | :----------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------- |
+| **Shell**   | `git clone "https://github.com/GabrielFrigo4/shell" "${HOME}/.local/share/shell" && sh "${HOME}/.local/share/shell/install.sh --pure"`     | `~/.local/share/shell` (recomendado), `~/.config/shell` ou `/usr/local/share/shell` |
+| **Profile** | `git clone "https://github.com/GabrielFrigo4/profile" "${HOME}/.local/share/profile" && sh "${HOME}/.local/share/profile/profile.sh sync"` | `~/.local/share/profile` (recomendado), `~/.config/profile` ou `~/.profile-repo`    |
+| **Emacs**   | `git clone "https://github.com/GabrielFrigo4/emacs" "${HOME}/.emacs.d"`                                                                    | `~/.emacs.d`                                                                        |
+| **NeoVim**  | `git clone "https://github.com/GabrielFrigo4/neovim" "${HOME}/.config/nvim"`                                                               | `~/.config/nvim`                                                                    |
+| **Helix**   | `git clone "https://github.com/GabrielFrigo4/helix" "${HOME}/.config/helix"`                                                               | `~/.config/helix`                                                                   |
+| **Vim**     | `git clone "https://github.com/GabrielFrigo4/vim" "${HOME}/.vim" && ln -sf "${HOME}/.vim/vimrc" "${HOME}/.vimrc"`                          | `~/.vim` e `~/.vimrc` (ou `~/vimfiles` no Windows)                                  |
+| **Vault**   | `git clone "git@github.com:GabrielFrigo4/vault" "${HOME}/.local/share/vault" && chmod 0700 "${HOME}/.local/share/vault"`                   | `~/.local/share/vault` (recomendado), `~/.config/vault` ou `~/.vault`               |
 
 ### 🏛️ Modo 2: Hub Central (Bancada de Desenvolvimento & Orquestração)
 
-O repositório **Environment** (`~/Documents/Environment`) é estritamente uma **bancada de desenvolvimento e orquestração**. Absolutamente **nada** em seu diretório deve ser consumido diretamente pelo SO hospedeiro como runtime. Para gerenciar, auditar ou provisionar os runtimes soberanos em seus caminhos canônicos a partir do hub:
+O repositório **Environment** (`~/Documents/Environment`) é estritamente uma **bancada de desenvolvimento e orquestração**. Absolutamente **nada** em seu diretório deve ser consumido diretamente pelo SO hospedeiro como runtime.
+
+Para inicializar a bancada e em seguida provisionar todos os runtimes soberanos em seus caminhos canônicos no sistema operacional:
 
 ```sh
 git clone --recurse-submodules "https://github.com/GabrielFrigo4/environment" "${HOME}/Documents/Environment"
 cd "${HOME}/Documents/Environment"
-make clone      # Inicializa submódulos de desenvolvimento e clona o Vault
-make install    # Clona e provisiona os runtimes soberanos nos caminhos canônicos do SO
+make clone
+make install
 ```
 
 ---
