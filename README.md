@@ -122,6 +122,7 @@ make install    # Clona e provisiona os runtimes soberanos nos caminhos canônic
 | `make install`   | Clona e provisiona cada repositório soberano em seu caminho canônico  |
 | `make bootstrap` | Alias para `make install` (conveniência e compatibilidade)            |
 | `make deploy`    | Alias para `make install` (conveniência e compatibilidade)            |
+| `make update`    | Atualiza todas as instalações soberanas no SO (Shell, Profile, etc.)  |
 | `make pull`      | Atualiza submódulos e sincroniza todos os repos com o upstream        |
 | `make sync-docs` | Propaga ENVIRONMENT.md e PRINCIPLES.md para todos os submódulos       |
 | `make uped`      | Atualiza individualmente os 4 repositórios da Suíte de Editores       |

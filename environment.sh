@@ -14,7 +14,8 @@ _env_help() {
 		  environment.sh [comando]
 
 		Comandos:
-		  update       Atualiza todos os repositorios e submodulos do ecossistema
+		  install      Clona e instala todos os repositorios em suas posicoes canonicas no SO
+		  update       Atualiza todas as instalacoes soberanas no SO (Shell, Profile, Vault, Editores)
 		  test         Valida a sintaxe POSIX e integridade de todos os componentes
 		  audit        Executa as suites de auditoria estatica em todos os projetos
 		  doctor       Executa sanity check e diagnostico de saude do sistema
@@ -67,10 +68,80 @@ _env_doctor() {
 }
 
 _env_update() {
-	echo "🔄 [Environment] Atualizando todos os componentes do ecossistema..."
-	if command -v make > "/dev/null" 2>&1; then
-		make -C "${_ENV_ROOT}" pull
+	echo "🔄 [Environment] Atualizando ecossistema soberano no sistema operacional..."
+	echo ""
+
+	_shell_target=""
+	if [ -d "/usr/local/share/shell/.git" ]; then
+		_shell_target="/usr/local/share/shell"
+	elif [ -d "${HOME}/.local/share/shell/.git" ]; then
+		_shell_target="${HOME}/.local/share/shell"
+	elif [ -d "${HOME}/.config/shell/.git" ]; then
+		_shell_target="${HOME}/.config/shell"
+	elif [ -d "${HOME}/.shell/.git" ]; then
+		_shell_target="${HOME}/.shell"
 	fi
+
+	if [ -n "${_shell_target}" ]; then
+		echo "🐚 Atualizando Universal Shell em ${_shell_target}..."
+		git -C "${_shell_target}" pull --ff-only 2> "/dev/null" || git -C "${_shell_target}" pull || echo "  ⚠️  Shell: git pull falhou."
+	else
+		echo "  ℹ️  Shell: nenhum clone soberano encontrado."
+	fi
+
+	_profile_target=""
+	if [ -d "${HOME}/.local/share/profile/.git" ]; then
+		_profile_target="${HOME}/.local/share/profile"
+	elif [ -d "${HOME}/.config/profile/.git" ]; then
+		_profile_target="${HOME}/.config/profile"
+	elif [ -d "${HOME}/.profile.d/.git" ]; then
+		_profile_target="${HOME}/.profile.d"
+	fi
+
+	if [ -n "${_profile_target}" ]; then
+		echo "🎨 Atualizando Universal Profile em ${_profile_target}..."
+		git -C "${_profile_target}" pull --ff-only 2> "/dev/null" || git -C "${_profile_target}" pull || echo "  ⚠️  Profile: git pull falhou."
+		if [ -f "${_profile_target}/profile.sh" ]; then
+			echo "   Sincronizando dotfiles e skills via profile.sh..."
+			sh "${_profile_target}/profile.sh" sync 2> "/dev/null" || true
+		fi
+	else
+		echo "  ℹ️  Profile: nenhum clone soberano encontrado."
+	fi
+
+	_vault_target=""
+	if [ -d "${HOME}/.local/share/vault/.git" ]; then
+		_vault_target="${HOME}/.local/share/vault"
+	elif [ -d "${HOME}/.config/vault/.git" ]; then
+		_vault_target="${HOME}/.config/vault"
+	elif [ -d "${HOME}/.vault/.git" ]; then
+		_vault_target="${HOME}/.vault"
+	elif [ -d "/usr/local/share/vault/.git" ]; then
+		_vault_target="/usr/local/share/vault"
+	fi
+
+	if [ -n "${_vault_target}" ]; then
+		echo "🔐 Atualizando Universal Vault em ${_vault_target}..."
+		git -C "${_vault_target}" pull --ff-only 2> "/dev/null" || git -C "${_vault_target}" pull || echo "  ⚠️  Vault: git pull falhou."
+	else
+		echo "  ℹ️  Vault: nenhum clone soberano encontrado."
+	fi
+
+	for _repo_name in emacs helix nvim vim; do
+		case "${_repo_name}" in
+			emacs) _dest="${HOME}/.emacs.d" ;;
+			helix) _dest="${HOME}/.config/helix" ;;
+			nvim)  _dest="${HOME}/.config/nvim" ;;
+			vim)   _dest="${HOME}/.vim" ;;
+		esac
+		if [ -d "${_dest}/.git" ]; then
+			echo "📝 Atualizando ${_repo_name} em ${_dest}..."
+			git -C "${_dest}" pull --ff-only 2> "/dev/null" || git -C "${_dest}" pull || echo "  ⚠️  ${_repo_name}: git pull falhou."
+		fi
+	done
+
+	echo ""
+	echo "🎉 Ecossistema soberano atualizado com sucesso!"
 }
 
 _env_install_sovereign() {
@@ -101,17 +172,19 @@ _env_install_sovereign() {
 		sh "${_shell_target}/install.sh" --pure
 	fi
 
-	_profile_target="${HOME}/.config/profile"
+	_profile_target="${HOME}/.local/share/profile"
 	if [ ! -d "${_profile_target}/.git" ]; then
 		echo "📦 Clonando Profile em ${_profile_target}..."
+		mkdir -p "${HOME}/.local/share"
 		git clone "https://github.com/GabrielFrigo4/profile.git" "${_profile_target}"
 	else
 		echo "  ℹ️  Profile já presente em ${_profile_target}."
 	fi
 
-	_vault_target="${HOME}/.vault"
+	_vault_target="${HOME}/.local/share/vault"
 	if [ ! -d "${_vault_target}/.git" ]; then
 		echo "🔐 Clonando Vault (via SSH) em ${_vault_target}..."
+		mkdir -p "${HOME}/.local/share"
 		git clone "git@github.com:GabrielFrigo4/vault.git" "${_vault_target}" 2> "/dev/null" || echo "  ⚠️ Vault clone SSH falhou. Configure sua chave SSH."
 	else
 		echo "  ℹ️  Vault já presente em ${_vault_target}."
