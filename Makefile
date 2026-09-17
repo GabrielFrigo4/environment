@@ -256,11 +256,14 @@ audit:
 
 test:
 	echo "🧪 Testando sintaxe de scripts do ecossistema..."
-	for dir in Setup Shell Vault Profile Editor; do \
+	for dir in Setup Vault Profile Editor; do \
 		if [ -d "$$dir" ]; then \
 			find "$$dir" -name "*.sh" -not -path "*/.git/*" -exec sh -n {} +; \
 		fi; \
 	done
+	if [ -d "Shell" ]; then \
+		$(MAKE) -C Shell test; \
+	fi
 	echo "✅ Sintaxe de todos os scripts está perfeita!"
 
 bench:
