@@ -77,7 +77,6 @@ _env_clone_sovereign() {
 	echo "🚀 [Environment] Inicializando clones soberanos nas posições canônicas do sistema..."
 	echo ""
 
-	# 1. Profile -> ~/.config/profile
 	_profile_target="${HOME}/.config/profile"
 	if [ ! -d "${_profile_target}/.git" ]; then
 		echo "📦 Clonando Profile em ${_profile_target}..."
@@ -86,7 +85,6 @@ _env_clone_sovereign() {
 		echo "  ℹ️  Profile já presente em ${_profile_target}."
 	fi
 
-	# 2. Vault -> ~/.vault
 	_vault_target="${HOME}/.vault"
 	if [ ! -d "${_vault_target}/.git" ]; then
 		echo "🔐 Clonando Vault (via SSH) em ${_vault_target}..."
@@ -95,7 +93,6 @@ _env_clone_sovereign() {
 		echo "  ℹ️  Vault já presente em ${_vault_target}."
 	fi
 
-	# 3. Editores
 	for _repo_name in emacs helix nvim vim; do
 		case "${_repo_name}" in
 			emacs) _dest="${HOME}/.emacs.d";  _url="https://github.com/GabrielFrigo4/.emacs.d.git" ;;
@@ -111,7 +108,6 @@ _env_clone_sovereign() {
 		fi
 	done
 
-	# 4. Sincronizar dotfiles a partir do clone soberano do Profile
 	if [ -f "${_profile_target}/profile.sh" ]; then
 		echo ""
 		echo "🎨 Disparando sincronização a partir do clone soberano do Profile..."
