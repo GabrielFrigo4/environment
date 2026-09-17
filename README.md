@@ -13,10 +13,17 @@
 
 ### 📝 A Suíte de Editores
 
-[![Emacs](https://img.shields.io/badge/🔮_Emacs-Elisp_%26_Org--Mode-indigo)](https://github.com/GabrielFrigo4/emacs)
-[![Helix](https://img.shields.io/badge/🧬_Helix-Modal_%26_LSP-black)](https://github.com/GabrielFrigo4/helix)
-[![NeoVim](https://img.shields.io/badge/⚡_NeoVim-Lua_%26_Kanagawa-green)](https://github.com/GabrielFrigo4/neovim)
-[![Vim](https://img.shields.io/badge/📜_Vim-Vimscript_%26_CodeDark-darkgreen)](https://github.com/GabrielFrigo4/vim)
+[![Emacs](https://img.shields.io/badge/GNU_Emacs-Elisp_%26_Org--Mode-indigo?logo=gnuemacs&logoColor=white)](https://github.com/GabrielFrigo4/emacs)
+[![Helix](https://img.shields.io/badge/Helix-Modal_%26_LSP-black?logo=helix&logoColor=white)](https://github.com/GabrielFrigo4/helix)
+[![NeoVim](https://img.shields.io/badge/NeoVim-Lua_%26_Kanagawa-green?logo=neovim&logoColor=white)](https://github.com/GabrielFrigo4/neovim)
+[![Vim](https://img.shields.io/badge/Vim-Vimscript_%26_CodeDark-darkgreen?logo=vim&logoColor=white)](https://github.com/GabrielFrigo4/vim)
+
+### 🖥️ Plataformas Homologadas
+
+![Linux](https://img.shields.io/badge/Linux-Supported-blue?logo=linux&logoColor=white)
+![FreeBSD](https://img.shields.io/badge/FreeBSD-Supported-red?logo=freebsd&logoColor=white)
+![Windows](<https://img.shields.io/badge/Windows_(Native_/_MSYS2)-Supported-purple?logo=gitforwindows&logoColor=white>)
+![macOS](https://img.shields.io/badge/macOS-Supported-black?logo=apple&logoColor=white)
 
 > 📖 **Arquitetura Unificada do Ecossistema:** Conheça a matriz completa de responsabilidades, ciclo de boot e segregação de privilégios em [ENVIRONMENT.md](ENVIRONMENT.md).
 > 📜 **Princípios de Engenharia:** Conheça os 18 princípios UNIX e boas práticas Clean Code em [PRINCIPLES.md](PRINCIPLES.md).
