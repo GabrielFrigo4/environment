@@ -94,8 +94,8 @@ _env_update() {
 		_profile_target="${HOME}/.local/share/profile"
 	elif [ -d "${HOME}/.config/profile/.git" ]; then
 		_profile_target="${HOME}/.config/profile"
-	elif [ -d "${HOME}/.profile.d/.git" ]; then
-		_profile_target="${HOME}/.profile.d"
+	elif [ -d "${HOME}/.profile/.git" ]; then
+		_profile_target="${HOME}/.profile"
 	fi
 
 	if [ -n "${_profile_target}" ]; then
