@@ -53,3 +53,18 @@ jobs:
               run: |
                   echo "🔍 Checking githooks syntax..."
                   find .githooks -type f -exec sh -n {} +
+
+            - name: Validate Shell Scripts Syntax
+              run: |
+                  echo "🧪 Validating shell scripts syntax..."
+                  make test
+
+            - name: Setup Node.js & Prettier
+              uses: actions/setup-node@v7
+              with:
+                  node-version: "22"
+
+            - name: Validate Markdown Formatting
+              run: |
+                  npm install -g prettier
+                  make lint-md

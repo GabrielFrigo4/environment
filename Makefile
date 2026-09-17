@@ -222,7 +222,7 @@ strip:
 format:
 	echo "🎨 Formatando arquivos Markdown com Prettier..."
 	if command -v prettier > "/dev/null" 2>&1; then \
-		find . -name "*.md" -not -path "*/.git/*" -exec prettier --write {} +; \
+		find . -name "*.md" -not -path "*/.git/*" -not -path "*/var/*" -exec prettier --write {} +; \
 		echo "✅ Todos os arquivos Markdown foram formatados!"; \
 	else \
 		echo "⚠️ Prettier não encontrado no PATH."; \
@@ -231,7 +231,7 @@ format:
 lint-md:
 	echo "🔍 Validando formatação de Markdown com Prettier..."
 	if command -v prettier > "/dev/null" 2>&1; then \
-		find . -name "*.md" -not -path "*/.git/*" -exec prettier --check {} +; \
+		find . -name "*.md" -not -path "*/.git/*" -not -path "*/var/*" -exec prettier --check {} +; \
 		echo "✅ Formatação de Markdown 100% em conformidade!"; \
 	else \
 		echo "ℹ️ Prettier não instalado; pulando validação de Markdown."; \
@@ -256,7 +256,11 @@ audit:
 
 test:
 	echo "🧪 Testando sintaxe de scripts do ecossistema..."
-	find Setup Shell Vault Profile Editor -name "*.sh" -not -path "*/.git/*" -exec sh -n {} +
+	for dir in Setup Shell Vault Profile Editor; do \
+		if [ -d "$$dir" ]; then \
+			find "$$dir" -name "*.sh" -not -path "*/.git/*" -exec sh -n {} +; \
+		fi; \
+	done
 	echo "✅ Sintaxe de todos os scripts está perfeita!"
 
 bench:
