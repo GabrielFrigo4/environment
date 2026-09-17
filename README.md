@@ -34,10 +34,10 @@
 
 O **Environment** é o **meta-repositório e hub orquestrador** que centraliza os 4 componentes do Quarteto de Produtividade e os 4 repositórios da Suíte de Editores. **Ele NÃO é um monorepo e NÃO é uma dependência runtime de produção**:
 
-- **Em Produção (Descentralizado & Standalone):** O Environment **não precisa existir nem ser clonado**. Cada ferramenta (`Shell`, `Emacs`, `NeoVim`, `Profile`, `Vault`) é clonada diretamente em seu caminho canônico (`~/.shell`, `~/.emacs.d`, `~/.config/nvim`, etc.) e opera de maneira 100% autônoma e desacoplada.
+- **Em Produção (Descentralizado & Soberano):** O Environment **não precisa existir nem ser clonado**. Cada ferramenta (`Shell`, `Emacs`, `NeoVim`, `Profile`, `Vault`) é clonada diretamente em seu caminho canônico (`~/.config/profile`, `~/.vault`, `/usr/local/share/shell`, `~/.emacs.d`, `~/.config/nvim`, etc.) e opera de maneira 100% autônoma e desacoplada.
 - **No Desenvolvimento (Hub do Arquiteto):** O Environment serve como o quartel-general de engenharia de Gabriel Frigo. Ele reúne os submódulos para permitir manutenção simultânea, auditoria cruzada (`make audit`), testes de sintaxe em lote (`make test`) e propagação da documentação canônica (`make sync-docs`).
-- **O que é o `make deploy`?** É um comando opcional de conveniência para a máquina de trabalho do arquiteto: ele cria links simbólicos do `$HOME` para os submódulos locais do Environment, permitindo que edições no workspace tenham efeito imediato no sistema operacional durante o desenvolvimento.
-- **Axioma da Precedência Local sobre Global (Local > Global):** Em todo o ecossistema, o escopo mais específico prevalece: CLI > Variáveis de Ambiente (`$SHELL_REPO_DIR`, `$VAULT_DIR`) > Projeto Local (`.agents/skills/`) > Usuário (`~/.shell`, `~/.vault`, `~/.gemini/config/skills/`) > Sistema Global (`/usr/local/share/`).
+- **O que é o `make bootstrap` (ou `./environment.sh clone`)?** É o orquestrador que clona e provisiona cada componente individual diretamente em suas posições canônicas nativas do sistema operacional, sem criar symlinks frágeis apontando para a pasta de desenvolvimento.
+- **Axioma da Precedência Local sobre Global (Local > Global):** Em todo o ecossistema, o escopo mais específico prevalece: CLI > Variáveis de Ambiente (`$SHELL_REPO_DIR`, `$VAULT_DIR`, `$PROFILE_DIR`) > Projeto Local (`.agents/skills/`) > Usuário (`~/.config/profile`, `~/.vault`, `~/.gemini/config/skills/`) > Sistema Global (`/usr/local/share/`).
 
 ```mermaid
 flowchart TD
@@ -109,31 +109,33 @@ Para gerenciar, auditar, aprimorar ou implantar todo o ecossistema a partir do r
 git clone --recurse-submodules "https://github.com/GabrielFrigo4/environment"
 cd environment
 make clone
-make deploy
+make bootstrap
 ```
 
 ---
 
 ## ⚙️ Comandos do Makefile
 
-| Comando        | Ação                                                                  |
-| :------------- | :-------------------------------------------------------------------- |
-| `make clone`   | Inicializa submódulos públicos e clona o Vault (defensivo)            |
-| `make deploy`  | Implanta links canônicos no sistema (`~/.shell`, editores, profile)   |
-| `make pull`    | Atualiza submódulos e sincroniza todos os repos com o upstream        |
-| `make sync`    | Sincroniza dotfiles declarativos e link unificado de skills de IA     |
-| `make uped`    | Atualiza individualmente os 4 repositórios da Suíte de Editores       |
-| `make upgit`   | Atualiza recursivamente todos os repositórios Git encontrados         |
-| `make strip`   | Purga metadados (`.git*`, `*.md`) para modo Zero-Bloat                |
-| `make status`  | Exibe status Git resumido de todo o ecossistema (Core + Editores)     |
-| `make hooks`   | Configura `.githooks` executáveis em todos os repositórios            |
-| `make audit`   | Executa suítes de auditoria estática e conformidade em todos os repos |
-| `make test`    | Valida sintaxe POSIX, Zsh e headless em todos os scripts e editores   |
-| `make bench`   | Mede latência de inicialização de shells e módulos (&lt; 64ms)        |
-| `make doctor`  | Executa diagnóstico de integridade e sanity check pós-boot            |
-| `make format`  | Formata todos os arquivos Markdown com Prettier                       |
-| `make lint-md` | Valida formatação de Markdown com Prettier sem alterar arquivos       |
-| `make ci`      | Executa pipeline completa de testes, auditoria e pre-commit           |
+| Comando          | Ação                                                                   |
+| :--------------- | :--------------------------------------------------------------------- |
+| `make clone`     | Inicializa submódulos públicos e clona o Vault (defensivo)             |
+| `make bootstrap` | Clona e provisiona cada repositório soberano em seu caminho canônico   |
+| `make deploy`    | Alias para `make bootstrap` (conveniência e compatibilidade)           |
+| `make pull`      | Atualiza submódulos e sincroniza todos os repos com o upstream         |
+| `make sync`      | Sincroniza dotfiles declarativos e skills no clone soberano do Profile |
+| `make sync-docs` | Propaga ENVIRONMENT.md e PRINCIPLES.md para todos os submódulos        |
+| `make uped`      | Atualiza individualmente os 4 repositórios da Suíte de Editores        |
+| `make upgit`     | Atualiza recursivamente todos os repositórios Git encontrados          |
+| `make strip`     | Purga metadados (`.git*`, `*.md`) para modo Zero-Bloat                 |
+| `make status`    | Exibe status Git resumido de todo o ecossistema (Core + Editores)      |
+| `make hooks`     | Configura `.githooks` executáveis em todos os repositórios             |
+| `make audit`     | Executa suítes de auditoria estática e conformidade em todos os repos  |
+| `make test`      | Valida sintaxe POSIX, Zsh e headless em todos os scripts e editores    |
+| `make bench`     | Mede latência de inicialização de shells e módulos (&lt; 64ms)         |
+| `make doctor`    | Executa diagnóstico de integridade e sanity check pós-boot             |
+| `make format`    | Formata todos os arquivos Markdown com Prettier                        |
+| `make lint-md`   | Valida formatação de Markdown com Prettier sem alterar arquivos        |
+| `make ci`        | Executa pipeline completa de testes, auditoria e pre-commit            |
 
 ---
 
@@ -141,16 +143,17 @@ make deploy
 
 ```text
 Environment/
-├── Setup/          ← Submodule público (provisionamento de SO)
-├── Shell/          ← Submodule público (motor de terminal)
-├── Profile/        ← Submodule público (dotfiles, linters & IA)
-├── Vault/          ← Clone privado (segredos, .gitignored)
+├── Setup/          ← Submodule público (provisionamento de SO; setup.sh na raiz)
+├── Shell/          ← Submodule público (motor de terminal; shell.sh na raiz)
+├── Profile/        ← Submodule público (dotfiles, linters & IA; profile.sh na raiz)
+├── Vault/          ← Clone privado (segredos criptografados; vault.sh na raiz)
 ├── Editor/
-│   ├── Emacs/      ← Submodule público (GNU Emacs, Org, EAF, IA)
-│   ├── Helix/      ← Submodule público (Helix modal em Rust)
-│   ├── NeoVim/     ← Submodule público (Neovim modular em Lua)
-│   └── Vim/        ← Submodule público (Vim clássico UNIX)
-├── Makefile        ← Orquestrador global de operações
+│   ├── Emacs/      ← Submodule público (GNU Emacs; emacs.sh na raiz)
+│   ├── Helix/      ← Submodule público (Helix modal; helix.sh na raiz)
+│   ├── NeoVim/     ← Submodule público (Neovim modular; neovim.sh na raiz)
+│   └── Vim/        ← Submodule público (Vim clássico UNIX; vim.sh na raiz)
+├── environment.sh  ← Interface CLI e orquestrador mestre do ecossistema
+├── Makefile        ← Orquestrador global de automação
 ├── ENVIRONMENT.md  ← Manifesto canônico de arquitetura
 ├── PRINCIPLES.md   ← 19 Princípios de Engenharia
 ├── AGENTS.md       ← Briefing para agentes de IA
