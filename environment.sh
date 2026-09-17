@@ -73,9 +73,33 @@ _env_update() {
 	fi
 }
 
-_env_clone_sovereign() {
-	echo "🚀 [Environment] Inicializando clones soberanos nas posições canônicas do sistema..."
+_env_install_sovereign() {
+	echo "🚀 [Environment] Instalando ecossistema nas posições canônicas do sistema..."
 	echo ""
+
+	_shell_target="/usr/local/share/shell"
+	if [ ! -d "${_shell_target}/.git" ]; then
+		if [ -w "/usr/local/share" ] || [ "$(id -u)" -eq 0 ]; then
+			echo "📦 Clonando Universal Shell em ${_shell_target}..."
+			git clone "https://github.com/GabrielFrigo4/shell.git" "${_shell_target}"
+		else
+			_shell_target="${HOME}/.local/share/shell"
+			if [ ! -d "${_shell_target}/.git" ]; then
+				echo "📦 Clonando Universal Shell em ${_shell_target} (rootless)..."
+				mkdir -p "${HOME}/.local/share"
+				git clone "https://github.com/GabrielFrigo4/shell.git" "${_shell_target}"
+			else
+				echo "  ℹ️  Shell já presente em ${_shell_target}."
+			fi
+		fi
+	else
+		echo "  ℹ️  Shell já presente em ${_shell_target}."
+	fi
+
+	if [ -f "${_shell_target}/install.sh" ]; then
+		echo "🐚 Executando instalador soberano do Shell..."
+		sh "${_shell_target}/install.sh" --pure
+	fi
 
 	_profile_target="${HOME}/.config/profile"
 	if [ ! -d "${_profile_target}/.git" ]; then
@@ -126,7 +150,7 @@ case "${_cmd}" in
 	test)   _env_test ;;
 	audit)  _env_audit ;;
 	doctor) _env_doctor ;;
-	clone|bootstrap) _env_clone_sovereign ;;
+	install|bootstrap|clone) _env_install_sovereign ;;
 	status) _env_status ;;
 	help|-h|--help) _env_help ;;
 	*)

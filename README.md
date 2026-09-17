@@ -91,51 +91,51 @@ flowchart TD
 
 Cada módulo opera de forma totalmente independente e pode ser clonado isoladamente sem qualquer dependência obrigatória ou aviso de erro:
 
-| Módulo      | Comando de Instalação Rápida (One-Liner)                                                                                                       | Destino Canônico                       |
-| :---------- | :--------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------- |
-| **Shell**   | `git clone "https://github.com/GabrielFrigo4/shell" "${HOME}/.shell" && sh "${HOME}/.shell/install.sh"`                                        | `~/.shell` ou `/usr/local/share/shell` |
-| **Profile** | `git clone "https://github.com/GabrielFrigo4/profile" "${HOME}/.config/profile" && sh "${HOME}/.config/profile/scripts/sync/sync-dotfiles.sh"` | `~/.config/profile`                    |
-| **Emacs**   | `git clone "https://github.com/GabrielFrigo4/emacs" "${HOME}/.emacs.d"`                                                                        | `~/.emacs.d`                           |
-| **NeoVim**  | `git clone "https://github.com/GabrielFrigo4/neovim" "${HOME}/.config/nvim"`                                                                   | `~/.config/nvim`                       |
-| **Helix**   | `git clone "https://github.com/GabrielFrigo4/helix" "${HOME}/.config/helix"`                                                                   | `~/.config/helix`                      |
-| **Vim**     | `git clone "https://github.com/GabrielFrigo4/vim" "${HOME}/vimfiles" && ln -sf "${HOME}/vimfiles/vimrc" "${HOME}/.vimrc"`                      | `~/vimfiles` e `~/.vimrc`              |
-| **Vault**   | `git clone "git@github.com:GabrielFrigo4/vault" "${HOME}/.vault" && chmod 0700 "${HOME}/.vault"`                                               | `~/.vault`                             |
+| Módulo      | Comando de Instalação Rápida (One-Liner)                                                                                               | Destino Canônico                                   |
+| :---------- | :------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------- |
+| **Shell**   | `git clone "https://github.com/GabrielFrigo4/shell" "${HOME}/.local/share/shell" && sh "${HOME}/.local/share/shell/install.sh --pure"` | `~/.local/share/shell` ou `/usr/local/share/shell` |
+| **Profile** | `git clone "https://github.com/GabrielFrigo4/profile" "${HOME}/.config/profile" && sh "${HOME}/.config/profile/profile.sh sync"`       | `~/.config/profile`                                |
+| **Emacs**   | `git clone "https://github.com/GabrielFrigo4/emacs" "${HOME}/.emacs.d"`                                                                | `~/.emacs.d`                                       |
+| **NeoVim**  | `git clone "https://github.com/GabrielFrigo4/neovim" "${HOME}/.config/nvim"`                                                           | `~/.config/nvim`                                   |
+| **Helix**   | `git clone "https://github.com/GabrielFrigo4/helix" "${HOME}/.config/helix"`                                                           | `~/.config/helix`                                  |
+| **Vim**     | `git clone "https://github.com/GabrielFrigo4/vim" "${HOME}/.vim" && ln -sf "${HOME}/.vim/vimrc" "${HOME}/.vimrc"`                      | `~/.vim` e `~/.vimrc` (ou `~/vimfiles` no Windows) |
+| **Vault**   | `git clone "git@github.com:GabrielFrigo4/vault" "${HOME}/.vault" && chmod 0700 "${HOME}/.vault"`                                       | `~/.vault`                                         |
 
-### 🏛️ Modo 2: Hub Central (Estação de Trabalho Completa)
+### 🏛️ Modo 2: Hub Central (Bancada de Desenvolvimento & Orquestração)
 
-Para gerenciar, auditar, aprimorar ou implantar todo o ecossistema a partir do repositório central:
+O repositório **Environment** (`~/Documents/Environment`) é estritamente uma **bancada de desenvolvimento e orquestração**. Absolutamente **nada** em seu diretório deve ser consumido diretamente pelo SO hospedeiro como runtime. Para gerenciar, auditar ou provisionar os runtimes soberanos em seus caminhos canônicos a partir do hub:
 
 ```sh
-git clone --recurse-submodules "https://github.com/GabrielFrigo4/environment"
-cd environment
-make clone
-make bootstrap
+git clone --recurse-submodules "https://github.com/GabrielFrigo4/environment" "${HOME}/Documents/Environment"
+cd "${HOME}/Documents/Environment"
+make clone      # Inicializa submódulos de desenvolvimento e clona o Vault
+make install    # Clona e provisiona os runtimes soberanos nos caminhos canônicos do SO
 ```
 
 ---
 
 ## ⚙️ Comandos do Makefile
 
-| Comando          | Ação                                                                   |
-| :--------------- | :--------------------------------------------------------------------- |
-| `make clone`     | Inicializa submódulos públicos e clona o Vault (defensivo)             |
-| `make bootstrap` | Clona e provisiona cada repositório soberano em seu caminho canônico   |
-| `make deploy`    | Alias para `make bootstrap` (conveniência e compatibilidade)           |
-| `make pull`      | Atualiza submódulos e sincroniza todos os repos com o upstream         |
-| `make sync`      | Sincroniza dotfiles declarativos e skills no clone soberano do Profile |
-| `make sync-docs` | Propaga ENVIRONMENT.md e PRINCIPLES.md para todos os submódulos        |
-| `make uped`      | Atualiza individualmente os 4 repositórios da Suíte de Editores        |
-| `make upgit`     | Atualiza recursivamente todos os repositórios Git encontrados          |
-| `make strip`     | Purga metadados (`.git*`, `*.md`) para modo Zero-Bloat                 |
-| `make status`    | Exibe status Git resumido de todo o ecossistema (Core + Editores)      |
-| `make hooks`     | Configura `.githooks` executáveis em todos os repositórios             |
-| `make audit`     | Executa suítes de auditoria estática e conformidade em todos os repos  |
-| `make test`      | Valida sintaxe POSIX, Zsh e headless em todos os scripts e editores    |
-| `make bench`     | Mede latência de inicialização de shells e módulos (&lt; 64ms)         |
-| `make doctor`    | Executa diagnóstico de integridade e sanity check pós-boot             |
-| `make format`    | Formata todos os arquivos Markdown com Prettier                        |
-| `make lint-md`   | Valida formatação de Markdown com Prettier sem alterar arquivos        |
-| `make ci`        | Executa pipeline completa de testes, auditoria e pre-commit            |
+| Comando          | Ação                                                                  |
+| :--------------- | :-------------------------------------------------------------------- |
+| `make clone`     | Inicializa submódulos de desenvolvimento e clona o Vault (defensivo)  |
+| `make install`   | Clona e provisiona cada repositório soberano em seu caminho canônico  |
+| `make bootstrap` | Alias para `make install` (conveniência e compatibilidade)            |
+| `make deploy`    | Alias para `make install` (conveniência e compatibilidade)            |
+| `make pull`      | Atualiza submódulos e sincroniza todos os repos com o upstream        |
+| `make sync-docs` | Propaga ENVIRONMENT.md e PRINCIPLES.md para todos os submódulos       |
+| `make uped`      | Atualiza individualmente os 4 repositórios da Suíte de Editores       |
+| `make upgit`     | Atualiza recursivamente todos os repositórios Git encontrados         |
+| `make strip`     | Purga metadados (`.git*`, `*.md`) para modo Zero-Bloat                |
+| `make status`    | Exibe status Git resumido de todo o ecossistema (Core + Editores)     |
+| `make hooks`     | Configura `.githooks` executáveis em todos os repositórios            |
+| `make audit`     | Executa suítes de auditoria estática e conformidade em todos os repos |
+| `make test`      | Valida sintaxe POSIX, Zsh e headless em todos os scripts e editores   |
+| `make bench`     | Mede latência de inicialização de shells e módulos (&lt; 64ms)        |
+| `make doctor`    | Executa diagnóstico de integridade e sanity check pós-boot            |
+| `make format`    | Formata todos os arquivos Markdown com Prettier                       |
+| `make lint-md`   | Valida formatação de Markdown com Prettier sem alterar arquivos       |
+| `make ci`        | Executa pipeline completa de testes, auditoria e pre-commit           |
 
 ---
 

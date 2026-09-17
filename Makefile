@@ -7,7 +7,7 @@ MAKEFLAGS += --no-print-directory -s
 # Makefile: Universal Environment
 # ----------------------------------------------------------------
 
-.PHONY: help status audit sync sync-docs pull test fix-banners ci doctor clone hooks format lint-md bench uped upgit strip deploy bootstrap
+.PHONY: help status audit sync-docs pull test fix-banners ci doctor clone hooks format lint-md bench uped upgit strip install deploy bootstrap
 
 REPOS     = Setup Shell Vault Profile
 EDITORS   = Editor/Emacs Editor/Helix Editor/NeoVim Editor/Vim
@@ -25,9 +25,7 @@ help:
 	sec "Sincronização & Soberania:"; \
 	cmd "clone"          "Inicializa submódulos públicos e clona o Vault defensivamente"; \
 	cmd "pull"           "Atualiza todos os submódulos e repositórios com o GitHub"; \
-	cmd "bootstrap"      "Executa o clone soberano de cada repo em seu destino nativo"; \
-	cmd "deploy"         "Alias para bootstrap de clones soberanos no sistema"; \
-	cmd "sync"           "Sincroniza dotfiles declarativos e skills no clone do Profile"; \
+	cmd "install"        "Clona e instala todos os repositórios em suas posições canônicas no SO"; \
 	cmd "sync-docs"      "Propaga ENVIRONMENT.md e PRINCIPLES.md para todos os repositórios"; \
 	cmd "uped"           "Atualiza os 4 repositórios da Suíte de Editores com o upstream"; \
 	cmd "upgit"          "Atualiza todos os repositórios Git encontrados recursivamente"; \
@@ -146,10 +144,6 @@ pull:
 		git -C "$${ZSH:-$$HOME/.oh-my-zsh}" pull --ff-only 2> "/dev/null" || true; \
 	fi
 
-sync:
-	echo "🎨 Sincronizando dotfiles declarativos e skills de IA..."
-	sh Profile/profile.sh sync
-
 sync-docs:
 	echo "📖 Sincronizando documentação canônica (ENVIRONMENT.md & PRINCIPLES.md)..."
 	for r in $(ALL_REPOS); do \
@@ -166,11 +160,12 @@ sync-docs:
 	fi
 	echo "🎉 Documentação canônica propagada para todos os repositórios!"
 
-bootstrap:
-	echo "🚀 Disparando provisionamento e clones soberanos do ecossistema..."
-	sh ./environment.sh clone
+install:
+	echo "🚀 Instalando ecossistema nas posições canônicas do sistema operacional..."
+	sh ./environment.sh install
 
-deploy: bootstrap
+bootstrap: install
+deploy: install
 
 
 strip:

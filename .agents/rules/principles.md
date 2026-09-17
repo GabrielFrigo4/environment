@@ -2,24 +2,27 @@
 
 Essas diretrizes são de aplicação obrigatória para qualquer modificação ou extensão neste repositório (`Environment`).
 
-## 1. Papel do Environment: Hub Orquestrador (Não-Monorepo)
+## 1. Papel do Environment: Hub Orquestrador e Bancada de Desenvolvimento
 
-- O Environment é um repositório de **orquestração e documentação**, não de código de produção.
-- Os 3 repos públicos (`Setup`, `Shell`, `Profile`) são **Git Submodules** — nunca edite código neles a partir do Environment sem entrar no diretório do sub-repo.
+- O Environment (`~/Documents/Environment`) é um repositório de **bancada de desenvolvimento, orquestração e documentação**, NÃO um ambiente de runtime de produção.
+- Absolutamente **NADA** residente no repositório do Environment deve ser usado ou apontado diretamente por symlinks no sistema hospedeiro.
+- Os 7 repositórios públicos (`Setup`, `Shell`, `Profile`, `Editor/Emacs`, `Editor/Helix`, `Editor/NeoVim`, `Editor/Vim`) são **Git Submodules** — opere neles individualmente ao desenvolver.
 - O `Vault` é um **clone privado** ignorado pelo `.gitignore` — NUNCA o adicione como submodule ou rastreie seu conteúdo.
+- Para implantar os componentes em seus caminhos canônicos no sistema operacional, utilize `make install` (que clona cada repositório de forma soberana).
 
 ## 2. Documentação Canônica
 
 - O `ENVIRONMENT.md` e `PRINCIPLES.md` **nesta raiz** são as versões autoritativas do ecossistema.
 - Os sub-repos contêm cópias sincronizadas que referenciam estas versões.
-- Ao atualizar princípios ou arquitetura, atualize primeiro aqui e propague para os sub-repos.
+- Ao atualizar princípios ou arquitetura, execute `make sync-docs` para propagar automaticamente para todos os submódulos.
 
 ## 3. Makefile como Orquestrador
 
-- Todas as operações globais (`make clone`, `make pull`, `make status`, `make audit`, `make ci`) são executadas via Makefile.
-- O `make clone` inicializa submódulos + clone defensivo do Vault via SSH.
+- Todas as operações globais (`make clone`, `make install`, `make pull`, `make status`, `make audit`, `make sync-docs`, `make ci`) são executadas via Makefile.
+- O `make clone` inicializa submódulos de desenvolvimento + clone defensivo do Vault via SSH.
+- O `make install` clona e provisiona os runtimes soberanos nos caminhos canônicos do sistema.
 - O `make pull` atualiza submódulos + pull de todos os repos.
-- Novos comandos globais devem ser adicionados ao Makefile mantendo o padrão existente.
+- `make sync` não pertence ao Makefile do Environment; a sincronização de dotfiles ocorre exclusivamente no clone de produção do Profile (`~/.config/profile/profile.sh sync`).
 
 ## 4. Modelo Híbrido de Submódulos
 

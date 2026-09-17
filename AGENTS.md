@@ -42,10 +42,9 @@ O **Environment** é o **orquestrador e ponto de entrada** do ecossistema. Ele *
 1. **Cada repo é independente:** Ao editar código de um sub-repo (Setup, Shell, Vault, Profile), você está operando dentro daquele repositório Git. Commits e branches são do sub-repo, não do Environment.
 2. **Documentação canônica aqui:** O `ENVIRONMENT.md` e `PRINCIPLES.md` **nesta raiz** são as versões autoritativas. Os sub-repos contêm cópias que referenciam estas.
 3. **Vault é privado:** NUNCA mencione conteúdos específicos do Vault em commits públicos do Environment.
-4. **Makefile é o orquestrador:** Operações globais (`make pull`, `make status`, `make audit`) devem ser executadas a partir da raiz do Environment.
+4. **Makefile é o orquestrador:** Operações globais (`make pull`, `make status`, `make audit`, `make install`) devem ser executadas a partir da raiz do Environment.
 5. **Hermetismo de Produção & Invariante `rm -rf .agents`:** O ecossistema é 100% soberano e independente de ferramentas de IA. É estritamente proibido criar dependências em código de produção (scripts executáveis, Makefiles, hooks, dotfiles, loaders, aliases) para arquivos em `.agents/` ou `skills/`. Se o diretório `.agents/` for sumariamente deletado (`rm -rf .agents`), 100% do repositório deve continuar funcionando com perfeição.
-
----
+6. **Bancada de Desenvolvimento vs. Runtimes de Produção:** O repositório **Environment** (`~/Documents/Environment`) é **exclusivamente uma bancada de desenvolvimento e orquestração**. Absolutamente **NADA** residente no diretório do Environment deve ser usado diretamente pelo sistema operacional hospedeiro. Em produção, cada ferramenta opera soberanamente em sua localização canônica (`Shell` em `/usr/local/share/shell` ou `~/.local/share/shell`, `Profile` em `~/.config/profile`, `Vault` em `~/.vault`, `Emacs` em `~/.emacs.d`, `NeoVim` em `~/.config/nvim`, etc.). É expressamente proibido criar symlinks de dotfiles ou configurações de shell que apontem para o clone do Environment. A instalação e provisionamento no SO devem ser executados via `make install` (que clona cada repositório em seu destino nativo).
 
 ---
 
@@ -61,7 +60,7 @@ Se durante a execução de qualquer tarefa (seja criação de novas features, co
     - **Banners Estruturais:** Ajustar réguas para exatamente 64 hífens no topo ou 32 caracteres com `### ` no corpo.
     - **Portabilidade POSIX:** Substituir bashismos (`[[ ]]`, `&>`, arrays, `source`) por sintaxe estrita POSIX `/bin/sh`.
     - **Shebang Universal:** Garantir sempre `#!/usr/bin/env sh` ou `#!/usr/bin/env python3`.
-    - **Sequências ANSI:** Substituir octais crípticos (``) e `printf` desnecessário por `[ -t 1 ] && echo -n $'\e...'`.
+    - **Sequências ANSI:** Substituir octais crípticos (` `) e `printf` desnecessário por `[ -t 1 ] && echo -n $'\e...'`.
     - **Redirecionamento Seguro:** Envolver destinos em aspas duplas (ex: `> "/dev/null" 2>&1`).
     - **Makefiles:** Assegurar cabeçalho `.POSIX: .SILENT:`, `MAKEFLAGS += --no-print-directory -s`, alinhamento estético de variáveis e zero `@` redundante.
     - **Permissões Canônicas:** Aplicar 4 dígitos octais (`chmod 0755`, `chmod 0644`, `chmod 0700`, `chmod 0600`).
@@ -71,6 +70,6 @@ Se durante a execução de qualquer tarefa (seja criação de novas features, co
 Antes de qualquer modificação neste ecossistema, consulte:
 
 - **[ENVIRONMENT.md](ENVIRONMENT.md)**: Arquitetura federada, matriz de responsabilidades e ciclo de boot
-- **[PRINCIPLES.md](PRINCIPLES.md)**: Os 18 Princípios de Engenharia UNIX + Clean Code
+- **[PRINCIPLES.md](PRINCIPLES.md)**: Os 21 Princípios de Engenharia UNIX + Clean Code
 - **[.agents/rules/principles.md](.agents/rules/principles.md)**: Regras específicas do Environment
 - **[.agents/skills/](.agents/skills/)**: Runbooks operacionais para o hub
