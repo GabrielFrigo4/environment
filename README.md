@@ -91,15 +91,15 @@ flowchart TD
 
 Cada módulo opera de forma totalmente independente e pode ser clonado isoladamente sem qualquer dependência obrigatória ou aviso de erro:
 
-| Módulo      | Comando de Instalação Rápida (One-Liner)                                                                                               | Destino Canônico                                   |
-| :---------- | :------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------- |
-| **Shell**   | `git clone "https://github.com/GabrielFrigo4/shell" "${HOME}/.local/share/shell" && sh "${HOME}/.local/share/shell/install.sh --pure"` | `~/.local/share/shell` ou `/usr/local/share/shell` |
-| **Profile** | `git clone "https://github.com/GabrielFrigo4/profile" "${HOME}/.config/profile" && sh "${HOME}/.config/profile/profile.sh sync"`       | `~/.config/profile`                                |
-| **Emacs**   | `git clone "https://github.com/GabrielFrigo4/emacs" "${HOME}/.emacs.d"`                                                                | `~/.emacs.d`                                       |
-| **NeoVim**  | `git clone "https://github.com/GabrielFrigo4/neovim" "${HOME}/.config/nvim"`                                                           | `~/.config/nvim`                                   |
-| **Helix**   | `git clone "https://github.com/GabrielFrigo4/helix" "${HOME}/.config/helix"`                                                           | `~/.config/helix`                                  |
-| **Vim**     | `git clone "https://github.com/GabrielFrigo4/vim" "${HOME}/.vim" && ln -sf "${HOME}/.vim/vimrc" "${HOME}/.vimrc"`                      | `~/.vim` e `~/.vimrc` (ou `~/vimfiles` no Windows) |
-| **Vault**   | `git clone "git@github.com:GabrielFrigo4/vault" "${HOME}/.vault" && chmod 0700 "${HOME}/.vault"`                                       | `~/.vault`                                         |
+| Módulo      | Comando de Instalação Rápida (One-Liner)                                                                                               | Destino Canônico                                                                    |
+| :---------- | :------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------- |
+| **Shell**   | `git clone "https://github.com/GabrielFrigo4/shell" "${HOME}/.local/share/shell" && sh "${HOME}/.local/share/shell/install.sh --pure"` | `~/.local/share/shell` (recomendado), `~/.config/shell` ou `/usr/local/share/shell` |
+| **Profile** | `git clone "https://github.com/GabrielFrigo4/profile" "${HOME}/.config/profile" && sh "${HOME}/.config/profile/profile.sh sync"`       | `~/.config/profile` (ou `~/.local/share/profile`)                                   |
+| **Emacs**   | `git clone "https://github.com/GabrielFrigo4/emacs" "${HOME}/.emacs.d"`                                                                | `~/.emacs.d`                                                                        |
+| **NeoVim**  | `git clone "https://github.com/GabrielFrigo4/neovim" "${HOME}/.config/nvim"`                                                           | `~/.config/nvim`                                                                    |
+| **Helix**   | `git clone "https://github.com/GabrielFrigo4/helix" "${HOME}/.config/helix"`                                                           | `~/.config/helix`                                                                   |
+| **Vim**     | `git clone "https://github.com/GabrielFrigo4/vim" "${HOME}/.vim" && ln -sf "${HOME}/.vim/vimrc" "${HOME}/.vimrc"`                      | `~/.vim` e `~/.vimrc` (ou `~/vimfiles` no Windows)                                  |
+| **Vault**   | `git clone "git@github.com:GabrielFrigo4/vault" "${HOME}/.local/share/vault" && chmod 0700 "${HOME}/.local/share/vault"`               | `~/.local/share/vault`, `~/.config/vault` ou `~/.vault`                             |
 
 ### 🏛️ Modo 2: Hub Central (Bancada de Desenvolvimento & Orquestração)
 
