@@ -47,7 +47,13 @@ Essas diretrizes são de aplicação obrigatória para qualquer modificação ou
 - Funções utilitárias e rotinas interativas no ecossistema devem sempre delegar sub-rotinas para o shell atualmente em execução, seguindo a cascata de preferência: `command -v "$(_detect_shell)" || command -v zsh || command -v bash || command -v sh`.
 - Isso previne falhas no `dash` (Debian/Ubuntu) e assegura que os nomes canônicos em `kebab-case` (`reinstall-shell`, `update-editors`, etc.) rodem no shell compatível (`zsh`, `bash` ou FreeBSD `/bin/sh` como fallback).
 
-## 8. Checklist de Validação
+## 8. Antifragilidade & Resiliência Ativa
+
+- Nenhum script, loader ou utilitário deve depender de caminhos rígidos (`~/.vault`) ou variáveis não validadas (`[ -f "$VAR" ]`).
+- Adotar ativamente a cascata de descoberta: Variável Explícita $\rightarrow$ Diretório do Componente $\rightarrow$ XDG Data (`~/.local/share`) $\rightarrow$ XDG Config (`~/.config`) $\rightarrow$ Home direta (`~/.`) $\rightarrow$ Global FHS (`/usr/local/share`).
+- Auto-curar permissões em tempo de voo (`chmod 0600` em chaves e segredos) e reparar a sessão ativa (`export`).
+
+## 9. Checklist de Validação
 
 Antes de concluir qualquer modificação no Environment:
 
