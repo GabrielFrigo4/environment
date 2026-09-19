@@ -194,7 +194,10 @@ strip:
 format:
 	echo "🎨 Formatando arquivos Markdown com Prettier..."
 	if command -v prettier > "/dev/null" 2>&1; then \
-		find . -name "*.md" -not -path "*/.git/*" -not -path "*/var/*" -exec prettier --write {} +; \
+		find . -name "*.md" -not -path "*/.git/*" -not -path "*/var/*" -not -path "./Vault/*" -exec prettier --write {} +; \
+		if [ -d "Vault" ]; then \
+			(cd Vault && find . -name "*.md" -not -path "*/.git/*" -exec prettier --write {} + 2> "/dev/null" || true); \
+		fi; \
 		echo "✅ Todos os arquivos Markdown foram formatados!"; \
 	else \
 		echo "⚠️ Prettier não encontrado no PATH."; \
@@ -203,7 +206,10 @@ format:
 lint-md:
 	echo "🔍 Validando formatação de Markdown com Prettier..."
 	if command -v prettier > "/dev/null" 2>&1; then \
-		find . -name "*.md" -not -path "*/.git/*" -not -path "*/var/*" -exec prettier --check {} +; \
+		find . -name "*.md" -not -path "*/.git/*" -not -path "*/var/*" -not -path "./Vault/*" -exec prettier --check {} +; \
+		if [ -d "Vault" ]; then \
+			(cd Vault && find . -name "*.md" -not -path "*/.git/*" -exec prettier --check {} + 2> "/dev/null" || true); \
+		fi; \
 		echo "✅ Formatação de Markdown 100% em conformidade!"; \
 	else \
 		echo "ℹ️ Prettier não instalado; pulando validação de Markdown."; \

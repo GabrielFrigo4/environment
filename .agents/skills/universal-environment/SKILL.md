@@ -79,7 +79,37 @@ Ao atualizar `ENVIRONMENT.md` ou `PRINCIPLES.md` no Environment:
 
 ---
 
-## 5. Checklist de Validação
+## 5. Governança de Roadmap & Os 4 Grandes Épicos (Opção C)
+
+O ecossistema adota a estratégia híbrida de governança:
+
+- **`README.md`:** Badges vetoriais `[![Roadmap](https://img.shields.io/badge/🗺️_Roadmap-TODO.md-teal)](TODO.md)` e links elegantes de status macro.
+- **`TODO.md`:** Matriz detalhada de status/cobertura de componentes e backlog estruturado de tarefas atômicas.
+
+### Os 4 Grandes Épicos Estratégicos:
+
+1. **🏛️ Refatoração do Setup:** Desconstrução de rusticidade, modularização em receitas idempotentes, conformidade POSIX `/bin/sh` sem bashismos e UI semântica `_ui_*`.
+2. **📝 Arquitetura Modular do GNU Emacs:** Detecção dinâmica sensorial de display (Wayland/PGTK, X11, DirectWrite), Tree-sitter ABI ≥ 14, compilação nativa AOT/JIT (`libgccjit`) e tipografia adaptativa.
+3. **🎨 Lapidação do Universal Profile:** Padronização dos terminais Windows (PowerShell, NuShell, CMD/Clink) com `_ui_*` e família `up*`, resiliência de symlinks e governança XDG.
+4. **🛡️ Invariante de Clonagem "Out-of-the-Box":** O ecossistema deve ser 100% executável logo após o `git clone`. Modos octais canônicos no Git Index (`0755`/`0644`/`0700`/`0600`), zero intervenção manual pós-clone e auto-cura em tempo de execução.
+
+---
+
+## 6. Padronização Semântica de UI (`_ui_*`)
+
+Qualquer rotina interativa ou de status no Shell (UNIX) ou nos perfis de terminal do Profile (Windows: PowerShell, NuShell, CMD/Clink) deve usar a biblioteca semântica:
+
+- `_ui_step`: `==> <msg>` (Ciano) - Início de etapa primária.
+- `_ui_sub`: `  ↳ <msg>` (Azul) - Subtarefa ou item inspecionado.
+- `_ui_ok`: `  ✅ <msg>` (Verde) - Conclusão com sucesso.
+- `_ui_warn`: `  ⚠️  <msg>` (Amarelo) - Alerta preventivo.
+- `_ui_err`: `  ❌ <msg>` (Vermelho em `stderr`) - Erro crítico.
+- `_ui_info`: `  ℹ️  <msg>` (Magenta) - Informação contextual.
+- `_ui_banner`: Régua de 64 `=` em Ciano.
+
+---
+
+## 7. Checklist de Validação
 
 ```sh
 git diff --check
@@ -88,5 +118,11 @@ git status
 
 make status
 
+make test
+
 make audit
+
+make lint-md
+
+make ci
 ```
