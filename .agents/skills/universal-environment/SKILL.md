@@ -79,19 +79,22 @@ Ao atualizar `ENVIRONMENT.md` ou `PRINCIPLES.md` no Environment:
 
 ---
 
-## 5. Governança de Roadmap & Os 4 Grandes Épicos (Opção C)
+## 5. Governança de Roadmap & Ciclo de Evolução (Opção C)
 
-O ecossistema adota a estratégia híbrida de governança:
+O ecossistema adota uma separação rigorosa entre documentação institucional, especificações de engenharia e estado dinâmico:
 
-- **`README.md`:** Badges vetoriais `[![Roadmap](https://img.shields.io/badge/🗺️_Roadmap-TODO.md-teal)](TODO.md)` e links elegantes de status macro.
-- **`TODO.md`:** Matriz detalhada de status/cobertura de componentes e backlog estruturado de tarefas atômicas.
+- **`README.md` (Vitrine & Entrada):** Portal de boas-vindas, arquitetura de alto nível, plataformas suportadas e badge `[![Roadmap](https://img.shields.io/badge/🗺️_Roadmap-TODO.md-teal)](TODO.md)` direcionando para o status detalhado.
+- **`TODO.md` (Estado Dinâmico & Backlog):** Única fonte dinâmica da verdade para a matriz de maturidade/cobertura operacional e para os épicos e tarefas em andamento.
+- **Skills & `AGENTS.md` (Invariantes de Engenharia):** Diretrizes cognitivas perenes, contratos arquiteturais e runbooks operacionais. Não devem conter listas voláteis de tarefas de sprint.
 
-### Os 4 Grandes Épicos Estratégicos:
+### Os 4 Vetores Invariantes de Qualidade & Arquitetura:
 
-1. **🏛️ Refatoração do Setup:** Desconstrução de rusticidade, modularização em receitas idempotentes, conformidade POSIX `/bin/sh` sem bashismos e UI semântica `_ui_*`.
-2. **📝 Arquitetura Modular do GNU Emacs:** Detecção dinâmica sensorial de display (Wayland/PGTK, X11, DirectWrite), Tree-sitter ABI ≥ 14, compilação nativa AOT/JIT (`libgccjit`) e tipografia adaptativa.
-3. **🎨 Lapidação do Universal Profile:** Padronização dos terminais Windows (PowerShell, NuShell, CMD/Clink) com `_ui_*` e família `up*`, resiliência de symlinks e governança XDG.
-4. **🛡️ Invariante de Clonagem "Out-of-the-Box":** O ecossistema deve ser 100% executável logo após o `git clone`. Modos octais canônicos no Git Index (`0755`/`0644`/`0700`/`0600`), zero intervenção manual pós-clone e auto-cura em tempo de execução.
+Ao auditar ou conceber novas evoluções no ecossistema (seja ao refinar o `TODO.md` ou durante a codificação), o agente deve assegurar aderência a quatro vetores perpétuos:
+
+1. **Modularização Atômica & Idempotência (Infraestrutura):** Todo script ou receita de provisionamento (`Setup`) deve ser estritamente atômico, isolado por ferramenta ou serviço, reexecutável sem efeitos colaterais e escrito em POSIX `/bin/sh` estrito.
+2. **Detecção Sensorial Dinâmica de Display & Runtime (Editores):** As ferramentas e editores (`Emacs`, `Helix`, `NeoVim`, `Vim`) devem descobrir ativamente as capacidades do host (Wayland, X11, DirectWrite, compilação nativa, aceleradores de renderização) em tempo de voo, garantindo degradação graciosa e inicialização limpa.
+3. **Paridade Multiplataforma & Governança Declarativa (Dotfiles & Terminais):** As configurações de usuário (`Profile`) mantêm paridade funcional, ergonômica e visual entre ambientes UNIX (Linux, BSDs, macOS) e Windows (PowerShell, NuShell, CMD/Clink), padronizando comandos de atualização e emissão de terminal (`_ui_*`).
+4. **Invariante de Clonagem "Out-of-the-Box" (Zero-Tweaks Git Invariant):** Zero intervenção manual pós-clone (`chmod`, criação de diretórios órfãos, ajustes manuais de PATH). Modos octais canônicos mantidos no Git Index e rotinas defensivas de auto-cura para assegurar operabilidade imediata sob qualquer filesystem.
 
 ---
 
