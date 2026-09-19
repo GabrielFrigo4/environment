@@ -48,6 +48,13 @@
 - [ ] **Self-Healing em tempo de execução:** Scripts devem auto-detectar e auto-corrigir permissões se clonados em sistemas de arquivos incompatíveis (ex: NTFS / FAT32 / WSL mounts).
 - [ ] **Quality Gates nos Hooks:** Validar via pre-commit local para impedir commits com modos de arquivo incorretos.
 
+### 5. 🧠 Estudo, Lapidação e Otimização do Ecossistema de AI Skills
+
+- [ ] **Compreensão holística do ecossistema:** Estudar na totalidade a arquitetura de Portable AI Skills, precedência de resolução Unix (Local > Global > Built-in) e dinâmica da janela de contexto.
+- [ ] **Auditoria e refinamento do catálogo:** Avaliar e polir as habilidades do `Profile/skills/`, elevando a densidade informacional, eliminando redundâncias e assegurando o orçamento canônico ($\le 256$ linhas).
+- [ ] **Alavancagem prática do ambiente:** Mapear e aplicar os runbooks cognitivos diretamente na operação, automação e elevação do fluxo diário em Linux, FreeBSD e Windows.
+- [ ] **Perenidade e antifragilidade:** Consolidar todas as skills como modelos mentais atemporais e estruturais, expurgando débitos efêmeros e fortalecendo a auto-cura contínua do ecossistema.
+
 ---
 
 > [!TIP]
