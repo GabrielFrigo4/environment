@@ -1,21 +1,28 @@
 [submodule "Setup"]
 	path = Setup
 	url = https://github.com/GabrielFrigo4/setup.git
+	branch = main
 [submodule "Shell"]
 	path = Shell
 	url = https://github.com/GabrielFrigo4/shell.git
+	branch = main
 [submodule "Profile"]
 	path = Profile
 	url = https://github.com/GabrielFrigo4/profile.git
+	branch = main
 [submodule "Editor/Emacs"]
 	path = Editor/Emacs
 	url = https://github.com/GabrielFrigo4/emacs.git
+	branch = main
 [submodule "Editor/Helix"]
 	path = Editor/Helix
 	url = https://github.com/GabrielFrigo4/helix.git
+	branch = main
 [submodule "Editor/NeoVim"]
 	path = Editor/NeoVim
 	url = https://github.com/GabrielFrigo4/neovim.git
+	branch = main
 [submodule "Editor/Vim"]
 	path = Editor/Vim
 	url = https://github.com/GabrielFrigo4/vim.git
+	branch = main
