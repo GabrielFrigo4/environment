@@ -20,6 +20,14 @@
 
 ## 🎯 Grandes Épicos do Ecossistema
 
+### 0. Melhorar o Benchmark
+
+Simplesmente o bechmark do Shell passa bonito, mas por algum motivo
+cd no zsh é mais lerdo que o do bash, tipo MUITO mais lerdo
+E o zsh buga as vezes o * do bit banch... Tipo...
+Ta estranho e quero investigar melhor isso
+E isso começou a acontecer em umas mudanças recentes do Shell que eu estava fazendo... Chuto que tem haver com os temas mas nn posso garantir nada
+
 ### 1. 🎨 Universal Profile: Lapidação e Organização
 
 > ⚡ **Execução:** Permitido com **Gemini Flash 3.x**
