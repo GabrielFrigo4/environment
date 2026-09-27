@@ -20,13 +20,14 @@
 
 ## 🎯 Grandes Épicos do Ecossistema
 
-### 0. Melhorar o Benchmark
+### 0. ⚡ Otimização do Shell & Expansão do Benchmark
 
-Simplesmente o bechmark do Shell passa bonito, mas por algum motivo
-cd no zsh é mais lerdo que o do bash, tipo MUITO mais lerdo
-E o zsh buga as vezes o * do bit banch... Tipo...
-Ta estranho e quero investigar melhor isso
-E isso começou a acontecer em umas mudanças recentes do Shell que eu estava fazendo... Chuto que tem haver com os temas mas nn posso garantir nada
+> ⚡ **Execução:** Concluído com **Gemini Flash 3.x**
+
+- [x] **Otimização do `cd` no Zsh:** Desacoplamento do hook síncrono do `zoxide` em `chpwd_functions` para `--hook prompt` com guarda de `$PWD`, restaurando a performance nativa de builtin (~0.008ms/cd).
+- [x] **Correção do indicador `*` (Git Dirty):** Normalização de caminhos relativos em arquivos `.git` de submódulos (`../../.git/...`) para caminhos absolutos e validação de `HEAD` antes de `git diff-index`, prevenindo falsos positivos em repositórios vazios (`git init`).
+- [x] **Harmonização visual dos temas PTY:** Unificação da cor amarela (`${_theme_color_yellow}*`) para o indicador de status sujo em `multi.sh`, `pill.sh` e `micro.sh`.
+- [x] **Expansão do `benchmark.sh`:** Inclusão de testes automatizados para Latência de Navegação Interativa (`cd`) e Latência de Renderização de Prompt (`_update_prompt`), eliminando pontos cegos na suíte de performance.
 
 ### 1. 🎨 Universal Profile: Lapidação e Organização
 
