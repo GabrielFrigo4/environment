@@ -25,7 +25,7 @@
 > ⚡ **Execução:** Concluído com **Gemini Flash 3.x**
 
 - [x] **Otimização do `cd` no Zsh:** Desacoplamento do hook síncrono do `zoxide` em `chpwd_functions` para `--hook prompt` com guarda de `$PWD`, restaurando a performance nativa de builtin (~0.008ms/cd).
-- [x] **Correção do indicador `*` (Git Dirty):** Normalização de caminhos relativos em arquivos `.git` de submódulos (`../../.git/...`) para caminhos absolutos e validação de `HEAD` antes de `git diff-index`, prevenindo falsos positivos em repositórios vazios (`git init`).
+- [x] **Correção do indicador `*` (Git Dirty):** Normalização de caminhos relativos em arquivos `.git` de submódulos (`../../.git/...`) para caminhos absolutos e eliminação definitiva de falsos positivos de stat-cache (`mtime`/`ctime` via `diff-index`) migrando para `git status --porcelain=v1 -uno` com `GIT_OPTIONAL_LOCKS=0`, imune a toques de filesystem e repositórios vazios.
 - [x] **Harmonização visual dos temas PTY:** Unificação da cor amarela (`${_theme_color_yellow}*`) para o indicador de status sujo em `multi.sh`, `pill.sh` e `micro.sh`.
 - [x] **Expansão do `benchmark.sh`:** Inclusão de testes automatizados para Latência de Navegação Interativa (`cd`) e Latência de Renderização de Prompt (`_update_prompt`), eliminando pontos cegos na suíte de performance.
 
