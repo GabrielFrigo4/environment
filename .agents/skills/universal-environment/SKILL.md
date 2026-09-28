@@ -9,7 +9,7 @@ description: >-
 
 # Universal Environment — Hub Orchestration Runbook
 
-Este guia detalha o fluxo operacional para gerenciar, estender e auditar o repositório **Universal Environment** (hub orquestrador), garantindo aderência rigorosa aos 21 Princípios de Engenharia e coordenação entre os 4 componentes do Quarteto e a Suíte de Editores.
+Este guia detalha o fluxo operacional para gerenciar, estender e auditar o repositório **Universal Environment** (hub orquestrador), garantindo aderência rigorosa aos 22 Princípios de Engenharia UNIX + Clean Code e coordenação entre os 4 componentes do Quarteto e a Suíte de Editores.
 
 ---
 
@@ -116,16 +116,10 @@ Qualquer rotina interativa ou de status no Shell (UNIX) ou nos perfis de termina
 
 ```sh
 git diff --check
-
 git status
-
 make status
-
 make test
-
 make audit
-
 make lint-md
-
 make ci
 ```

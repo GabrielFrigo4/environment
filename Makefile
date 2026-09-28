@@ -17,10 +17,11 @@ ALL_REPOS = $(REPOS) $(EDITORS)
 ### HELP & DOCUMENTATION
 ### ================================
 help:
-	cmd() { printf "    \033[36mmake %-22s\033[0m %s\n" "$$1" "$$2"; }; \
-	sec() { printf "\n  \033[1;33m%s\033[0m\n" "$$1"; }; \
-	sub() { printf "  \033[1;34m  ── %s ──\033[0m\n" "$$1"; }; \
-	printf "\n  \033[1;37mUniversal Environment — Orquestrador Global do Ecossistema\033[0m\n"; \
+	c_c=$$'\e[36m'; c_y=$$'\e[1;33m'; c_b=$$'\e[1;34m'; c_w=$$'\e[1;37m'; c_0=$$'\e[0m'; \
+	cmd() { printf "    %smake %-22s%s %s\n" "$${c_c}" "$$1" "$${c_0}" "$$2"; }; \
+	sec() { printf "\n  %s%s%s\n" "$${c_y}" "$$1" "$${c_0}"; }; \
+	sub() { printf "  %s  ── %s ──%s\n" "$${c_b}" "$$1" "$${c_0}"; }; \
+	printf "\n  %sUniversal Environment — Orquestrador Global do Ecossistema%s\n" "$${c_w}" "$${c_0}"; \
 	printf "  ============================================================\n"; \
 	sec "Sincronização & Soberania:"; \
 	cmd "clone"          "Inicializa submódulos públicos e clona o Vault defensivamente"; \

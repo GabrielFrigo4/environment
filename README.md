@@ -28,7 +28,7 @@
 [![Contributing](https://img.shields.io/badge/🤝_Contributing-CONTRIBUTING.md-orange)](CONTRIBUTING.md)
 
 > 📖 **Arquitetura Unificada do Ecossistema:** Conheça a matriz completa de responsabilidades, ciclo de boot e segregação de privilégios em [ENVIRONMENT.md](ENVIRONMENT.md).
-> 📜 **Princípios de Engenharia:** Conheça os 18 princípios UNIX e boas práticas Clean Code em [PRINCIPLES.md](PRINCIPLES.md).
+> 📜 **Princípios de Engenharia:** Conheça os 22 princípios de engenharia UNIX + Clean Code em [PRINCIPLES.md](PRINCIPLES.md).
 > 🗺️ **Roadmap & Status do Ecossistema:** Acompanhe o planejamento estratégico e a matriz de status em [TODO.md](TODO.md).
 > 🤝 **Guia de Contribuição & Bancada:** Instruções de setup, ganchos Git e quality gates em [CONTRIBUTING.md](CONTRIBUTING.md).
 
@@ -175,7 +175,7 @@ Environment/
 ├── environment.sh  ← Interface CLI e orquestrador mestre do ecossistema
 ├── Makefile        ← Orquestrador global de automação
 ├── ENVIRONMENT.md  ← Manifesto canônico de arquitetura
-├── PRINCIPLES.md   ← 19 Princípios de Engenharia
+├── PRINCIPLES.md   ← 22 Princípios de Engenharia
 ├── AGENTS.md       ← Briefing para agentes de IA
 └── .agents/        ← Skills e regras operacionais para IAs
 ```
@@ -185,6 +185,6 @@ Environment/
 ## 🔗 Documentação Canônica
 
 - 🏛️ **[ENVIRONMENT.md](ENVIRONMENT.md)**: Arquitetura federada, matriz de responsabilidades e ciclo de boot.
-- 📜 **[PRINCIPLES.md](PRINCIPLES.md)**: Os 19 Princípios de Engenharia e Clean Code do ecossistema.
+- 📜 **[PRINCIPLES.md](PRINCIPLES.md)**: Os 22 Princípios de Engenharia e Clean Code do ecossistema.
 - 🤝 **[CONTRIBUTING.md](CONTRIBUTING.md)**: Guia de contribuição, configuração de ganchos Git e quality gates.
 - 🤖 **[AGENTS.md](AGENTS.md)**: Guia de contexto para agentes de IA (Antigravity, Claude, GPT).

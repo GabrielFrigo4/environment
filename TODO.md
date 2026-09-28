@@ -56,6 +56,9 @@
 - [x] **Auditoria e refinamento do catálogo:** Avaliar e polir as habilidades do `Profile/skills/`, elevando a densidade informacional, eliminando redundâncias e assegurando o orçamento canônico ($\le 256$ linhas).
 - [x] **Alavancagem prática do ambiente:** Mapear e aplicar os runbooks cognitivos diretamente na operação, automação e elevação do fluxo diário em Linux, FreeBSD e Windows.
 - [x] **Perenidade e antifragilidade:** Consolidar todas as skills como modelos mentais atemporais e estruturais, expurgando débitos efêmeros e fortalecendo a auto-cura contínua do ecossistema.
+- [x] **Auditor automatizado contínuo (`skills.py`):** Implementação do 7º quality gate estático em `Profile/audit/skills.py` integrado ao `all.py` e pre-commit (orçamento 17-128-256, YAML frontmatter e integridade).
+- [x] **Elevação de `skill-authoring-standards`:** Consolidação das regras canônicas de trigger engineering, escopo atômico e orçamento unificado de linhas para skills e `AGENTS.md`.
+- [x] **Alinhamento constitucional (`AGENTS.md` e 22 Princípios):** Auditoria e harmonização de 100% dos `AGENTS.md`, `.agents/rules/` e documentações canônicas nos 8 repositórios do ecossistema sob o orçamento de $\le 128$ linhas e os 22 Princípios de Engenharia.
 
 ### 4. 🪟 Paridade e Resiliência no Windows: Profile, Shell e Vault
 
