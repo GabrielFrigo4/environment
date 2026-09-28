@@ -12,7 +12,7 @@
 | **Shell**                | Motor de terminal & prompts |      🟢 100%      | Latência < 16ms, 4 shells em 7 SOs, TUI `_ui_*` unificada   |
 | **Setup**                | Provisionador de sistema    | 🟡 Em Refatoração | Funcional, mas rústico; necessita de modularização profunda |
 | **Vault**                | Cofre privado de segredos   |    🟢 Estável     | Chaves SSH, arquivos .env e resolução resiliente            |
-| **Profile**              | Dotfiles & skills de IA     | 🟡 Em Refinamento | Terminais Windows padronizados; polimento geral de dotfiles |
+| **Profile**              | Dotfiles & skills de IA     |    🟢 Estável     | Paridade multiplataforma, auto-cura de links e 28 skills    |
 | **Emacs**                | Editor Elisp extensível     |  🟡 Em Evolução   | Modularização e auto-detecção de hardware/runtime           |
 | **Helix / NeoVim / Vim** | Suíte de Editores modais    |    🟢 Estável     | Runtimes soberanos e fallbacks sem dependências externas    |
 
@@ -31,12 +31,12 @@
 
 ### 1. 🎨 Universal Profile: Lapidação e Organização
 
-> ⚡ **Execução:** Permitido com **Gemini Flash 3.x**
+> ⚡ **Execução:** Concluído com **Gemini Flash 3.x**
 
-- [ ] **Curadoria e expurgo:** Eliminar dotfiles redundantes, configurações obsoletas e alinhar convenções de nomes.
-- [ ] **Governança XDG e FHS:** Auditar todos os destinos de symlinks em Linux, FreeBSD, macOS e Windows.
-- [ ] **Auto-cura de links e permissões:** Reforçar validação defensiva em `profile.sh` e `install.ps1`.
-- [ ] **Catálogo de AI skills:** Manter sincronização e documentação canônica das habilidades portáteis de IA.
+- [x] **Curadoria e expurgo:** Eliminar dotfiles redundantes (expurgo de `nushell.nu`), configurações obsoletas e alinhar convenções de nomes (alinhamento de `tools/`, VSCodium e Mermaid CLI).
+- [x] **Governança XDG e FHS:** Auditar todos os destinos de symlinks em Linux, FreeBSD, macOS e Windows com resolução defensiva (`$XDG_CONFIG_HOME`, `$XDG_DATA_HOME`).
+- [x] **Auto-cura de links e permissões:** Reforçar validação defensiva em `profile.sh` e `install.ps1` com biblioteca semântica `_ui_*`, idempotência ativa e cascata resiliente de links.
+- [x] **Catálogo de AI skills:** Manter sincronização e documentação canônica das 28 habilidades portáteis de IA em Unix e Windows.
 
 ### 2. 🛡️ Invariante de Clonagem "Out-of-the-Box" (Zero-Tweaks Git Invariant)
 
