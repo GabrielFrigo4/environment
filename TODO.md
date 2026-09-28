@@ -36,7 +36,7 @@
 
 - [x] **Curadoria e expurgo:** Eliminar dotfiles redundantes (expurgo de `nushell.nu`), configurações obsoletas e alinhar convenções de nomes (alinhamento de `tools/`, VSCodium e Mermaid CLI).
 - [x] **Governança XDG e FHS:** Auditar todos os destinos de symlinks em Linux, FreeBSD, macOS e Windows com resolução defensiva (`$XDG_CONFIG_HOME`, `$XDG_DATA_HOME`).
-- [x] **Auto-cura de links e permissões:** Reforçar validação defensiva em `profile.sh` e `install.ps1` com biblioteca semântica `_ui_*`, idempotência ativa e cascata resiliente de links.
+- [x] **Auto-cura de links e permissões:** Reforçar validação defensiva em `profile.sh` com biblioteca semântica `_ui_*`, idempotência ativa, detecção de divergência e cascata resiliente de links.
 - [x] **Catálogo de AI skills:** Manter sincronização e documentação canônica das 28 habilidades portáteis de IA em Unix e Windows.
 
 ### 2. 🛡️ Invariante de Clonagem "Out-of-the-Box" (Zero-Tweaks Git Invariant)
@@ -57,17 +57,17 @@
 - [x] **Alavancagem prática do ambiente:** Mapear e aplicar os runbooks cognitivos diretamente na operação, automação e elevação do fluxo diário em Linux, FreeBSD e Windows.
 - [x] **Perenidade e antifragilidade:** Consolidar todas as skills como modelos mentais atemporais e estruturais, expurgando débitos efêmeros e fortalecendo a auto-cura contínua do ecossistema.
 - [x] **Auditor automatizado contínuo (`skills.py`):** Implementação do 7º quality gate estático em `Profile/audit/skills.py` integrado ao `all.py` e pre-commit (orçamento 17-128-256, YAML frontmatter e integridade).
-- [x] **Elevação de `skill-authoring-standards`:** Consolidação das regras canônicas de trigger engineering, escopo atômico e orçamento unificado de linhas para skills e `AGENTS.md`.
+- [x] **Elevação de `agentic-governance-standards`:** Consolidação das regras canônicas de governança agentic (Constituição `AGENTS.md`, Cláusulas Pétreas `.agents/rules/` e Arquitetura em 2 Tiers Lean vs Extended).
 - [x] **Alinhamento constitucional (`AGENTS.md` e 22 Princípios):** Auditoria e harmonização de 100% dos `AGENTS.md`, `.agents/rules/` e documentações canônicas nos 8 repositórios do ecossistema sob o orçamento de $\le 128$ linhas e os 22 Princípios de Engenharia.
 
 ### 4. 🪟 Paridade e Resiliência no Windows: Profile, Shell e Vault
 
-> ⚡ **Execução:** Permitido com **Gemini Flash 3.x**
+> ⚡ **Execução:** Concluído com **Gemini Flash 3.x**
 
-- [ ] **Universalização do `vault-perms`:** Estender a validação e endurecimento de permissões do Vault (atualmente restrito a MSYS2 e PowerShell) para suportar nativamente o **Nushell** e o **CMD com Clink**.
-- [ ] **Estratégia de deploy de dotfiles (Symlinks vs. Cópia):** Preservar symlinks estritos no Unix e MSYS2; no Windows nativo, desenhar arquitetura de instalação resiliente (avaliar trade-offs de symlinks via _Developer Mode_ vs. fallback gracioso para cópia/sincronização direta sem exigência de elevação UAC).
-- [ ] **Reconciliação e sincronismo de dotfiles:** Caso adotada a estratégia de cópia no Windows, criar rotina idempotente de sincronização para propagar alterações locais de volta ao repositório sem atrito.
-- [ ] **Harmonização de runtime nos shells Windows:** Padronizar inicialização, aliases e chamadas TUI (`_ui_*`) entre PowerShell, Nushell, CMD/Clink e MSYS2, eliminando divergências de comportamento e caminhos de execução.
+- [x] **Universalização do `vault-perms`:** Suporte multiplataforma e endurecimento de permissões do Vault com `_ui_*` nativo no **Bash/POSIX**, **PowerShell**, **Nushell**, **CMD com Clink** e **Lua**, aplicando `icacls` restritivo e registrando hooks locais.
+- [x] **Estratégia de deploy soberana (UNIX First / MSYS2 Soberano):** Consolidar o MSYS2 como Centro de Comando soberano no Windows (cidadão Classe 1.5). Unificação completa do motor de sincronização em `profile.sh` POSIX com suporte a NTFS symlinks nativos via `MSYS=winsymlinks:nativestrict` (quando Modo Desenvolvedor ativo) e fallback gracioso para cópia física com alertas semânticos (`_ui_warn`). Expurgado definitivamente o script duplicado `install.ps1` (Clean-Break).
+- [x] **Reconciliação e sincronismo bidirecional de dotfiles:** Implementadas opções `--status` (`-s`) para auditar drift/divergências e `--pull` para propagar alterações locais feitas no Windows de volta ao repositório Git de forma idempotente e segura.
+- [x] **Harmonização de runtime nos shells Windows:** Padronização completa da família `up*`, `sync-profile`, `vault-perms` e biblioteca semântica `_ui_*` entre **PowerShell**, **Nushell**, **CMD/Clink** e **MSYS2**, atuando como consumidores rápidos (Classe 2) que delegam a manutenção estrutural ao motor unificado POSIX.
 
 ### 5. 🏛️ Refatoração e Elevação do Setup
 
