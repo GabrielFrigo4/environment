@@ -25,10 +25,12 @@
 ![Windows](<https://img.shields.io/badge/Windows_(Native_/_MSYS2)-Supported-purple?logo=gitforwindows&logoColor=white>)
 ![macOS](https://img.shields.io/badge/macOS-Supported-black?logo=apple&logoColor=white)
 [![Roadmap](https://img.shields.io/badge/🗺️_Roadmap-TODO.md-teal)](TODO.md)
+[![Contributing](https://img.shields.io/badge/🤝_Contributing-CONTRIBUTING.md-orange)](CONTRIBUTING.md)
 
 > 📖 **Arquitetura Unificada do Ecossistema:** Conheça a matriz completa de responsabilidades, ciclo de boot e segregação de privilégios em [ENVIRONMENT.md](ENVIRONMENT.md).
 > 📜 **Princípios de Engenharia:** Conheça os 18 princípios UNIX e boas práticas Clean Code em [PRINCIPLES.md](PRINCIPLES.md).
 > 🗺️ **Roadmap & Status do Ecossistema:** Acompanhe o planejamento estratégico e a matriz de status em [TODO.md](TODO.md).
+> 🤝 **Guia de Contribuição & Bancada:** Instruções de setup, ganchos Git e quality gates em [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
@@ -123,8 +125,10 @@ Para inicializar a bancada e em seguida provisionar todos os runtimes soberanos 
 ```sh
 git clone --recurse-submodules "https://github.com/GabrielFrigo4/environment" "${HOME}/Documents/Environment"
 cd "${HOME}/Documents/Environment"
-make clone
-make install
+make clone    # Inicializa submódulos e configura ganchos Git (make hooks)
+make test     # Valida sintaxe POSIX e testes de todos os módulos
+make ci       # Executa pipeline completa de testes locais
+make install  # Provisiona todos os repositórios em seus caminhos canônicos no SO
 ```
 
 ---
@@ -182,4 +186,5 @@ Environment/
 
 - 🏛️ **[ENVIRONMENT.md](ENVIRONMENT.md)**: Arquitetura federada, matriz de responsabilidades e ciclo de boot.
 - 📜 **[PRINCIPLES.md](PRINCIPLES.md)**: Os 19 Princípios de Engenharia e Clean Code do ecossistema.
+- 🤝 **[CONTRIBUTING.md](CONTRIBUTING.md)**: Guia de contribuição, configuração de ganchos Git e quality gates.
 - 🤖 **[AGENTS.md](AGENTS.md)**: Guia de contexto para agentes de IA (Antigravity, Claude, GPT).

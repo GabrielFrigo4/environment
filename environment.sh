@@ -6,6 +6,17 @@ set -eu
 
 _ENV_ROOT="$(cd "$(dirname "$0")" && pwd)"
 
+_self_heal_perms() {
+	if [ -d "${_ENV_ROOT}/.git" ] && command -v git > "/dev/null" 2>&1; then
+		git -C "${_ENV_ROOT}" config core.hooksPath .githooks 2> "/dev/null" || true
+	fi
+	if [ -d "${_ENV_ROOT}/.githooks" ]; then
+		chmod 0755 "${_ENV_ROOT}/.githooks/"* 2> "/dev/null" || true
+	fi
+	[ -f "${_ENV_ROOT}/environment.sh" ] && chmod 0755 "${_ENV_ROOT}/environment.sh" 2> "/dev/null" || true
+}
+_self_heal_perms
+
 _env_help() {
 	cat <<- EOF
 		Universal Environment — Orquestrador Global do Ecossistema
@@ -151,6 +162,7 @@ _env_install_sovereign() {
 	_shell_target="/usr/local/share/shell"
 	if [ ! -d "${_shell_target}/.git" ]; then
 		if [ -w "/usr/local/share" ] || [ "$(id -u)" -eq 0 ]; then
+			mkdir -p "/usr/local/share" 2> "/dev/null" || true
 			echo "📦 Clonando Universal Shell em ${_shell_target}..."
 			git clone "https://github.com/GabrielFrigo4/shell.git" "${_shell_target}"
 		else
@@ -198,6 +210,7 @@ _env_install_sovereign() {
 			vim)   _dest="${HOME}/.vim";          _url="https://github.com/GabrielFrigo4/vim.git" ;;
 		esac
 		if [ ! -d "${_dest}/.git" ]; then
+			mkdir -p "$(dirname "${_dest}")"
 			echo "📝 Clonando ${_repo_name} em ${_dest}..."
 			git clone "${_url}" "${_dest}" || true
 		else

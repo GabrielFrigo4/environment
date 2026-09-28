@@ -50,6 +50,7 @@ O **Environment** é o **orquestrador e ponto de entrada** do ecossistema. Ele *
 9. **Governança de Roadmap & Status (Opção C):** Todo repositório do ecossistema mantém seu [TODO.md](TODO.md) canônico com a Matriz Detalhada de Status & Cobertura e o Backlog de Grandes Épicos, referenciado pelo badge `[![Roadmap](https://img.shields.io/badge/🗺️_Roadmap-TODO.md-teal)](TODO.md)` no `README.md`.
 10. **A Regra Áurea da Fonte Canônica para Edição (Bancada vs. Clones de Runtime):** Toda e qualquer alteração de engenharia em qualquer componente do ecossistema (`Setup`, `Shell`, `Profile`, `Vault`, `Emacs`, `Helix`, `NeoVim`, `Vim`) DEVE ser realizada prioritariamente na bancada de desenvolvimento do **Environment** (geralmente em `~/Documents/Environment` ou `~/Documentos/Environment`).
     **Condição Estrita para Editar em Clones de Runtime:** Apenas se o repositório canônico no Environment **NÃO existir** E o agente **NÃO estiver nele** (ambas as condições estritamente negadas simultaneamente) é que se admite editar diretamente nos clones de runtime (`~/.local/share/profile`, `~/.emacs.d`, `~/.config/nvim`, etc.). Isso previne sujar árvores de trabalho de runtime (`unstaged changes`), preserva o fluxo de atualização automática (`uped`, `uprc`, `git pull --ff-only`) e garante que os commits sejam integrados na fonte da verdade.
+11. **Refatoração Sem Legado / Soberania Monousuário (Clean-Break / Zero-Cruft Invariant):** O ecossistema é estritamente pessoal, governado e operado por um único desenvolvedor soberano (Gabriel Frigo). É terminantemente proibido manter "sujeira" de retrocompatibilidade, shims temporários, wrappers obsoletos, seções de compatibilidade legada ou aliases de transição ao renomear variáveis, comandos, funções, diretórios ou arquivos, salvo se expressamente ordenado pelo usuário. Toda refatoração deve ser atômica, direta, definitiva e limpa (_clean break_), expurgando o identificador antigo integralmente da base de código.
 
 ---
 
@@ -73,6 +74,7 @@ Se durante a execução de qualquer tarefa (seja criação de novas features, co
     - **Emissão Semântica de UI:** Substituir imediatamente `echo` avulsos com emojis ou texto ad-hoc pelas rotinas canônicas `_ui_*`.
     - **Antifragilidade & Resiliência:** Garantir resolução ativa de caminhos em cascata, auto-cura de permissões (0600 em chaves/segredos) e zero suposições cegas de arquivos estáticos.
     - **Curadoria Cognitiva:** Capturar decisões estruturais e regras tácitas em skills locais compactas (`.agents/skills/`), mantendo-as atualizadas e expurgando runbooks obsoletos para evitar débito cognitivo, preservando sempre o hermetismo de produção (`rm -rf .agents`).
+    - **Refatoração Sem Legado:** Expurgar sumariamente aliases obsoletos, variáveis mortas e shims de compatibilidade deixados para trás em renomeações passadas, mantendo o código puro e direto.
 
 ## 📖 Referências Obrigatórias
 

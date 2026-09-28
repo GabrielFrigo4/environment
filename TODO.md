@@ -40,12 +40,12 @@
 
 ### 2. 🛡️ Invariante de Clonagem "Out-of-the-Box" (Zero-Tweaks Git Invariant)
 
-> ⚡ **Execução:** Permitido com **Gemini Flash 3.x**
+> ⚡ **Execução:** Concluído com **Gemini Flash 3.x**
 
-- [ ] **Executabilidade imediata:** Garantir que após um simples `git clone`, 100% do repositório funcione sem comandos manuais (nem `chmod`, nem criação de diretórios órfãos).
-- [ ] **Permissões canônicas no Git Index:** Garantir modos octais canônicos no controle de versão (`0755` para scripts/hooks executáveis, `0644` para configurações e documentação).
-- [ ] **Self-Healing em tempo de execução:** Scripts devem auto-detectar e auto-corrigir permissões se clonados em sistemas de arquivos incompatíveis (ex: NTFS / FAT32 / WSL mounts).
-- [ ] **Quality Gates nos Hooks:** Validar via pre-commit local para impedir commits com modos de arquivo incorretos.
+- [x] **Executabilidade imediata:** Garantir que após um simples `git clone`, 100% do repositório funcione sem comandos manuais (nem `chmod`, nem criação de diretórios órfãos), com documentação canônica de onboarding (`CONTRIBUTING.md`) e guias nos READMEs.
+- [x] **Permissões canônicas no Git Index:** Garantir modos octais canônicos no controle de versão (`0755` para scripts/hooks executáveis, `0644` para configurações e documentação) em todos os 9 repositórios do ecossistema.
+- [x] **Self-Healing em tempo de execução:** Scripts de entrypoint e Makefiles auto-detectam e auto-corrigem permissões (`_self_heal_perms` e `make hooks`) se clonados em sistemas de arquivos incompatíveis (NTFS / FAT32 / WSL).
+- [x] **Quality Gates nos Hooks:** Validar via pre-commit local em todos os repositórios para impedir commits com modos de arquivo incorretos, complementado por auditorias Python (`syntax.py`) e CI/CD.
 
 ### 3. 🧠 Estudo, Lapidação e Otimização do Ecossistema de AI Skills
 

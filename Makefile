@@ -61,6 +61,7 @@ clone:
 		echo "  ⚠️  Vault: clone via SSH falhou (configure sua chave SSH para clonar Vault)."; \
 	fi
 	echo ""
+	$(MAKE) hooks
 	echo "🎉 Ecossistema pronto!"
 
 ### ================================
