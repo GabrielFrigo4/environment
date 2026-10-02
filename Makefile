@@ -47,37 +47,32 @@ help:
 	echo ""
 
 ### ================================
-### BOOTSTRAP & SUBMODULES
+### REPOSITORIES ORCHESTRATION
 ### ================================
+PRIVATE_REPOS := \
+	"Vault:GabrielFrigo4/vault"
+
 clone:
 	echo "📦 Inicializando submódulos públicos (Core + Editores)..."
 	git submodule update --init --recursive
-	echo "✅ Submódulos públicos inicializados!"
-	echo ""
-	echo "🔐 Tentando clonar o Vault (repositório privado via SSH)..."
-	if [ -e "Vault/.git" ]; then \
-		echo "  ℹ️  Vault já clonado."; \
-	elif git clone "git@github.com:GabrielFrigo4/vault.git" Vault 2> "/dev/null"; then \
-		echo "  ✅ Vault clonado com sucesso!"; \
-	else \
-		echo "  ⚠️  Vault: clone via SSH falhou (configure sua chave SSH para clonar Vault)."; \
-	fi
+	echo "✅ Submódulos públicos inicializados!\n"
+	echo "🔐 Verificando repositórios privados..."
+	for entry in $(PRIVATE_REPOS); do \
+		dir=$${entry%%:*}; \
+		repo=$${entry##*:}; \
+		if [ -e "$$dir/.git" ]; then \
+			echo "  ℹ️  $$dir já clonado."; \
+		elif git clone "git@github.com:$$repo.git" "$$dir" 2>/dev/null; then \
+			echo "  ✅ $$dir clonado com sucesso via SSH!"; \
+		elif gh repo clone "$$repo" "$$dir" 2>/dev/null; then \
+			echo "  ✅ $$dir clonado com sucesso via gh CLI!"; \
+		else \
+			echo "  ⚠️  $$dir: clone falhou (verifique SSH ou login no gh)."; \
+		fi; \
+	done
 	echo ""
 	$(MAKE) hooks
 	echo "🎉 Ecossistema pronto!"
-
-### ================================
-### GIT HOOKS & STATUS
-### ================================
-hooks:
-	echo "🪝 Configurando ganchos Git (.githooks) em todos os repositórios..."
-	chmod 0755 .githooks/* Template/.githooks/* Setup/.githooks/* Profile/.githooks/* Shell/.githooks/* Editor/*/.githooks/* 2> "/dev/null" || true
-	chmod 0700 Vault/.githooks/* 2> "/dev/null" || true
-	git config core.hooksPath .githooks 2> "/dev/null" || true
-	echo "  ✅ Environment: core.hooksPath -> .githooks"
-	for r in $(ALL_REPOS); do \
-		[ -e "$$r/.git" ] && git -C $$r config core.hooksPath .githooks && echo "  ✅ $$r: core.hooksPath -> .githooks"; \
-	done
 
 status:
 	echo "=== 🏛️ O Quarteto de Infraestrutura ==="
@@ -101,6 +96,37 @@ status:
 			echo "[não clonado] $$ed"; \
 			echo ""; \
 		fi; \
+	done
+
+pull:
+	echo "⬇️  Atualizando submódulos públicos..."
+	git submodule update --remote --merge
+	for r in $(ALL_REPOS); do \
+		if [ -e "$$r/.git" ]; then \
+			echo "⬇️  Pulling $$r..."; \
+			git -C $$r pull --ff-only || echo "⚠️  $$r: pull falhou."; \
+		fi; \
+	done
+	if [ -d "$${OSH:-$$HOME/.oh-my-bash}" ]; then \
+		echo "⬇️  Pulling Oh-My-Bash..."; \
+		git -C "$${OSH:-$$HOME/.oh-my-bash}" pull --ff-only 2> "/dev/null" || true; \
+	fi
+	if [ -d "$${ZSH:-$$HOME/.oh-my-zsh}" ]; then \
+		echo "⬇️  Pulling Oh-My-Zsh..."; \
+		git -C "$${ZSH:-$$HOME/.oh-my-zsh}" pull --ff-only 2> "/dev/null" || true; \
+	fi
+
+### ================================
+### GIT HOOKS & STATUS
+### ================================
+hooks:
+	echo "🪝 Configurando ganchos Git (.githooks) em todos os repositórios..."
+	chmod 0755 .githooks/* Template/.githooks/* Setup/.githooks/* Profile/.githooks/* Shell/.githooks/* Editor/*/.githooks/* 2> "/dev/null" || true
+	chmod 0700 Vault/.githooks/* 2> "/dev/null" || true
+	git config core.hooksPath .githooks 2> "/dev/null" || true
+	echo "  ✅ Environment: core.hooksPath -> .githooks"
+	for r in $(ALL_REPOS); do \
+		[ -e "$$r/.git" ] && git -C $$r config core.hooksPath .githooks && echo "  ✅ $$r: core.hooksPath -> .githooks"; \
 	done
 
 ### ================================
@@ -129,24 +155,6 @@ upgit:
 		echo ""; \
 	done
 	echo "✅ Repositórios Git atualizados!"
-
-pull:
-	echo "⬇️  Atualizando submódulos públicos..."
-	git submodule update --remote --merge
-	for r in $(ALL_REPOS); do \
-		if [ -e "$$r/.git" ]; then \
-			echo "⬇️  Pulling $$r..."; \
-			git -C $$r pull --ff-only || echo "⚠️  $$r: pull falhou."; \
-		fi; \
-	done
-	if [ -d "$${OSH:-$$HOME/.oh-my-bash}" ]; then \
-		echo "⬇️  Pulling Oh-My-Bash..."; \
-		git -C "$${OSH:-$$HOME/.oh-my-bash}" pull --ff-only 2> "/dev/null" || true; \
-	fi
-	if [ -d "$${ZSH:-$$HOME/.oh-my-zsh}" ]; then \
-		echo "⬇️  Pulling Oh-My-Zsh..."; \
-		git -C "$${ZSH:-$$HOME/.oh-my-zsh}" pull --ff-only 2> "/dev/null" || true; \
-	fi
 
 sync-docs:
 	echo "📖 Sincronizando documentação canônica (ENVIRONMENT.md & PRINCIPLES.md)..."
