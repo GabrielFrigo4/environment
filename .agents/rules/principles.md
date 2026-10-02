@@ -9,6 +9,7 @@ Essas diretrizes são de aplicação obrigatória para qualquer modificação ou
 - Os 7 repositórios públicos (`Setup`, `Shell`, `Profile`, `Editor/Emacs`, `Editor/Helix`, `Editor/NeoVim`, `Editor/Vim`) são **Git Submodules** — opere neles individualmente ao desenvolver.
 - O `Vault` é um **clone privado** ignorado pelo `.gitignore` — NUNCA o adicione como submodule ou rastreie seu conteúdo.
 - Para implantar os componentes em seus caminhos canônicos no sistema operacional, utilize `make install` (que clona cada repositório de forma soberana).
+- **Ciclo Obrigatório de Propagação (Bancada -> Git Push -> Git Pull em Produção):** Toda edição ocorre estritamente na bancada de desenvolvimento (`Environment/<Componente>`), seguida de commit e push para o repositório remoto. Clones de produção (`/usr/local/share/shell`, `~/.local/share/profile`, `~/.emacs.d`, etc.) DEVEM ser atualizados unicamente via `git pull` (ou `upsh`/`uprc`/`uped`), sendo terminantemente proibido copiar arquivos via `cp` avulso de modo a deixar a árvore de produção suja (`unstaged/uncommitted changes`).
 
 ## 2. Documentação Canônica
 
