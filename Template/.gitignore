@@ -1,0 +1,53 @@
+# ----------------------------------------------------------------
+# Git Ignore: Sovereign Project Template
+# ----------------------------------------------------------------
+
+# Operating System Cruft
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor & IDE Artefacts
+*~
+*.swp
+*.swo
+*.kate-swp
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Build Outputs & Binary Directories
+bin/
+build/
+dist/
+out/
+target/
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+
+# Temporary Files, Logs & Caches
+*.log
+*.tmp
+*.bak
+.tmp/
+.cache/
+.coverage
+coverage/
+node_modules/
+__pycache__/
+*.pyc
+
+# Local Environment & Secrets
+.env
+.env.local
+*.key
+*.pem

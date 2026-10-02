@@ -1,0 +1,62 @@
+#!/usr/bin/env sh
+# ----------------------------------------------------------------
+# Hook: Git Pre-Commit Quality Gate & Sanity Guardian
+# ----------------------------------------------------------------
+
+set -e
+
+printf "🔍 [pre-commit] Executando verificações de qualidade...\n"
+
+# 1. Whitespace & EOF validation
+if ! git diff --check --cached; then
+	printf "❌ [pre-commit] Erros de whitespace ou fim de arquivo detectados.\n" >&2
+	exit 1
+fi
+
+# 2. Git Index file modes check (0755 vs 0644 validation)
+_bad_executables=$(git diff --cached --summary | grep 'create mode 100755' | grep -v -E '(\.sh$|/bin/|\.githooks/)' || true)
+if [ -n "${_bad_executables}" ]; then
+	printf "⚠️  [pre-commit] Arquivos executáveis inesperados staged (verifique filemodes):\n%s\n" "${_bad_executables}" >&2
+fi
+
+# 3. POSIX shell syntax validation for staged shell scripts
+_staged_sh=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.sh$' || true)
+if [ -n "${_staged_sh}" ]; then
+	for _f in ${_staged_sh}; do
+		if [ -f "${_f}" ]; then
+			sh -n "${_f}" || {
+				printf "❌ [pre-commit] Erro de sintaxe shell em: %s\n" "${_f}" >&2
+				exit 1
+			}
+		fi
+	done
+fi
+
+# 4. Prettier validation for staged Markdown and configuration files
+if command -v prettier > "/dev/null" 2>&1; then
+	_staged_docs=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(md|json|yml|yaml)$' || true)
+	if [ -n "${_staged_docs}" ]; then
+		prettier --check ${_staged_docs} > "/dev/null" 2>&1 || {
+			printf "❌ [pre-commit] Formatação fora dos padrões Prettier. Execute 'make format'.\n" >&2
+			exit 1
+		}
+	fi
+elif command -v npx > "/dev/null" 2>&1; then
+	_staged_docs=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(md|json|yml|yaml)$' || true)
+	if [ -n "${_staged_docs}" ]; then
+		npx prettier --check ${_staged_docs} > "/dev/null" 2>&1 || {
+			printf "❌ [pre-commit] Formatação fora dos padrões Prettier. Execute 'make format'.\n" >&2
+			exit 1
+		}
+	fi
+fi
+
+# 5. Banimento de escapes octais ANSI (\033) em scripts e Makefiles
+_bad_octal=$(git diff --cached -S'\033' --name-only 2>"/dev/null" | grep -E '(\.sh$|Makefile$|\.py$)' || true)
+if [ -n "${_bad_octal}" ]; then
+	printf "❌ [pre-commit] Escape octal (\\\\033) detectado em: %s. Use \$'\\\\e' ou \\\\x1b.\n" "${_bad_octal}" >&2
+	exit 1
+fi
+
+printf "✅ [pre-commit] Todas as verificações locais foram aprovadas!\n"
+exit 0

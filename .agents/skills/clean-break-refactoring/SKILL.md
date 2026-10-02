@@ -41,7 +41,7 @@ flowchart TD
 | :------------------------ | :------------------------------------------ | :---------------------------------------------------------------- |
 | **Público-Alvo**          | Terceiros desconhecidos                     | Único usuário (Gabriel Frigo)                                     |
 | **Custo do Shim**         | Justificável para evitar incidentes         | Inaceitável: polui o shell, duplica manutenção e gera ambiguidade |
-| **Aliases de Transição**  | Recomendados por N ciclos de release        | **Terminantemente proibidos**                                     |
+| **Aliases de Transição**  | Recomendados por N ciclos de release        | **Não admitidos (eliminação direta)**                             |
 | **Variáveis Antigas**     | Fallback mantido por compatibilidade        | **Expurgadas sumariamente**                                       |
 | **Comentários de Código** | "Deprecated: use Y instead"                 | **Proibidos**: nada de comentários tipo `(antigo X)`              |
 | **Ação do Agente**        | Criar compatibilidade retroativa preventiva | **Executar clean break imediato e definitivo**                    |

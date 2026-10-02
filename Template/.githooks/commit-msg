@@ -1,0 +1,43 @@
+#!/usr/bin/env sh
+# ----------------------------------------------------------------
+# Hook: Git Semantic Commit-Message Validator
+# ----------------------------------------------------------------
+
+set -e
+
+_msg_file="${1:-}"
+if [ -z "${_msg_file}" ] || [ ! -f "${_msg_file}" ]; then
+	exit 0
+fi
+
+_clean_msg=$(grep -v '^[[:space:]]*#' "${_msg_file}" | tr '\n' ' ' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+
+case "${_clean_msg}" in
+	Merge*|Revert*|fixup!*|squash!*)
+		exit 0
+		;;
+esac
+
+if [ -z "${_clean_msg}" ]; then
+	printf "❌ [commit-msg] A mensagem de commit não pode estar vazia!\n" >&2
+	exit 1
+fi
+
+_char_count=$(printf "%s" "${_clean_msg}" | wc -m)
+if [ "${_char_count}" -lt 8 ]; then
+	printf "❌ [commit-msg] Mensagem de commit muito curta (mínimo de 8 caracteres).\n" >&2
+	exit 1
+fi
+
+_pattern='^(add|update|fix|docs|feat|chore|refactor|style|ci|test)(\([a-zA-Z0-9_.-]+\))?:[[:space:]]+.+'
+if ! printf "%s" "${_clean_msg}" | grep -E -q "${_pattern}"; then
+	printf "❌ [commit-msg] Convenção de commit semântico violada!\n" >&2
+	printf "   Formatos aceitos:\n" >&2
+	printf "     <tipo>: <descrição>\n" >&2
+	printf "     <tipo>(<escopo>): <descrição>\n" >&2
+	printf "   Tipos permitidos: add, update, fix, docs, feat, chore, refactor, style, ci, test\n" >&2
+	printf "   Exemplo: 'add(auth): implement session validation'\n" >&2
+	exit 1
+fi
+
+exit 0

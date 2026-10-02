@@ -7,7 +7,7 @@ MAKEFLAGS += --no-print-directory -s
 # Makefile: Universal Environment
 # ----------------------------------------------------------------
 
-.PHONY: help status audit sync-docs pull update test fix-banners ci doctor clone hooks format lint-md bench uped upgit strip install deploy bootstrap
+.PHONY: help status audit sync-docs pull update test fix-banners ci doctor clone hooks format prettier lint-md bench uped upgit strip install deploy bootstrap
 
 REPOS     = Setup Shell Vault Profile
 EDITORS   = Editor/Emacs Editor/Helix Editor/NeoVim Editor/Vim
@@ -17,11 +17,11 @@ ALL_REPOS = $(REPOS) $(EDITORS)
 ### HELP & DOCUMENTATION
 ### ================================
 help:
-	c_c=$$'\e[36m'; c_y=$$'\e[1;33m'; c_b=$$'\e[1;34m'; c_w=$$'\e[1;37m'; c_0=$$'\e[0m'; \
-	cmd() { printf "    %smake %-22s%s %s\n" "$${c_c}" "$$1" "$${c_0}" "$$2"; }; \
-	sec() { printf "\n  %s%s%s\n" "$${c_y}" "$$1" "$${c_0}"; }; \
-	sub() { printf "  %s  ── %s ──%s\n" "$${c_b}" "$$1" "$${c_0}"; }; \
-	printf "\n  %sUniversal Environment — Orquestrador Global do Ecossistema%s\n" "$${c_w}" "$${c_0}"; \
+	_e=$$'\e'; \
+	cmd() { printf "    $${_e}[36mmake %-22s$${_e}[0m %s\n" "$$1" "$$2"; }; \
+	sec() { printf "\n  $${_e}[1;33m%s$${_e}[0m\n" "$$1"; }; \
+	sub() { printf "  $${_e}[1;34m  ── %s ──$${_e}[0m\n" "$$1"; }; \
+	printf "\n  $${_e}[1;37mUniversal Environment — Orquestrador Global do Ecossistema$${_e}[0m\n"; \
 	printf "  ============================================================\n"; \
 	sec "Sincronização & Soberania:"; \
 	cmd "clone"          "Inicializa submódulos públicos e clona o Vault defensivamente"; \
@@ -41,6 +41,7 @@ help:
 	cmd "test"           "Valida sintaxe Zsh, Bash e POSIX em todos os scripts do ecossistema"; \
 	cmd "audit"          "Executa suítes de auditoria estática e conformidade em todos os repos"; \
 	cmd "format"         "Formata todos os arquivos Markdown com Prettier"; \
+	cmd "prettier"       "Formata todos os arquivos Markdown com Prettier"; \
 	cmd "lint-md"        "Valida formatação de Markdown sem alterar arquivos"; \
 	cmd "ci"             "Executa pipeline completa de testes, auditoria e pre-commit"; \
 	echo ""
@@ -70,8 +71,8 @@ clone:
 ### ================================
 hooks:
 	echo "🪝 Configurando ganchos Git (.githooks) em todos os repositórios..."
-	chmod 0755 .githooks/pre-commit Setup/.githooks/pre-commit Profile/.githooks/pre-commit Shell/.githooks/pre-commit Editor/*/.githooks/pre-commit 2> "/dev/null" || true
-	chmod 0700 Vault/.githooks/pre-commit 2> "/dev/null" || true
+	chmod 0755 .githooks/* Template/.githooks/* Setup/.githooks/* Profile/.githooks/* Shell/.githooks/* Editor/*/.githooks/* 2> "/dev/null" || true
+	chmod 0700 Vault/.githooks/* 2> "/dev/null" || true
 	git config core.hooksPath .githooks 2> "/dev/null" || true
 	echo "  ✅ Environment: core.hooksPath -> .githooks"
 	for r in $(ALL_REPOS); do \
@@ -193,6 +194,8 @@ strip:
 ### ================================
 ### CODE QUALITY & AUDITING
 ### ================================
+prettier: format
+
 format:
 	echo "🎨 Formatando arquivos Markdown com Prettier..."
 	if command -v prettier > "/dev/null" 2>&1; then \

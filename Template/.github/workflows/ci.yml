@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+
+jobs:
+  validate:
+    name: Local Quality Gate & Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (for Prettier)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Validate Githooks Syntax
+        run: |
+          find .githooks -type f -exec sh -n {} +
+
+      - name: Check Whitespace & Formatting
+        run: |
+          npx prettier --check "**/*.{md,json,yml,yaml}"
+
+      - name: Run Makefile CI
+        run: |
+          make ci

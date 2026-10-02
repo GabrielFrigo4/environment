@@ -43,44 +43,42 @@ O **Environment** é o **orquestrador e ponto de entrada** do ecossistema. Ele *
 2. **Documentação canônica aqui:** O `ENVIRONMENT.md` e `PRINCIPLES.md` **nesta raiz** são as versões autoritativas. Os sub-repos contêm cópias que referenciam estas.
 3. **Vault é privado:** NUNCA mencione conteúdos específicos do Vault em commits públicos do Environment.
 4. **Makefile é o orquestrador:** Operações globais (`make pull`, `make status`, `make audit`, `make install`) devem ser executadas a partir da raiz do Environment.
-5. **Hermetismo de Produção & Invariante `rm -rf .agents`:** O ecossistema é 100% soberano e independente de ferramentas de IA. É estritamente proibido criar dependências em código de produção (scripts executáveis, Makefiles, hooks, dotfiles, loaders, aliases) para arquivos em `.agents/` ou `skills/`. Se o diretório `.agents/` for sumariamente deletado (`rm -rf .agents`), 100% do repositório deve continuar funcionando com perfeição.
-6. **Bancada de Desenvolvimento vs. Runtimes de Produção:** O repositório **Environment** (`~/Documents/Environment`) é **exclusivamente uma bancada de desenvolvimento e orquestração**. Absolutamente **NADA** residente no diretório do Environment deve ser usado diretamente pelo sistema operacional hospedeiro. Em produção, cada ferramenta opera soberanamente em sua localização canônica (`Shell` em `/usr/local/share/shell` ou `~/.local/share/shell`, `Profile` em `~/.config/profile`, `Vault` em `~/.local/share/vault` (ou `~/.vault`), `Emacs` em `~/.emacs.d`, `NeoVim` em `~/.config/nvim`, etc.). É expressamente proibido criar symlinks de dotfiles ou configurações de shell que apontem para o clone do Environment. A instalação e provisionamento no SO devem ser executados via `make install` (que clona cada repositório em seu destino nativo).
-7. **Invariante de Clonagem "Out-of-the-Box" (Zero-Tweaks Git Invariant):** O ecossistema deve funcionar 100% imediatamente após um simples `git clone`. É proibido que qualquer repositório necessite de comandos manuais pós-clone (como `chmod +x`, criação manual de diretórios órfãos ou edição de caminhos). Permissões canônicas octais DEVEM estar registradas no Git Index (`0755` para executáveis/scripts/hooks, `0644` para arquivos de configuração e documentação, `0700`/`0600` no Vault). Scripts devem implementar rotinas defensivas de self-healing para re-aplicar permissões se clonados sob sistemas de arquivos que não preservam bits POSIX (NTFS/FAT32/WSL).
-8. **Padrão Universal de Emissão de UI (`_ui_*`):** Toda saída interativa de status, progresso ou etapas no Shell (UNIX) e nos perfis de terminal do Profile (Windows: PowerShell, NuShell, CMD/Clink) DEVE utilizar a biblioteca semântica `_ui_*` (`_ui_step`, `_ui_sub`, `_ui_ok`, `_ui_warn`, `_ui_err`, `_ui_info`, `_ui_banner`). É expressamente proibido o uso de `echo` ad-hoc com emojis ou saídas soltas sem prefixo semântico padronizado.
-9. **Governança de Roadmap & Status (Opção C):** Todo repositório do ecossistema mantém seu [TODO.md](TODO.md) canônico com a Matriz Detalhada de Status & Cobertura e o Backlog de Grandes Épicos, referenciado pelo badge `[![Roadmap](https://img.shields.io/badge/🗺️_Roadmap-TODO.md-teal)](TODO.md)` no `README.md`.
-10. **A Regra Áurea da Fonte Canônica para Edição & Pipeline de Propagação (Bancada -> Git Push -> Git Pull em Produção):**
-    - **Edição Estrita na Bancada:** Toda e qualquer alteração de engenharia em qualquer componente do ecossistema (`Setup`, `Shell`, `Profile`, `Vault`, `Emacs`, `Helix`, `NeoVim`, `Vim`) DEVE ser realizada no clone de bancada do **Environment** (`~/Documents/Environment/<Componente>`).
-    - **O Ciclo Obrigatório de Propagação:** O fluxo canônico inegociável é:
-        1. Desenvolver, validar e testar na bancada (`Environment/<Componente>`).
-        2. Commitar e enviar via `git push` para o repositório remoto oficial.
-        3. No clone soberano de produção (`/usr/local/share/shell`, `~/.local/share/profile`, `~/.emacs.d`, etc.), propagar as mudanças EXCLUSIVAMENTE via `git pull` (ou comandos de atualização como `upsh`, `uprc`, `uped`, `make pull`).
-    - **Proibição de `cp` ou Árvores Sujas em Produção:** É terminantemente proibido copiar arquivos manualmente via `cp` da bancada para os clones de produção de forma a deixar árvores de trabalho de produção com alterações não rastreadas (`unstaged/uncommitted changes`). Os repositórios de produção DEVEM manter estado Git limpo (`clean working tree`), avançando exclusivamente via fast-forward pelo Git.
-    - **Condição Estrita para Editar em Clones de Runtime:** Apenas se o repositório canônico no Environment **NÃO existir** E o agente **NÃO estiver nele** (ambas as condições estritamente negadas simultaneamente) é que se admite editar diretamente nos clones de runtime (`~/.local/share/profile`, `~/.emacs.d`, `~/.config/nvim`, etc.).
-11. **Refatoração Sem Legado / Soberania Monousuário (Clean-Break / Zero-Cruft Invariant):** O ecossistema é estritamente pessoal, governado e operado por um único desenvolvedor soberano (Gabriel Frigo). É terminantemente proibido manter "sujeira" de retrocompatibilidade, shims temporários, wrappers obsoletos, seções de compatibilidade legada ou aliases de transição ao renomear variáveis, comandos, funções, diretórios ou arquivos, salvo se expressamente ordenado pelo usuário. Toda refatoração deve ser atômica, direta, definitiva e limpa (_clean break_), expurgando o identificador antigo integralmente da base de código.
+5. **Hermetismo de Produção & Invariante `rm -rf .agents`:** O ecossistema é 100% soberano e independente de ferramentas de IA. Código de produção (scripts, Makefiles, hooks, dotfiles, loaders) não deve depender de arquivos em `.agents/` ou `skills/`. Se o diretório `.agents/` for deletado (`rm -rf .agents`), o repositório continua operando com 100% de integridade.
+6. **Bancada de Desenvolvimento vs. Runtimes de Produção:** O repositório **Environment** (`~/Documents/Environment`) é **exclusivamente uma bancada de desenvolvimento e orquestração**. Nenhum artefato no diretório do Environment deve ser consumido diretamente pelo sistema operacional hospedeiro. Em produção, cada ferramenta opera soberanamente em sua localização canônica (`Shell` em `/usr/local/share/shell` ou `~/.local/share/shell`, `Profile` em `~/.config/profile`, `Vault` em `~/.local/share/vault`, `Emacs` em `~/.emacs.d`, `NeoVim` em `~/.config/nvim`, etc.). Não crie symlinks de dotfiles que apontem para o Environment. A instalação deve ser feita via `make install`.
+7. **Invariante de Clonagem "Out-of-the-Box" (Zero-Tweaks Git Invariant):** O ecossistema deve funcionar imediatamente após `git clone`, sem etapas manuais pós-clone (como `chmod +x` manual). Permissões octais canônicas devem estar registradas no Git Index (`0755` para executáveis/scripts/hooks, `0644` para arquivos de configuração e documentação, `0700`/`0600` no Vault). Scripts devem aplicar self-healing de permissões se clonados sob filesystems que não preservam bits POSIX.
+8. **Padrão Universal de Emissão de UI (`_ui_*`):** Saídas interativas de status ou etapas no Shell (UNIX) e perfis de terminal do Profile (Windows) devem utilizar a biblioteca semântica `_ui_*` (`_ui_step`, `_ui_sub`, `_ui_ok`, `_ui_warn`, `_ui_err`, `_ui_info`, `_ui_banner`). Não use `echo` ad-hoc com emojis sem formatação padronizada.
+9. **Governança de Roadmap & Status:** Cada repositório mantém seu [TODO.md](TODO.md) canônico com matriz de cobertura e backlog.
+10. **Matriz de Shells Suportada:** A automação e scripts visam a matriz: `zsh`, `bash`, FreeBSD `sh` e OpenBSD `ksh`. Interpretadores restritos de recuperação (Debian `dash`, NetBSD `sh`) estão fora de escopo.
+11. **Ciclo de Propagação (Bancada -> Git Push -> Git Pull em Produção):**
+    - Edição na bancada: alterações são implementadas e testadas sob `~/Documents/Environment/<Componente>`.
+    - Envio: commits e pushes ocorrem na bancada.
+    - Atualização em produção: os clones de produção recebem atualizações via `git pull`. Não utilize `cp` avulso que deixe working trees sujas em produção.
+    - Edição em runtime: somente é admitida se o componente não existir no Environment e você não estiver nele.
+12. **Refatoração Sem Legado (Clean-Break / Zero-Cruft Invariant):** O ecossistema é monousuário soberano. Não mantenha shims temporários, wrappers obsoletos ou aliases de transição ao renomear variáveis, comandos ou caminhos. Toda refatoração deve ser direta, atômica e limpa (_clean break_).
 
 ---
 
 ## 🛡️ Regra da Proatividade e Correção Contínua (Boy Scout Rule)
 
-O agente de IA **DEVE SER ATIVAMENTE PROATIVO** na manutenção e aplicação dos padrões canônicos deste repositório.
+O agente de IA atua de forma proativa na manutenção e aplicação dos padrões canônicos deste repositório.
 
-Se durante a execução de qualquer tarefa (seja criação de novas features, correções pontuais, refatorações ou investigação) o agente identificar qualquer linha de código, script, Makefile ou documentação fora dos padrões estabelecidos, **NÃO DEVE HESITAR NEM IGNORAR**:
+Ao identificar linhas ou artefatos fora dos padrões estabelecidos:
 
-1. **Notificar concisamente** o usuário sobre a divergência encontrada.
-2. **Corrigir imediatamente a inconformidade**, aplicando o padrão canônico correspondente:
-    - **Comentários Narrativos:** Eliminar imediatamente comentários óbvios que apenas narram código executável.
+1. **Notificar concisamente** o usuário sobre o ajuste realizado.
+2. **Corrigir a inconformidade**, aplicando o padrão correspondente:
+    - **Comentários Narrativos:** Eliminar comentários óbvios que apenas narram código executável.
     - **Banners Estruturais:** Ajustar réguas para exatamente 64 hífens no topo ou 32 caracteres com `### ` no corpo.
     - **Portabilidade POSIX:** Substituir bashismos (`[[ ]]`, `&>`, arrays, `source`) por sintaxe estrita POSIX `/bin/sh`.
     - **Shebang Universal:** Garantir sempre `#!/usr/bin/env sh` ou `#!/usr/bin/env python3`.
-    - **Sequências ANSI & Escapes:** Eliminar terminantemente octais (`\033`, `\001`) para caracteres ou bytes. Usar `[ -t 1 ] && echo -n $'\e...'` para sequências de escape, notação hexadecimal (`\x01`, `\x1b`) para bytes/controles e fugir de `printf` desnecessário. Notação octal é estritamente aceita apenas onde o sistema operacional a exige nativamente (permissões POSIX: `chmod 0755`, `chmod 0644`, `umask`).
+    - **Sequências ANSI & Escapes:** Não use octais (`\033`, `\001`) para caracteres ou escapes. Use `[ -t 1 ] && echo -n $'\e...'` ou notação hexadecimal (`\x01`, `\x1b`). Octal é exclusivo para permissões POSIX (`chmod 0755`, `chmod 0644`, `umask`).
     - **Redirecionamento Seguro:** Envolver destinos em aspas duplas (ex: `> "/dev/null" 2>&1`).
     - **Makefiles:** Assegurar cabeçalho `.POSIX: .SILENT:`, `MAKEFLAGS += --no-print-directory -s`, alinhamento estético de variáveis e zero `@` redundante.
     - **Permissões Canônicas:** Aplicar 4 dígitos octais (`chmod 0755`, `chmod 0644`, `chmod 0700`, `chmod 0600`).
     - **Invariante Out-of-the-Box:** Garantir modos octais corretos no Git Index e auto-cura em tempo de execução sem requerer intervenção manual pós-clone.
-    - **Emissão Semântica de UI:** Substituir imediatamente `echo` avulsos com emojis ou texto ad-hoc pelas rotinas canônicas `_ui_*`.
-    - **Antifragilidade & Resiliência:** Garantir resolução ativa de caminhos em cascata, auto-cura de permissões (0600 em chaves/segredos) e zero suposições cegas de arquivos estáticos.
-    - **Curadoria Cognitiva:** Capturar decisões estruturais e regras tácitas em skills locais compactas (`.agents/skills/`), mantendo-as atualizadas e expurgando runbooks obsoletos para evitar débito cognitivo, preservando sempre o hermetismo de produção (`rm -rf .agents`).
-    - **Refatoração Sem Legado:** Expurgar sumariamente aliases obsoletos, variáveis mortas e shims de compatibilidade deixados para trás em renomeações passadas, mantendo o código puro e direto.
+    - **Emissão Semântica de UI:** Substituir `echo` avulsos com emojis pelas rotinas canônicas `_ui_*`.
+    - **Antifragilidade & Resiliência:** Resolução ativa de caminhos em cascata, auto-cura de permissões (0600 em chaves/segredos) e validação defensiva de pré-requisitos.
+    - **Curadoria Cognitiva:** Capturar decisões estruturais e regras tácitas em skills locais compactas (`.agents/skills/`), mantendo-as atualizadas e expurgando ruído obsoleto.
+    - **Refatoração Sem Legado:** Expurgar aliases obsoletos, variáveis mortas e shims de compatibilidade em renomeações.
 
 ## 📖 Referências Obrigatórias
 

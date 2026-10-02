@@ -57,7 +57,7 @@
 - [x] **Alavancagem prática do ambiente:** Mapear e aplicar os runbooks cognitivos diretamente na operação, automação e elevação do fluxo diário em Linux, FreeBSD e Windows.
 - [x] **Perenidade e antifragilidade:** Consolidar todas as skills como modelos mentais atemporais e estruturais, expurgando débitos efêmeros e fortalecendo a auto-cura contínua do ecossistema.
 - [x] **Auditor automatizado contínuo (`skills.py`):** Implementação do 7º quality gate estático em `Profile/audit/skills.py` integrado ao `all.py` e pre-commit (orçamento 17-128-256, YAML frontmatter e integridade).
-- [x] **Elevação de `agentic-governance-standards`:** Consolidação das regras canônicas de governança agentic (Constituição `AGENTS.md`, Cláusulas Pétreas `.agents/rules/` e Arquitetura em 2 Tiers Lean vs Extended).
+- [x] **Elevação de `agentic-governance-standards`:** Consolidação das regras canônicas de governança agentic (Constituição `AGENTS.md`, Regras Canônicas `.agents/rules/` e Arquitetura em 2 Tiers Lean vs Extended).
 - [x] **Alinhamento constitucional (`AGENTS.md` e 22 Princípios):** Auditoria e harmonização de 100% dos `AGENTS.md`, `.agents/rules/` e documentações canônicas nos 8 repositórios do ecossistema sob o orçamento de $\le 128$ linhas e os 22 Princípios de Engenharia.
 
 ### 4. 🪟 Paridade e Resiliência no Windows: Profile, Shell e Vault
