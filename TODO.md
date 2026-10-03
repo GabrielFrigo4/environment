@@ -87,6 +87,13 @@
 - [ ] **Modularidade avançada:** Desacoplar `early-init.el` e organizar camadas Elisp autônomas com carregamento assíncrono via Elpaca.
 - [ ] **Robustez de inicialização:** Garantir testes de boot em modo batch e headless sem falhas silenciosas (< 1s).
 
+### 7. 🚀 Shells Alternativos: Modularização no Shell e Desacoplamento do Profile
+
+- [ ] **Migração de módulos para o Shell:** Mover dotfiles e runtimes de **PowerShell**, **Nushell**, **Fish** e **CMD/Clink** para dentro do repositório `Shell`.
+- [ ] **Deploy e bootstrapping via `install.sh`:** Incorporar rotinas de instalação e symlinks declarativos desses shells no motor do `Shell`.
+- [ ] **Expurgo no Profile (Clean-Break):** Remover `terminals/powershell`, `nushell` e `cmd` do `Profile`, restringindo-o a emuladores gráficos (Windows Terminal, Konsole).
+- [ ] **Harmonização com o Setup:** Garantir que o `Setup` apenas provisione os binários/pacotes, delegando dotfiles e runtimes 100% ao `Shell`.
+
 ---
 
 > [!TIP]
