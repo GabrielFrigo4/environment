@@ -7,7 +7,7 @@ MAKEFLAGS += --no-print-directory -s
 # Makefile: Universal Environment
 # ----------------------------------------------------------------
 
-.PHONY: help status audit sync-docs pull update test fix-banners ci doctor clone hooks format prettier lint-md bench uped upgit strip install deploy bootstrap
+.PHONY: help status audit sync-docs pull update test fix-banners ci doctor clone hooks format prettier lint-md bench uped upgit strip install deploy bootstrap main
 
 REPOS     = Setup Shell Vault Profile
 EDITORS   = Editor/Emacs Editor/Helix Editor/NeoVim Editor/Vim
@@ -25,6 +25,7 @@ help:
 	printf "  ============================================================\n"; \
 	sec "Sincronização & Soberania:"; \
 	cmd "clone"          "Inicializa submódulos públicos e clona o Vault defensivamente"; \
+	cmd "main"           "Alterna todos os submódulos e repositórios clonados para a branch main"; \
 	cmd "pull"           "Atualiza todos os submódulos e repositórios com o GitHub"; \
 	cmd "install"        "Clona e instala todos os repositórios em suas posições canônicas no SO"; \
 	cmd "update"         "Atualiza todas as instalações soberanas no SO (Shell, Profile, Vault, Editores)"; \
@@ -71,8 +72,21 @@ clone:
 		fi; \
 	done
 	echo ""
+	$(MAKE) main
 	$(MAKE) hooks
 	echo "🎉 Ecossistema pronto!"
+
+main:
+	echo "🌿 Alternando todos os repositórios clonados para a branch main..."
+	for r in $(ALL_REPOS); do \
+		if [ -e "$$r/.git" ]; then \
+			echo "  🌿 $$r -> main"; \
+			git -C "$$r" checkout main 2> "/dev/null" || git -C "$$r" switch main 2> "/dev/null" || echo "  ⚠️  $$r: falha ao alternar para main."; \
+		else \
+			echo "  ⏭️  $$r: não clonado, pulando."; \
+		fi; \
+	done
+	echo "✅ Repositórios ativos configurados na branch main!\n"
 
 status:
 	echo "=== 🏛️ O Quarteto de Infraestrutura ==="
@@ -98,7 +112,7 @@ status:
 		fi; \
 	done
 
-pull:
+pull: main
 	echo "⬇️  Atualizando submódulos públicos..."
 	git submodule update --remote --merge
 	for r in $(ALL_REPOS); do \
@@ -182,7 +196,6 @@ update:
 
 bootstrap: install
 deploy: install
-
 
 strip:
 	if [ -z "$${TARGET}" ]; then \
