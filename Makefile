@@ -243,9 +243,9 @@ lint-md:
 
 audit:
 	echo "🔍 [1/5] Auditando Setup..."
-	python3 Setup/scripts/audit/all.py
+	python3 Setup/.scripts/audit/all.py
 	echo "🔍 [2/5] Auditando Profile..."
-	python3 Profile/audit/all.py
+	python3 Profile/.scripts/audit/all.py
 	echo "🔍 [3/5] Validando sintaxe do Shell..."
 	find Shell -name "*.sh" -not -path "*/.git/*" -exec sh -n {} +
 	echo "🔍 [4/5] Validando sintaxe do Vault..."
@@ -268,15 +268,15 @@ test:
 
 fix-banners:
 	echo "📏 Normalizando réguas de banners em Setup e Profile..."
-	python3 Setup/scripts/audit/banners.py --fix
-	python3 Profile/audit/banners.py --fix
+	python3 Setup/.scripts/audit/banners.py --fix
+	python3 Profile/.scripts/audit/banners.py --fix
 	echo "✅ Réguas de banners normalizadas com sucesso!"
 
 bench:
 	sh Shell/benchmark.sh
 
 doctor:
-	sh Setup/scripts/audit/doctor.sh
+	sh Setup/.scripts/audit/doctor.sh
 
 ci: test audit lint-md
 	echo "⚡ Medindo benchmark de inicialização do Shell..."

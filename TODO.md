@@ -56,7 +56,7 @@
 - [x] **Auditoria e refinamento do catálogo:** Avaliar e polir as habilidades do `Profile/skills/`, elevando a densidade informacional, eliminando redundâncias e assegurando o orçamento canônico ($\le 256$ linhas).
 - [x] **Alavancagem prática do ambiente:** Mapear e aplicar os runbooks cognitivos diretamente na operação, automação e elevação do fluxo diário em Linux, FreeBSD e Windows.
 - [x] **Perenidade e antifragilidade:** Consolidar todas as skills como modelos mentais atemporais e estruturais, expurgando débitos efêmeros e fortalecendo a auto-cura contínua do ecossistema.
-- [x] **Auditor automatizado contínuo (`skills.py`):** Implementação do 7º quality gate estático em `Profile/audit/skills.py` integrado ao `all.py` e pre-commit (orçamento 17-128-256, YAML frontmatter e integridade).
+- [x] **Auditor automatizado contínuo (`skills.py`):** Implementação do 7º quality gate estático em `Profile/.scripts/audit/skills.py` integrado ao `all.py` e pre-commit (orçamento 17-128-256, YAML frontmatter e integridade).
 - [x] **Elevação de `agentic-governance-standards`:** Consolidação das regras canônicas de governança agentic (Constituição `AGENTS.md`, Regras Canônicas `.agents/rules/` e Arquitetura em 2 Tiers Lean vs Extended).
 - [x] **Alinhamento constitucional (`AGENTS.md` e 22 Princípios):** Auditoria e harmonização de 100% dos `AGENTS.md`, `.agents/rules/` e documentações canônicas nos 8 repositórios do ecossistema sob o orçamento de $\le 128$ linhas e os 22 Princípios de Engenharia.
 
@@ -69,7 +69,36 @@
 - [x] **Reconciliação e sincronismo bidirecional de dotfiles:** Implementadas opções `--status` (`-s`) para auditar drift/divergências e `--pull` para propagar alterações locais feitas no Windows de volta ao repositório Git de forma idempotente e segura.
 - [x] **Harmonização de runtime nos shells Windows:** Padronização completa da família `up*`, `sync-profile`, `vault-perms` e biblioteca semântica `_ui_*` entre **PowerShell**, **Nushell**, **CMD/Clink** e **MSYS2**, atuando como consumidores rápidos (Classe 3 / Bronze) que delegam a manutenção estrutural ao motor unificado POSIX da Classe 2 (Prata).
 
-### 5. 🏛️ Refatoração e Elevação do Setup
+### 5. Arrumar os <projetos>.sh
+
+> ⚡ **Execução:** Concluído com **Gemini Flash 3.x**
+
+- [ ] Fazer com que as interfaces <projetos>.sh fiquem limpas, crie a pasta <projetos> para modularisar os monolitos <projetos>.sh
+- [ ] Quando for executar essa tarefa avise do plano de "remoção das pastas scripts na raiz de qualquer projeto por principio e por limpesa"
+- [ ] Melhorar as skills sobre markdown, mermaid e svg.
+      Regras Mermaid e SVG, em versão genérica
+      Escolha e estrutura
+
+Diagrama declarativo primeiro. Texto que vira vetor vem antes de ilustração vetorial, que vem antes de ASCII. A ASCII é só para grades densas de bits ou para quando o alinhamento monoespaçado é insubstituível.
+A escolha de formato é por clareza e geometria. Nunca por tema.
+Proporção harmônica (~16:9, 4:3 ou 2:1). Evite cadeias com mais de 3–4 nós na horizontal ou 4–5 na vertical. Prefira fluxo vertical macro com subgrupos horizontais.
+Aresta nunca encosta no título de um grupo. Ligue contêiner a contêiner, ou modele os estágios como nós independentes.
+Setas e rótulos 5. Com legenda, operador de comprimento 3. Sem legenda, comprimento 2. O elo mais longo reserva espaço para a legenda. 6. Nada de HTML em rótulos. Quebra de linha e ênfase usam a sintaxe nativa de strings Markdown da ferramenta. 7. Sem Unicode decorativo (setas, símbolos matemáticos) em rótulos. Use a sintaxe de seta nativa. 8. Legendas de aresta ficam sobre fundo sólido e opaco, para a linha não atravessar o texto.
+
+Vetor e render 9. Rótulos como texto vetorial nativo (sem HTML embutido), com entidades sanitizadas. Assim o texto fica selecionável e nítido em qualquer renderizador. 10. Espaçamentos e margens internas calibrados para o papel. Padding de grupo maior que o padrão evita setas cortando bordas de clusters aninhados. Espaço entre nós e entre camadas deixa a legenda respirar. A margem do título do grupo vem calculada para ele não colidir com o primeiro filho. 11. Estilo em duas camadas. Variáveis de tema para o cálculo de geometria, e CSS com prioridade máxima para sobrepor o estilo injetado pela ferramenta. 12. Ilustrações geométricas são arquivos locais embutidos no documento final. O resultado fica portátil e sem dependência externa.
+
+Pós-processamento do SVG (antifrágil) 13. Extraia atributos pelo nome, nunca pela posição. O parsing não pode depender da ordem de serialização. 14. Falha graciosa. Se um atributo falta ou o formato muda, devolva o bloco original intacto. O pior caso é "sem ajuste fino", nunca "documento quebrado". 15. Ajustes finos ficam isolados e nomeados. Cada correção cobre um defeito específico: centralização ótica, deslocamento em cilindros, snap em bordas de cluster, padding de badge.
+
+Governança 16. Regra mecânica vira gate automático (pre-commit), não só documentação. 17. Ferramentas pesadas usam cache fora da árvore do repositório. 18. Diagrama com sintaxe duvidosa é validado em navegador headless antes do push.
+
+"""O bug ocorre porque, com `"htmlLabels": false`, o Mermaid processa strings delimitadas por crase (`["`...`"]`) através de um parser de Markdown, o qual interpreta qualquer linha iniciada por número seguido de ponto e espaço (`1. `, `2. `) como um **item de lista ordenada**. Como o gerador de SVG nativo do Mermaid suporta apenas estilos inline básicos e não implementa listas, ele descarta esses tokens silenciosamente e cospe uma tag `<text>` vazia no diagrama final.""" => Um bug que temos que salvar no skill e agents no Raw Text E fazer algo a respeito na skill global do markdown... Porque tem haver
+
+**Como evitar:**
+
+- **Escapar o ponto (recomendado):** Adicione uma barra invertida antes do ponto (ex: `["`1\. Input Assembler`"]`), forçando o parser a tratá-lo como texto comum.
+- **Mudar o separador numérico:** Substitua o padrão número + ponto por outro caractere (ex: `["`[1] Input Assembler`"]` ou `["`1 - Input Assembler`"]`).
+
+### 6. 🏛️ Refatoração e Elevação do Setup
 
 > 🔒 **Trava de Modelo:** Bloqueado — Executar exclusivamente com **Gemini Pro 4** (demanda raciocínio aprofundado para arquitetura de receitas modais, portabilidade POSIX estrita e testes de estresse multiplataforma).
 
@@ -78,7 +107,7 @@
 - [ ] **Paridade multiplataforma:** Garantir consistência entre distribuições Linux (Arch, Debian/Ubuntu, Fedora, Void, Alpine), FreeBSD, illumos e Windows.
 - [ ] **Padronização visual TUI:** Adotar a biblioteca semântica `_ui_*` em 100% das saídas interativas do Setup.
 
-### 6. 📝 GNU Emacs: Arquitetura Modular e Auto-Detecção Sensorial
+### 7. 📝 GNU Emacs: Arquitetura Modular e Auto-Detecção Sensorial
 
 > 🔒 **Trava de Modelo:** Bloqueado — Executar exclusivamente com **Gemini Pro 4** (demanda orquestração Elisp avançada, bootstrapping assíncrono via Elpaca e depuração de compilação nativa/C-level).
 
@@ -87,7 +116,9 @@
 - [ ] **Modularidade avançada:** Desacoplar `early-init.el` e organizar camadas Elisp autônomas com carregamento assíncrono via Elpaca.
 - [ ] **Robustez de inicialização:** Garantir testes de boot em modo batch e headless sem falhas silenciosas (< 1s).
 
-### 7. 🚀 Shells Alternativos: Modularização no Shell e Desacoplamento do Profile
+### 8. 🚀 Shells Alternativos: Modularização no Shell e Desacoplamento do Profile
+
+> 🔒 **Trava de Modelo:** Bloqueado — Executar exclusivamente com **Gemini Pro 4** (demanda orquestração Elisp avançada, bootstrapping assíncrono via Elpaca e depuração de compilação nativa/C-level).
 
 - [ ] **Migração de módulos para o Shell:** Mover dotfiles e runtimes de **PowerShell**, **Nushell**, **Fish** e **CMD/Clink** para dentro do repositório `Shell`.
 - [ ] **Deploy e bootstrapping via `install.sh`:** Incorporar rotinas de instalação e symlinks declarativos desses shells no motor do `Shell`.

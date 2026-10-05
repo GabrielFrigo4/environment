@@ -73,8 +73,8 @@ _env_audit() {
 }
 
 _env_doctor() {
-	if [ -f "${_ENV_ROOT}/Setup/scripts/audit/doctor.sh" ]; then
-		sh "${_ENV_ROOT}/Setup/scripts/audit/doctor.sh"
+	if [ -f "${_ENV_ROOT}/Setup/.scripts/audit/doctor.sh" ]; then
+		sh "${_ENV_ROOT}/Setup/.scripts/audit/doctor.sh"
 	fi
 }
 
