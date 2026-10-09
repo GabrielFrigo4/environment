@@ -73,7 +73,13 @@
 
 > ⚡ **Execução:** Concluído com **Gemini Flash 3.x**
 
-- [ ] Fazer com que as interfaces <projetos>.sh fiquem limpas, crie a pasta <projetos> para modularisar os monolitos <projetos>.sh
+- [x] **Modularização dos monólitos em `core/`:** Interfaces principais de `Profile/profile.sh` (reduzido de 371 para 105 linhas) e `Vault/vault.sh` (reduzido de 134 para 42 linhas) modularizadas com sucesso na subpasta canônica `core/` (`perms.sh`, `sync.sh`, `ui.sh`, `env.sh`), respeitando os limites estritos de linhas e integridade dos hooks locais.
+- [x] **Universal Git Traversal (Top-Down `plgit`/`update-git` e Bottom-Up `psgit`/`push-git`):** Implementada ordenação estrita por profundidade (`depth`) no Shell, Nushell, PowerShell e CMD/Clink para atualização segura de cima para baixo e propagação de push de baixo para cima das folhas para a raiz.
+- [x] **Blindagem de pipelines POSIX:** Normalizados wrappers de `grep`, `ls`, `cat` para desacoplamento de aliases interativos durante o tráfego em pipes (`vulkaninfo | grep -E ...`).
+- [x] **Cascata universal de cursor Wayland:** Implementada resolução resiliente em 5 camadas (Variáveis existentes -> `index.theme` -> KDE `kcminputrc` -> GTK `settings.ini` -> GSettings -> Fallback semântico) garantindo paridade entre Linux e FreeBSD.
+- [x] **Unificação de submódulos do GNU Emacs:** Submódulos Git em `usr/local/` (`aweshell`, `aweww`, `emacs-lisp-ts-mode`) convertidos em árvores rastreadas nativas, eliminando dependências externas e mantendo testes em batch mode 100% limpos.
+- [x] **Ativação de Menu Bar e Tool Bar no GNU Emacs:** Ativação dinâmica de `menu-bar-mode` e `tool-bar-mode` em ambientes POSIX com guarda para desativação em `windows-nt`, saneamento de `custom.el` contra desativações assíncronas do Elpaca e estilização GTK 3 via CSS/Breeze-Dark.
+- [x] **Despachantes universais multi-SO no Setup:** Criação dos despachantes universais `Setup/common/ai/ollama.sh` (multi-gerenciador `pkg`, `dnf`, `apt`, `pacman`, `winget`), unificação de `Setup/common/security/wireshark.sh`, adição de `plasma6-breeze-gtk` para paridade de temas GTK no FreeBSD KDE e formalização da matriz multi-SO de shells canônicos (`chsh`).
 - [ ] Quando for executar essa tarefa avise do plano de "remoção das pastas scripts na raiz de qualquer projeto por principio e por limpesa"
 - [ ] Melhorar as skills sobre markdown, mermaid e svg.
       Regras Mermaid e SVG, em versão genérica
