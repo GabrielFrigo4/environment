@@ -80,29 +80,8 @@
 - [x] **Unificação de submódulos do GNU Emacs:** Submódulos Git em `usr/local/` (`aweshell`, `aweww`, `emacs-lisp-ts-mode`) convertidos em árvores rastreadas nativas, eliminando dependências externas e mantendo testes em batch mode 100% limpos.
 - [x] **Ativação de Menu Bar e Tool Bar no GNU Emacs:** Ativação dinâmica de `menu-bar-mode` e `tool-bar-mode` em ambientes POSIX com guarda para desativação em `windows-nt`, saneamento de `custom.el` contra desativações assíncronas do Elpaca e estilização GTK 3 via CSS/Breeze-Dark.
 - [x] **Despachantes universais multi-SO no Setup:** Criação dos despachantes universais `Setup/common/ai/ollama.sh` (multi-gerenciador `pkg`, `dnf`, `apt`, `pacman`, `winget`), unificação de `Setup/common/security/wireshark.sh`, adição de `plasma6-breeze-gtk` para paridade de temas GTK no FreeBSD KDE e formalização da matriz multi-SO de shells canônicos (`chsh`).
-- [ ] Quando for executar essa tarefa avise do plano de "remoção das pastas scripts na raiz de qualquer projeto por principio e por limpesa"
-- [ ] Melhorar as skills sobre markdown, mermaid e svg.
-      Regras Mermaid e SVG, em versão genérica
-      Escolha e estrutura
-
-Diagrama declarativo primeiro. Texto que vira vetor vem antes de ilustração vetorial, que vem antes de ASCII. A ASCII é só para grades densas de bits ou para quando o alinhamento monoespaçado é insubstituível.
-A escolha de formato é por clareza e geometria. Nunca por tema.
-Proporção harmônica (~16:9, 4:3 ou 2:1). Evite cadeias com mais de 3–4 nós na horizontal ou 4–5 na vertical. Prefira fluxo vertical macro com subgrupos horizontais.
-Aresta nunca encosta no título de um grupo. Ligue contêiner a contêiner, ou modele os estágios como nós independentes.
-Setas e rótulos 5. Com legenda, operador de comprimento 3. Sem legenda, comprimento 2. O elo mais longo reserva espaço para a legenda. 6. Nada de HTML em rótulos. Quebra de linha e ênfase usam a sintaxe nativa de strings Markdown da ferramenta. 7. Sem Unicode decorativo (setas, símbolos matemáticos) em rótulos. Use a sintaxe de seta nativa. 8. Legendas de aresta ficam sobre fundo sólido e opaco, para a linha não atravessar o texto.
-
-Vetor e render 9. Rótulos como texto vetorial nativo (sem HTML embutido), com entidades sanitizadas. Assim o texto fica selecionável e nítido em qualquer renderizador. 10. Espaçamentos e margens internas calibrados para o papel. Padding de grupo maior que o padrão evita setas cortando bordas de clusters aninhados. Espaço entre nós e entre camadas deixa a legenda respirar. A margem do título do grupo vem calculada para ele não colidir com o primeiro filho. 11. Estilo em duas camadas. Variáveis de tema para o cálculo de geometria, e CSS com prioridade máxima para sobrepor o estilo injetado pela ferramenta. 12. Ilustrações geométricas são arquivos locais embutidos no documento final. O resultado fica portátil e sem dependência externa.
-
-Pós-processamento do SVG (antifrágil) 13. Extraia atributos pelo nome, nunca pela posição. O parsing não pode depender da ordem de serialização. 14. Falha graciosa. Se um atributo falta ou o formato muda, devolva o bloco original intacto. O pior caso é "sem ajuste fino", nunca "documento quebrado". 15. Ajustes finos ficam isolados e nomeados. Cada correção cobre um defeito específico: centralização ótica, deslocamento em cilindros, snap em bordas de cluster, padding de badge.
-
-Governança 16. Regra mecânica vira gate automático (pre-commit), não só documentação. 17. Ferramentas pesadas usam cache fora da árvore do repositório. 18. Diagrama com sintaxe duvidosa é validado em navegador headless antes do push.
-
-"""O bug ocorre porque, com `"htmlLabels": false`, o Mermaid processa strings delimitadas por crase (`["`...`"]`) através de um parser de Markdown, o qual interpreta qualquer linha iniciada por número seguido de ponto e espaço (`1. `, `2. `) como um **item de lista ordenada**. Como o gerador de SVG nativo do Mermaid suporta apenas estilos inline básicos e não implementa listas, ele descarta esses tokens silenciosamente e cospe uma tag `<text>` vazia no diagrama final.""" => Um bug que temos que salvar no skill e agents no Raw Text E fazer algo a respeito na skill global do markdown... Porque tem haver
-
-**Como evitar:**
-
-- **Escapar o ponto (recomendado):** Adicione uma barra invertida antes do ponto (ex: `["`1\. Input Assembler`"]`), forçando o parser a tratá-lo como texto comum.
-- **Mudar o separador numérico:** Substitua o padrão número + ponto por outro caractere (ex: `["`[1] Input Assembler`"]` ou `["`1 - Input Assembler`"]`).
+- [x] **Adoção canônica de `.scripts/`:** Transição completa das antigas pastas `scripts/` na raiz para `.scripts/` por princípio de pureza e limpeza do diretório raiz em todo o ecossistema.
+- [x] **Lapidação e sincronização das diretrizes Markdown, Mermaid e SVG:** Consolidada a Hierarquia Universal de 3 Camadas (Mermaid > SVG > ASCII), as diretrizes de proporção harmônica e pós-processamento antifrágil de SVG, e a blindagem contra o bug de listas ordenadas (`htmlLabels: false` / descarte para `<text></text>` vazio) em `Profile/agents/skills/technical-writing-standards` e `Foundation/Raw Text/AGENTS.md`.
 
 ### 6. 🏛️ Refatoração e Elevação do Setup
 
