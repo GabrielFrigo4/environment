@@ -1,0 +1,112 @@
+# 🔲 Consoles Virtuais, TTYs & Ly Display Manager
+
+> Governança dos consoles virtuais do FreeBSD no `/etc/ttys`, formatação simétrica de 5 colunas, fontes de alta resolução Spleen e gerenciador de login Ly TUI.
+
+---
+
+## 🧭 Arquitetura dos Terminais Virtuais no FreeBSD
+
+O FreeBSD gerencia os consoles de texto físicos e virtuais através do arquivo `/etc/ttys` e do daemon de inicialização `init(8)`. Ao contrário do Linux moderno (onde consoles são instanciados dinamicamente via `systemd-logind`), o FreeBSD adota uma tabela estrita e previsível de dispositivos de terminal:
+
+- **`console`:** Console do sistema operacional utilizado durante single-user mode e logs de pânico.
+- **`ttyv0`:** Primeiro console virtual acessível via `Ctrl + Alt + F1`.
+- **`ttyv1`:** Terminal virtual reservado para o **Ly Display Manager** (gerenciador gráfico/TUI).
+- **`ttyv2` a `ttyv7`:** Terminais virtuais independentes para login direto em linha de comando (`Alt + F3` a `Alt + F8`).
+- **`ttyu0` a `ttyu3`:** Portas seriais físicas e virtuais.
+
+```mermaid
+flowchart TD
+    INIT["init(8) Daemon"] --> TTYS["/etc/ttys Table"]
+    TTYS --> C0["console (Mensagens de Kernel)"]
+    TTYS --> V0["ttyv0 (Terminal de Texto Puro)"]
+    TTYS --> V1["ttyv1 (Ly TUI Display Manager)"]
+    TTYS --> V2["ttyv2..v7 (Sessões CLI de Reserva)"]
+    V1 --> PLASMA["Sessão Wayland KDE Plasma 6"]
+```
+
+---
+
+## 📐 O Contrato das 5 Colunas no `/etc/ttys`
+
+O arquivo `/etc/ttys` é processado pela biblioteca de sistema `getttyent(3)`. Cada linha de configuração ativa contém exatamente cinco campos principais:
+
+1. **`name` (Largura: 7 caracteres):** Identificador do dispositivo de terminal (`console`, `ttyv0`, `ttyu0`, `xc0`).
+2. **`getty` (Largura: 31 caracteres):** O comando ou classe do `gettytab` a ser invocado (ex: `"/usr/libexec/getty Pc"`, `"/usr/libexec/getty Ly"`, `none`).
+3. **`type` (Largura: 7 caracteres):** Emulação do terminal para a variável `$TERM` (`xterm`, `vt100`, `unknown`).
+4. **`status` (Largura: 10 caracteres):** Estado de ativação (`on`, `off`, `onifexists`, `onifconsole`).
+5. **`comments` (Restante da linha):** Nível de segurança e flags de controle (`secure`, `insecure`).
+
+---
+
+## 🗄️ Tabela Canônica Formatada
+
+Quando formatado pelo utilitário [`Setup/freebsd/desktop/system/ttys.sh`](../../Setup/freebsd/desktop/system/ttys.sh), o `/etc/ttys` atinge simetria geométrica absoluta:
+
+```text
+console none                            unknown off        secure
+#
+ttyv0   "/usr/libexec/getty Pc"         xterm   onifexists secure
+# Virtual terminals
+ttyv1   "/usr/libexec/getty Ly"         xterm   on         secure
+ttyv2   "/usr/libexec/getty Pc"         xterm   onifexists secure
+ttyv3   "/usr/libexec/getty Pc"         xterm   onifexists secure
+ttyv4   "/usr/libexec/getty Pc"         xterm   onifexists secure
+ttyv5   "/usr/libexec/getty Pc"         xterm   onifexists secure
+ttyv6   "/usr/libexec/getty Pc"         xterm   onifexists secure
+ttyv7   "/usr/libexec/getty Pc"         xterm   onifexists secure
+ttyv8   "/usr/local/bin/xdm -nodaemon"  xterm   off        secure
+# Serial terminals
+ttyu0   "/usr/libexec/getty 3wire"      vt100   onifconsole secure
+ttyu1   "/usr/libexec/getty 3wire"      vt100   onifconsole secure
+ttyu2   "/usr/libexec/getty 3wire"      vt100   onifconsole secure
+ttyu3   "/usr/libexec/getty 3wire"      vt100   onifconsole secure
+# Dumb console
+dcons   "/usr/libexec/getty std.115200" vt100   off        secure
+# Xen Virtual console
+xc0     "/usr/libexec/getty Pc"         xterm   onifconsole secure
+# RISC-V HTIF console
+rcons   "/usr/libexec/getty std.115200" vt100   onifconsole secure
+```
+
+---
+
+## 🔲 Ly TUI Display Manager
+
+O **Ly** é um display manager moderno de interface em modo texto (TUI) com animações matriciais, suporte a Wayland e consumo irrisório de memória RAM (< 5 MB contra 150 MB do SDDM ou GDM).
+
+### Mecanismo de Inicialização:
+
+1. No FreeBSD, o Ly não roda como serviço autônomo do `rc.d`; ele é instanciado diretamente pelo `init(8)` sobre o terminal virtual `ttyv1`.
+2. A linha `ttyv1 "/usr/libexec/getty Ly" xterm on secure` instrui o `init` a invocar o `getty` com a classe `Ly`.
+3. O `/etc/gettytab` redireciona a classe `Ly` para executar o binário `/usr/local/bin/ly`.
+4. Ao autenticar com sucesso, o Ly dispara a sessão do KDE Plasma 6 Wayland (`startplasma-wayland`).
+
+---
+
+## 🔤 Fontes Spleen de Alta Resolução no Console
+
+Em telas de alta densidade (Full HD e 4K), as fontes padrão de 8x16 do console de texto do FreeBSD ficam minúsculas e difíceis de ler.
+
+O ecossistema provisiona fontes **Spleen** nítidas via [`Setup/freebsd/desktop/system/system.sh`](../../Setup/freebsd/desktop/system/system.sh):
+
+```sh
+# Configuração no /etc/rc.conf
+allscreens_flags="-f spleen-16x32"
+```
+
+A fonte bitmap `spleen-16x32` garante legibilidade cristalina em qualquer monitor sem requerer renderizadores gráficos pesados.
+
+---
+
+## 🛠️ Comandos de Manutenção
+
+```sh
+# 1. Executar auto-alinhamento canônico do /etc/ttys
+sudo sh ~/Documents/Environment/Setup/freebsd/desktop/system/ttys.sh
+
+# 2. Recarregar tabela de TTYs sem reiniciar o sistema operacional
+sudo kill -HUP 1
+
+# 3. Testar nova fonte Spleen na sessão ativa do console
+vidcontrol -f /usr/share/vt/fonts/spleen-16x32.fnt
+```

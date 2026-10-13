@@ -87,7 +87,7 @@
 
 > ⚡ **Execução:** Concluído com **Gemini Flash 3.x**
 
-- [x] **Saneamento e curadoria da série de runbooks:** Saneamento técnico integral dos 6 documentos operacionais e organização canônica na pasta `docs/bhyve/` com índice `README.md`.
+- [x] **Saneamento e curadoria da série de runbooks:** Saneamento técnico integral dos 6 documentos operacionais e organização canônica na pasta `docs/virtualization/bhyve/` com índice `README.md`.
 - [x] **Integração no Universal Shell (`linux-host`, `agy-lx`, `agy-compat`):** Implementação modular em `Shell/target/freebsd/bhyve.sh` e `Shell/target/freebsd/compat.sh` com aliases (`linux`, `lx`, `debian`, `deb`, `agy`, `agy-cp`), conformidade estrita POSIX `/bin/sh` (zero arrays bash) e blindagem da latência de prompt (< 5ms).
 - [x] **Paridade e antifragilidade de diretórios:** Lógica de espelhamento que navega automaticamente para o subdiretório correspondente em `/home/gabrielf` no guest, com fallback silencioso para a raiz da home se disparado fora dela ou em pasta inexistente.
 - [x] **Rotina unificada de atualização (`update-linux`):** Implementada a função `update-linux` com atalhos `uplx` e `updeb`, integrada automaticamente ao comando orquestrador `update-all` (`upall`) no host FreeBSD.
@@ -95,7 +95,19 @@
 - [x] **Registro topológico no Vault:** Configuração do nó local `192.168.8.2 debian` em `Vault/servers/hosts.env`.
 - [x] **Governança Constitucional (`AGENTS.md` e Skills):** Formalização da Regra 13/14 nos repositórios sobre o ambiente híbrido e expansão das skills `universal-environment` e `antifragile-engineering`.
 
-### 7. 🏛️ Refatoração e Elevação do Setup
+### 7. 📚 Biblioteca Canônica de Documentação ("Docs Digno do Environment")
+
+> ⚡ **Execução:** Concluído com **Gemini Flash 3.x**
+
+- [x] **Arquitetura Hub & Spoke e Portal Mestre (`docs/README.md`):** Estruturação taxonômica completa com mapa de navegação Mermaid e 8 domínios de conhecimento especializados.
+- [x] **Host FreeBSD Bare-Metal (`docs/freebsd/`):** 7 runbooks cobrindo bootloader/kernel, tuning OpenZFS ARC (4/8), rede/PF NAT, gráficos Intel Alder Lake (PSR/FBC), terminais `/etc/ttys` com Ly TUI e áudio USB/devfs.
+- [x] **Tríade de Virtualização & Isolamento (`docs/virtualization/`):** Comparativo arquitetural e runbooks aprofundados para Bhyve (`bhyve/`), Jails VNET nativas (`jails/`) e orquestração declarativa BastilleBSD (`bastille/`).
+- [x] **Runtimes Linux & Windows (`docs/linux/` e `docs/windows/`):** Paridade POSIX/GNU, UID/GID 1001, Podman Rootless OCI, Arquitetura Tripartite no Windows, perfis PowerShell/Nushell com `_ui_*` e gestão Pageant/icacls.
+- [x] **A Suíte de 4 Editores Autônomos (`docs/editors/`):** Guias de referência para GNU Emacs (Elpaca assíncrono), Helix (Rust & Tree-sitter), NeoVim (Lua, Lazy & Mason) e Vim Clássico (TTYs e soberania UNIX).
+- [x] **O Quarteto de Infraestrutura (`docs/quarteto/`):** Contratos arquiteturais detalhados de Setup, Shell, Vault e Profile.
+- [x] **Metodologia & Engenharia Antifrágil (`docs/engineering/`):** Análise comentada dos 22 Princípios UNIX, os 7 Pilares de Antifragilidade, a política Clean-Break e o ciclo Bancada vs. Produção.
+
+### 8. 🏛️ Refatoração e Elevação do Setup
 
 > 🔒 **Trava de Modelo:** Bloqueado — Executar exclusivamente com **Gemini Pro 4** (demanda raciocínio aprofundado para arquitetura de receitas modais, portabilidade POSIX estrita e testes de estresse multiplataforma).
 
@@ -104,7 +116,7 @@
 - [ ] **Paridade multiplataforma:** Garantir consistência entre distribuições Linux (Arch, Debian/Ubuntu, Fedora, Void, Alpine), FreeBSD, illumos e Windows.
 - [ ] **Padronização visual TUI:** Adotar a biblioteca semântica `_ui_*` em 100% das saídas interativas do Setup.
 
-### 8. 📝 GNU Emacs: Arquitetura Modular e Auto-Detecção Sensorial
+### 9. 📝 GNU Emacs: Arquitetura Modular e Auto-Detecção Sensorial
 
 > 🔒 **Trava de Modelo:** Bloqueado — Executar exclusivamente com **Gemini Pro 4** (demanda orquestração Elisp avançada, bootstrapping assíncrono via Elpaca e depuração de compilação nativa/C-level).
 
@@ -113,7 +125,7 @@
 - [ ] **Modularidade avançada:** Desacoplar `early-init.el` e organizar camadas Elisp autônomas com carregamento assíncrono via Elpaca.
 - [ ] **Robustez de inicialização:** Garantir testes de boot em modo batch e headless sem falhas silenciosas (< 1s).
 
-### 9. 🚀 Shells Alternativos: Modularização no Shell e Desacoplamento do Profile
+### 10. 🚀 Shells Alternativos: Modularização no Shell e Desacoplamento do Profile
 
 > 🔒 **Trava de Modelo:** Bloqueado — Executar exclusivamente com **Gemini Pro 4** (demanda orquestração Elisp avançada, bootstrapping assíncrono via Elpaca e depuração de compilação nativa/C-level).
 
