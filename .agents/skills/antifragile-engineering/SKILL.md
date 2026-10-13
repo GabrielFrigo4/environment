@@ -96,6 +96,45 @@ Sistemas antifrágeis não exigem que o operador execute intervenções manuais 
 - **Auto-Cura Pós-Clone:** Scripts de entrada e inicializadores detectam se estão rodando sob sistemas de arquivos que não preservam bits POSIX (ex: NTFS, FAT32, montagens WSL) e aplicam `chmod 0755` defensivamente aos seus subordinados antes da execução.
 - **Zero Diretórios Órfãos:** Scripts garantem a existência de seus diretórios de trabalho (`mkdir -p`) no momento do uso, prevenindo falhas de `No such file or directory`.
 
+### 6. Resolução Antifrágil de Privilégios (_Antifragile Elevation Pattern_)
+
+Em scripts de infraestrutura executados sob a diretiva de integridade estrita `set -eu`, comandos ternários de substituição de comando (como `ELEVATE="$( [ "$(id -u)" -ne 0 ] && ... )"`) constituem uma armadilha de fragilidade:
+
+- Quando o script é executado como superusuário (`root` ou via `sudo`), a condição `[ "$(id -u)" -ne 0 ]` é falsa e a substituição sai com status `1`.
+- Sob `set -e`, o interpretador POSIX encerra imediatamente o script inteiro.
+
+O padrão canônico antifrágil exige a estrutura condicional explícita e imune a `set -e`:
+
+```sh
+ELEVATE=""
+if [ "$(id -u)" -ne 0 ]; then
+	if command -v doas > "/dev/null" 2>&1; then
+		ELEVATE="doas"
+	elif command -v sudo > "/dev/null" 2>&1; then
+		ELEVATE="sudo"
+	fi
+fi
+```
+
+### 7. Invariante de Shift Seguro de Argumentos (_Safe Shift Invariant_)
+
+No padrão POSIX, o comando `shift` é um utilitário especial embutido (_special built-in utility_). Se `shift N` for executado quando `$#` for menor que `N`, as especificações POSIX determinam que o shell encerre **incondicionalmente** sob `set -e`, ignorando até mesmo `|| true`.
+
+O padrão antifrágil determina que todo deslocamento de argumentos deve ser precedido de validação:
+
+```sh
+# Deslocamento simples:
+[ "$#" -ge 1 ] && shift
+
+# Deslocamento múltiplo com argumentos remanescentes:
+if [ "$#" -ge 2 ]; then
+	shift 2
+	comments="$*"
+else
+	comments=""
+fi
+```
+
 ---
 
 ## 🛠️ Padrões Canônicos por Interpretador

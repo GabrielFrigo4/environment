@@ -54,7 +54,23 @@ Essas diretrizes são de aplicação obrigatória para qualquer modificação ou
 - Adotar ativamente a cascata de descoberta: Variável Explícita $\rightarrow$ Diretório do Componente $\rightarrow$ XDG Data (`~/.local/share`) $\rightarrow$ XDG Config (`~/.config`) $\rightarrow$ Home direta (`~/.`) $\rightarrow$ Global FHS (`/usr/local/share`).
 - Auto-curar permissões em tempo de voo (`chmod 0600` em chaves e segredos) e reparar a sessão ativa (`export`).
 
-## 9. Checklist de Validação
+## 9. Elevação Antifrágil & Shift Seguro
+
+- Em scripts e receitas executáveis sob `set -eu`, a resolução da variável `ELEVATE` deve utilizar estritamente o bloco explícito:
+    ```sh
+    ELEVATE=""
+    if [ "$(id -u)" -ne 0 ]; then
+        if command -v doas > "/dev/null" 2>&1; then
+            ELEVATE="doas"
+        elif command -v sudo > "/dev/null" 2>&1; then
+            ELEVATE="sudo"
+        fi
+    fi
+    ```
+    Isso previne o colapso fatal do script por retorno status 1 da substituição de comando `$( [ 0 -ne 0 ] ... )` quando executado nativamente como root.
+- Todo comando `shift` em scripts sob `set -e` deve ser precedido por validação de parâmetros (`[ "$#" -ge N ] && shift N`), prevenindo o término fatal do shell exigido pelo padrão POSIX para utilitários especiais (_special built-ins_) quando `$# < N`.
+
+## 10. Checklist de Validação
 
 Antes de concluir qualquer modificação no Environment:
 
