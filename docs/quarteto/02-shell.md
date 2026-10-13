@@ -41,6 +41,19 @@ O Shell padroniza a saída visual de status de todos os scripts do ecossistema a
 
 ---
 
+## 🌐 Adaptação Dinâmica de Prompt & Propagação TTY via SSH
+
+O Universal Shell detecta dinamicamente a natureza do terminal conectado:
+
+- **Sessões Gráficas PTY (KDE Plasma, Wayland, X11):** Em emuladores modernos com fontes Nerd Fonts, renderiza a cápsula gráfica rica (`pill.sh`, `multi.sh`).
+- **Consoles Puros TTY (FreeBSD `ttyv*`, Linux `/dev/tty*`):** Em consoles virtuais sem fontes Nerd Fonts (ex: fontes Spleen/VGA), comuta automaticamente para o layout ASCII estruturado sem glifos quebrados.
+
+### Propagação Automática via SSH & Multiplexadores:
+
+Quando o usuário dispara comandos remotos a partir de um console TTY puro (via `lx`/`linux-host`, `agy`, `personal-server`, `venture-server` ou `ssh`), o cliente injeta e propaga `LC_RAW_TTY=1` e `RAW_TTY=1` através da infraestrutura OpenSSH (`AcceptEnv LANG LC_*` e `-o SetEnv`). O servidor remoto identifica a condição do terminal do cliente e renderiza o prompt TTY limpo, prevenindo caixas pretas e caracteres corrompidos (_mojibake_). A mesma herança protege painéis internos do **tmux** e **zellij**.
+
+---
+
 ## ⚡ Suíte de Benchmarks de Performance (`benchmark.sh`)
 
 O Shell mantém sua própria ferramenta de medição estatística de latência, executada automaticamente antes de novos commits:
