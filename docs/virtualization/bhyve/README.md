@@ -1,15 +1,37 @@
-# 🖥️ Arquitetura Bhyve Linux Runtime: Guia e Runbooks
+# 🖥️ Arquitetura Bhyve Linux Runtime: Guia & Runbooks
 
-Documentação canônica do subsistema de virtualização Bhyve no FreeBSD, fornecendo um motor de execução Linux isolado e nativo para o Google Antigravity CLI (`agy`) e ferramentas dependentes de syscalls avançadas do kernel Linux.
+> Documentação canônica do subsistema de virtualização Bhyve no FreeBSD, fornecendo um motor de execução Linux isolado e nativo para o Google Antigravity CLI (`agy`), contêineres OCI e ferramentas dependentes do kernel Linux.
+
+---
+
+## 🧭 Visão Geral
+
+O runtime virtualizado no Bhyve resolve o desafio histórico de executar ferramentas modernas com dependências estritas do kernel Linux em estações de trabalho FreeBSD, preservando 100% da soberania do OpenZFS, rede Packet Filter (PF) e ambiente de desktop KDE.
 
 ---
 
 ## 📚 Índice da Série de Runbooks
 
-1. **[01-inventario-e-ports.md](01-inventario-e-ports.md):** Inventário de pacotes do host FreeBSD, mídia ISO Debian e binários locais.
-2. **[02-host-tuning-zfs-e-pf.md](02-host-tuning-zfs-e-pf.md):** Governança de memória ZFS ARC, firewall PF com NAT e configurações de sysctl.
-3. **[03-bhyve-debian-vm.md](03-bhyve-debian-vm.md):** Criação da VM Debian 13.7, template Bhyve, modo headless e espelhamento NFSv3.
-4. **[04-antigravity-cli-dual-exec.md](04-antigravity-cli-dual-exec.md):** Estratégia de despacho do Shell (`linux-host`, `agy-lx`, `agy-compat`) e conformidade POSIX.
-5. **[05-diagnostico-anatomia-falha.md](05-diagnostico-anatomia-falha.md):** Diagnóstico aprofundado das incompatibilidades do runtime Go no Linuxulator.
-6. **[06-operacao-manutencao-e-snapshots.md](06-operacao-manutencao-e-snapshots.md):** Gestão do ciclo de vida da VM, snapshots no ZFS e rotina `update-linux` (`uplx`, `updeb`).
-7. **[07-paradigma-e-expansao-futura.md](07-paradigma-e-expansao-futura.md):** Filosofia arquitetural, casos de uso holísticos e matriz de expansão futura (X + Bhyve).
+| Runbook                                                                            | Foco Arquitetural e Operacional  | Tópicos Principais                                                                                   |
+| :--------------------------------------------------------------------------------- | :------------------------------- | :--------------------------------------------------------------------------------------------------- |
+| **[`01-arquitetura-e-paradigma.md`](01-arquitetura-e-paradigma.md)**               | Paradigma Híbrido & Fundamentos  | Tese soberana, 4 pilares técnicos, diagnóstico forense Go/Linuxulator e matriz de expansão.          |
+| **[`02-provisionamento-e-host-tuning.md`](02-provisionamento-e-host-tuning.md)**   | Provisionamento & Tuning do Host | Instalação no host, governança ZFS ARC, firewall PF com NAT, template da VM e NFSv3.                 |
+| **[`03-operacao-ciclo-de-vida-e-shell.md`](03-operacao-ciclo-de-vida-e-shell.md)** | Ciclo de Vida, Snapshots & Shell | Comandos `vm-bhyve`, snapshots atômicos ZFS, despacho `lx`/`agy`, propagação de TTY e rotina `uplx`. |
+
+---
+
+## ⚡ Comandos Rápidos de Referência
+
+```sh
+# Gestão da Máquina Virtual (Host FreeBSD)
+vm list                  # Exibir status da VM
+sudo vm start debian     # Iniciar VM em modo headless
+sudo vm stop debian      # Parar VM graciosamente via ACPI
+sudo vm console debian   # Acessar console serial nmdm (~. para sair)
+
+# Despacho Interativo via Shell
+lx uname -a              # Executar comando isolado no Linux guest
+lx                       # Abrir shell interativo na mesma pasta
+agy status               # Executar o Google Antigravity CLI no runtime Linux
+uplx                     # Atualizar o sistema operacional guest (Debian)
+```
