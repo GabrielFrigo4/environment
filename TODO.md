@@ -88,7 +88,7 @@
 > ⚡ **Execução:** Concluído com **Gemini Flash 3.x**
 
 - [x] **Saneamento e curadoria da série de runbooks:** Saneamento técnico integral dos 6 documentos operacionais e organização canônica na pasta `docs/bhyve/` com índice `README.md`.
-- [x] **Integração no Universal Shell (`linux-host`, `agy-lx`, `agy-compat`):** Implementação modular em `Shell/target/freebsd/bhyve.sh` e `Shell/target/freebsd/compat.sh` com aliases (`linux`, `lx`, `debian`, `deb`, `agy`, `agy-bh`, `agy-cp`), conformidade estrita POSIX `/bin/sh` (zero arrays bash) e blindagem da latência de prompt (< 5ms).
+- [x] **Integração no Universal Shell (`linux-host`, `agy-lx`, `agy-compat`):** Implementação modular em `Shell/target/freebsd/bhyve.sh` e `Shell/target/freebsd/compat.sh` com aliases (`linux`, `lx`, `debian`, `deb`, `agy`, `agy-cp`), conformidade estrita POSIX `/bin/sh` (zero arrays bash) e blindagem da latência de prompt (< 5ms).
 - [x] **Paridade e antifragilidade de diretórios:** Lógica de espelhamento que navega automaticamente para o subdiretório correspondente em `/home/gabrielf` no guest, com fallback silencioso para a raiz da home se disparado fora dela ou em pasta inexistente.
 - [x] **Rotina unificada de atualização (`update-linux`):** Implementada a função `update-linux` com atalhos `uplx` e `updeb`, integrada automaticamente ao comando orquestrador `update-all` (`upall`) no host FreeBSD.
 - [x] **Receitas de provisionamento no Setup:** Adicionadas as receitas `Setup/freebsd/container/bhyve.sh` (host, switch, PF NAT, NFSv3 e template) e `Setup/linux/desktop/debian/bhyve-guest.sh` (guest, UID/GID 1001, cliente NFS, doas/sudo e git-crypt).

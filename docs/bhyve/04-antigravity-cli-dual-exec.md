@@ -56,7 +56,7 @@ alias deb="linux-host"
 
 # ================================================================
 # 3. agy-lx: Antigravity CLI no Linux-Host via Bhyve (Padrão)
-# Aliases: agy, agy-bh
+# Alias: agy
 # ================================================================
 agy-lx() {
     _ensure_debian_running
@@ -76,7 +76,6 @@ agy-lx() {
 }
 
 alias agy="agy-lx"
-alias agy-bh="agy-lx"
 
 # ================================================================
 # 4. agy-compat: Execução Local no FreeBSD Compat (Contenção)

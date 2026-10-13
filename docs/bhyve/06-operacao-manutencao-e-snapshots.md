@@ -193,7 +193,6 @@ alias deb="linux-host"
 alias linux="linux-host"
 alias lx="linux-host"
 alias agy="agy-lx"
-alias agy-bh="agy-lx"
 alias uplx="update-linux"
 alias updeb="update-linux"
 ```
