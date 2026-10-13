@@ -12,3 +12,4 @@ Documentação canônica do subsistema de virtualização Bhyve no FreeBSD, forn
 4. **[04-antigravity-cli-dual-exec.md](04-antigravity-cli-dual-exec.md):** Estratégia de despacho do Shell (`linux-host`, `agy-lx`, `agy-compat`) e conformidade POSIX.
 5. **[05-diagnostico-anatomia-falha.md](05-diagnostico-anatomia-falha.md):** Diagnóstico aprofundado das incompatibilidades do runtime Go no Linuxulator.
 6. **[06-operacao-manutencao-e-snapshots.md](06-operacao-manutencao-e-snapshots.md):** Gestão do ciclo de vida da VM, snapshots no ZFS e rotina `update-linux` (`uplx`, `updeb`).
+7. **[07-paradigma-e-expansao-futura.md](07-paradigma-e-expansao-futura.md):** Filosofia arquitetural, casos de uso holísticos e matriz de expansão futura (X + Bhyve).
