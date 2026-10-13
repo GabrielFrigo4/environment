@@ -8,8 +8,8 @@ Runbook operacional para manutenção, snapshots atômicos de disco no ZFS, gest
 
 Para evitar que permissões de arquivos (`0600`/`0700`) bloqueiem acessos via NFSv3, a VM Debian tem o UID e GID do usuário `gabriel` configurados para espelhar exatamente o `gabrielf` do FreeBSD:
 
-* **Host FreeBSD:** `uid=1001(gabrielf)` / `gid=1001(gabrielf)`
-* **Guest Debian:** `uid=1001(gabriel)` / `gid=1001(gabriel)`
+- **Host FreeBSD:** `uid=1001(gabrielf)` / `gid=1001(gabrielf)`
+- **Guest Debian:** `uid=1001(gabriel)` / `gid=1001(gabriel)`
 
 Caso a VM seja reconstruída a partir da ISO original, execute o realinhamento no guest:
 
@@ -49,23 +49,23 @@ sudo zfs destroy zroot/vm/debian@pre-upgrade
 
 Comandos executados diretamente no terminal do host FreeBSD:
 
-* **Listar status detalhado das VMs:**
-  ```sh
-  vm list
-  ```
-* **Parada graciosa via sinal ACPI:**
-  ```sh
-  sudo vm stop debian
-  ```
-* **Desligamento forçado imediato:**
-  ```sh
-  sudo vm poweroff debian
-  ```
-* **Acessar console serial de texto (emergência se a rede falhar):**
-  ```sh
-  sudo vm console debian
-  # Para sair do console: pressione ~. (til seguido de ponto)
-  ```
+- **Listar status detalhado das VMs:**
+    ```sh
+    vm list
+    ```
+- **Parada graciosa via sinal ACPI:**
+    ```sh
+    sudo vm stop debian
+    ```
+- **Desligamento forçado imediato:**
+    ```sh
+    sudo vm poweroff debian
+    ```
+- **Acessar console serial de texto (emergência se a rede falhar):**
+    ```sh
+    sudo vm console debian
+    # Para sair do console: pressione ~. (til seguido de ponto)
+    ```
 
 ---
 
@@ -94,6 +94,7 @@ updeb
 ```
 
 Comando interno executado na VM via SSH (dispara o `update-all` do Shell no guest, com fallback para apt):
+
 ```sh
 ssh -t gabriel@192.168.8.2 "if command -v zsh > '/dev/null' 2>&1 && [ -f \"\${HOME}/.zshrc\" ]; then zsh -ic 'update-all'; else sudo apt update && sudo apt dist-upgrade -y && sudo apt autoremove -y; fi"
 ```
@@ -105,21 +106,21 @@ ssh -t gabriel@192.168.8.2 "if command -v zsh > '/dev/null' 2>&1 && [ -f \"\${HO
 Caso a invocação do `agy` ou do `linux-host` falhe ou trave:
 
 1. **A VM está em execução?**
-   ```sh
-   vm list
-   ```
+    ```sh
+    vm list
+    ```
 2. **A interface de rede da bridge responde a ping?**
-   ```sh
-   ping -c 2 192.168.8.2
-   ```
+    ```sh
+    ping -c 2 192.168.8.2
+    ```
 3. **O servidor NFS do FreeBSD está anunciando os diretórios?**
-   ```sh
-   showmount -e 127.0.0.1
-   ```
+    ```sh
+    showmount -e 127.0.0.1
+    ```
 4. **O ponto de montagem está montado no guest?**
-   ```sh
-   ssh gabriel@192.168.8.2 "df -h | grep /home/gabrielf"
-   ```
+    ```sh
+    ssh gabriel@192.168.8.2 "df -h | grep /home/gabrielf"
+    ```
 
 ---
 

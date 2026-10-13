@@ -6,7 +6,7 @@ Diretrizes de calibração do kernel FreeBSD, escalonamento dinâmico de memóri
 
 ## 1. Gestão Dinâmica de Memória do ZFS ARC
 
-O teto estático rígido (`vfs.zfs.arc.max`) foi descontinuado nas versões modernas do OpenZFS no FreeBSD. O subsistema ARC opera com governança dinâmica coordenada com o escalonador de memória virtual (VM pager) do kernel, liberando páginas de buffer de leitura sob demanda quando o Bhyve aloca memória física (*wired*).
+O teto estático rígido (`vfs.zfs.arc.max`) foi descontinuado nas versões modernas do OpenZFS no FreeBSD. O subsistema ARC opera com governança dinâmica coordenada com o escalonador de memória virtual (VM pager) do kernel, liberando páginas de buffer de leitura sob demanda quando o Bhyve aloca memória física (_wired_).
 
 ---
 

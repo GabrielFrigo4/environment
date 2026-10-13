@@ -20,7 +20,7 @@ utctime="yes"
 ```
 
 > [!NOTE]
-> A fixação de `memory=2G` evita a retenção excessiva de memória física cabeada (*wired memory*) pelo Bhyve, permitindo coexistência harmônica com o cache ZFS ARC do host.
+> A fixação de `memory=2G` evita a retenção excessiva de memória física cabeada (_wired memory_) pelo Bhyve, permitindo coexistência harmônica com o cache ZFS ARC do host.
 
 ---
 
@@ -62,14 +62,14 @@ sudo vm start debian
 
 ## 4. Parâmetros de Rede e Usuário da VM Debian
 
-* **Configuração de Rede Estática (Guest):**
-  * **Endereço IP:** `192.168.8.2`
-  * **Máscara de rede:** `255.255.255.0` (`/24`)
-  * **Gateway:** `192.168.8.1` (Host FreeBSD)
-  * **Servidores DNS:** `1.1.1.1`, `8.8.8.8`
-  * **Hostname:** `debian`
-* **Usuário local da VM:** `gabriel` (UID 1001)
-* **Usuário local do Host:** `gabrielf` (UID 1001)
+- **Configuração de Rede Estática (Guest):**
+    - **Endereço IP:** `192.168.8.2`
+    - **Máscara de rede:** `255.255.255.0` (`/24`)
+    - **Gateway:** `192.168.8.1` (Host FreeBSD)
+    - **Servidores DNS:** `1.1.1.1`, `8.8.8.8`
+    - **Hostname:** `debian`
+- **Usuário local da VM:** `gabriel` (UID 1001)
+- **Usuário local do Host:** `gabrielf` (UID 1001)
 
 ---
 
@@ -105,6 +105,7 @@ ssh-copy-id -i ~/.ssh/id_ed25519.pub gabriel@192.168.8.2
 Permite que ferramentas no Debian acessem diretamente os diretórios de desenvolvimento (`Documents`, `Projects`, `~/.gemini`, `~/.config`) hospedados no ZFS:
 
 ### No Host FreeBSD:
+
 ```sh
 # 1. Habilitar daemons NFS no /etc/rc.conf
 sudo sysrc rpcbind_enable="YES" nfs_server_enable="YES" mountd_enable="YES"
@@ -119,6 +120,7 @@ sudo service nfsd restart
 ```
 
 ### Na VM Debian (`ssh gabriel@192.168.8.2`):
+
 ```sh
 # 1. Instalar cliente NFS
 sudo apt update && sudo apt install -y nfs-common
