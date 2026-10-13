@@ -23,6 +23,11 @@ O **{{PROJECT_NAME}}** é {{PROJECT_DESCRIPTION}}.
 6. **Commits Semânticos:** Mensagens de commit devem seguir o padrão `<tipo>(<escopo>): <descrição>` ou `<tipo>: <descrição>` com os tipos permitidos.
 7. **Escapes ANSI & Banimento de Octal:** Não utilize escapes octais (`\033`, `\001`) para cores ANSI ou caracteres de controle. Use sempre `$'\e'` (em Makefiles: `_e=$$'\e';`) ou hexadecimal (`\x1b`). Notação octal é reservada para permissões de sistema de arquivos POSIX (`chmod 0755`, `0644`, `0700`, `0600`, `umask 022`).
 8. **Matriz de Shells Suportada:** Automação e scripts de shell visam `zsh`, `bash`, FreeBSD `sh` e OpenBSD `ksh`. Shells ultra-restritos de recuperação (Debian `dash`, NetBSD `sh`) estão fora de escopo.
+9. **Invariante de Clonagem "Out-of-the-Box" (Zero-Tweaks Git Invariant):** O repositório deve funcionar imediatamente após um simples `git clone`, com modos octais canônicos mantidos no Git Index e rotinas de auto-cura em tempo de execução sem requerer etapas manuais pós-clone.
+10. **Padrão Universal de Emissão de UI (`_ui_*`):** Toda saída interativa de status ou etapas deve utilizar a taxonomia semântica `_ui_*` (`_ui_step`, `_ui_sub`, `_ui_ok`, `_ui_warn`, `_ui_err`, `_ui_info`, `_ui_banner`), sendo proibido `echo` avulso com emojis soltos.
+11. **Governança de Roadmap (TODO.md):** O repositório mantém seu `TODO.md` canônico atualizado com a matriz de status operacional e backlog de evolução.
+12. **Refatoração Sem Legado (Clean-Break / Zero-Cruft Invariant):** O ecossistema é monousuário soberano. Não mantenha shims temporários, wrappers obsoletos ou aliases de transição ao renomear variáveis, comandos ou caminhos. Toda refatoração deve ser direta, atômica e limpa (_clean break_).
+13. **Ambiente Híbrido Host/Guest (FreeBSD Workstation + Bhyve Linux Runtime):** Em estações FreeBSD, o agente de IA (`agy`) opera isolado dentro de uma máquina virtual Debian no Bhyve (`192.168.8.2`), conectada via NFSv3 à `/home/gabrielf` do host com paridade de UID/GID 1001. O agente executa comandos em ambiente Linux nativo (kernel 6.12/GNU), porém seus arquivos de trabalho residem fisicamente no ZFS do FreeBSD. Ao despachar comandos no terminal, utilize ferramentas Linux disponíveis no guest ou faça a demarcação correta ao editar scripts específicos de cada sistema operacional.
 
 ---
 

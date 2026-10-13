@@ -112,7 +112,21 @@ Qualquer rotina interativa ou de status no Shell (UNIX) ou nos perfis de termina
 
 ---
 
-## 7. Checklist de Validação
+## 7. Arquitetura Híbrida Host/Guest (FreeBSD Workstation + Bhyve Linux Runtime)
+
+Para ferramentas e agentes de IA que utilizam o runtime Go com clientes HTTP/2 e `epoll`/`fsnotify` não suportados plenamente pela camada Linuxulator do FreeBSD (como o `agy`), o ecossistema adota um **motor de execução Linux isolado sob Bhyve**:
+
+1. **Host Soberano (FreeBSD):** Workstation principal, KDE/Wayland, terminal PTY, ZFS (`zroot`), firewall PF (NAT dinâmico em `192.168.8.0/24`) e servidor NFSv3 exportando `/home/gabrielf` com `-mapall=gabrielf`.
+2. **Guest Linux (Debian 13.7 em Bhyve):** Endereço fixo `192.168.8.2`, UID/GID 1001 alinhado, montagem NFSv3 em `/home/gabrielf` e binário `agy` em `/usr/local/bin/agy`.
+3. **Wrappers Transparentes no Shell:**
+   - `linux-host` (aliases: `linux`, `lx`, `debian`, `deb`): Runner e shell interativo com paridade de diretórios e fallback silencioso para `/home/gabrielf`.
+   - `agy-lx` (aliases: `agy`, `agy-bh`): Despacho transparente do agente Antigravity na VM.
+   - `agy-compat` (alias: `agy-cp`): Contenção no FreeBSD Compat (`/compat/linux`) com `COMPAT_*`, limites e afinidade de CPU.
+   - `update-linux` (aliases: `uplx`, `updeb`): Atualização do guest via SSH, integrado ao `update-all` (`upall`) do FreeBSD.
+
+---
+
+## 8. Checklist de Validação
 
 ```sh
 git diff --check

@@ -241,18 +241,20 @@ lint-md:
 		echo "ℹ️ Prettier não instalado; pulando validação de Markdown."; \
 	fi
 
+SH_VALIDATOR ?= $(shell command -v bash 2>/dev/null || command -v zsh 2>/dev/null || echo sh)
+
 audit:
 	echo "🔍 [1/5] Auditando Setup..."
 	python3 Setup/.scripts/audit/all.py
 	echo "🔍 [2/5] Auditando Profile..."
 	python3 Profile/.scripts/audit/all.py
 	echo "🔍 [3/5] Validando sintaxe do Shell..."
-	find Shell -name "*.sh" -not -path "*/.git/*" -exec sh -n {} +
+	find Shell -name "*.sh" -not -path "*/.git/*" -exec $(SH_VALIDATOR) -n {} +
 	echo "🔍 [4/5] Validando sintaxe do Vault..."
-	sh -n Vault/vault.sh
+	$(SH_VALIDATOR) -n Vault/vault.sh
 	echo "🔍 [5/5] Validando a Suíte de Editores (Sintaxe & Headless)..."
 	$(MAKE) -C Editor/Helix test
-	find Editor -name "*.sh" -not -path "*/.git/*" -exec sh -n {} + && echo "  ✅ Editor Shell Scripts: sintaxe POSIX OK"
+	find Editor -name "*.sh" -not -path "*/.git/*" -exec $(SH_VALIDATOR) -n {} + && echo "  ✅ Editor Shell Scripts: sintaxe POSIX OK"
 	$(MAKE) -C Editor/NeoVim test
 	$(MAKE) -C Editor/Vim test
 	$(MAKE) -C Editor/Emacs test
@@ -261,7 +263,7 @@ audit:
 test:
 	echo "🧪 Testando sintaxe de scripts do ecossistema..."
 	for dir in Setup Vault Profile Editor; do \
-		[ -d "$$dir" ] && find "$$dir" -name "*.sh" -not -path "*/.git/*" -exec sh -n {} +; \
+		[ -d "$$dir" ] && find "$$dir" -name "*.sh" -not -path "*/.git/*" -exec $(SH_VALIDATOR) -n {} +; \
 	done
 	[ -d "Shell" ] && $(MAKE) -C Shell test
 	echo "✅ Sintaxe de todos os scripts está perfeita!"
