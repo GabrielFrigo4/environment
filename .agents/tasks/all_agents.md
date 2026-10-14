@@ -146,13 +146,13 @@ Nenhum arquivo de código executável no ecossistema pode ultrapassar 256 linhas
 
 Os agentes especializados possuem escopos isolados definidos nos seguintes arquivos operacionais em `.agents/tasks/`:
 
-| Arquivo de Tarefa                            | Agente      | Escopo Principal                                                    | Trava / Requisito de Modelo |
-| :------------------------------------------- | :---------- | :------------------------------------------------------------------ | :-------------------------- |
-| **[`agent1_setup.md`](agent1_setup.md)**     | **Agent 1** | Refatoração e Elevação Modular do Setup (Épico 8)                   | 🔒 **Gemini Pro 4**         |
-| **[`agent2_emacs.md`](agent2_emacs.md)**     | **Agent 2** | Arquitetura Modular & Auto-Detecção Sensorial do Emacs (Épico 9)    | 🔒 **Gemini Pro 4**         |
-| **[`agent3_shells.md`](agent3_shells.md)**   | **Agent 3** | Migração de Shells Alternativos: Profile ➔ Shell (Épico 10)         | 🔒 **Gemini Pro 4**         |
-| **[`agent4_vault.md`](agent4_vault.md)**     | **Agent 4** | Blindagem e Ferramentas do Vault (`audit-vault.sh`, `age`, backups) | **Autônomo (Flash 3.x)**    |
-| **[`agent5_editors.md`](agent5_editors.md)** | **Agent 5** | Otimização da Suíte de Editores Modais (NeoVim, Helix, Vim)         | **Autônomo (Flash 3.x)**    |
+| Arquivo de Tarefa                            | Agente      | Escopo Principal                                                    | Modelo Recomendado / Alocação |
+| :------------------------------------------- | :---------- | :------------------------------------------------------------------ | :---------------------------- |
+| **[`agent1_setup.md`](agent1_setup.md)**     | **Agent 1** | Refatoração e Elevação Modular do Setup (Épico 8)                   | **Flash / Inherit**           |
+| **[`agent2_emacs.md`](agent2_emacs.md)**     | **Agent 2** | Arquitetura Modular & Auto-Detecção Sensorial do Emacs (Épico 9)    | **Flash / Inherit**           |
+| **[`agent3_shells.md`](agent3_shells.md)**   | **Agent 3** | Migração de Shells Alternativos: Profile ➔ Shell (Épico 10)         | **Flash / Inherit**           |
+| **[`agent4_vault.md`](agent4_vault.md)**     | **Agent 4** | Blindagem e Ferramentas do Vault (`audit-vault.sh`, `age`, backups) | **Flash / Inherit**           |
+| **[`agent5_editors.md`](agent5_editors.md)** | **Agent 5** | Otimização da Suíte de Editores Modais (NeoVim, Helix, Vim)         | **Flash / Inherit**           |
 
 ---
 
