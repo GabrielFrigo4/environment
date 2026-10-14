@@ -50,13 +50,18 @@ Em estações FreeBSD com processadores Intel Core de 12ª geração e desktop W
 Para neutralizar a instabilidade do pipeline de energia nos gráficos Iris Xe Alder Lake, os parâmetros são aplicados no `/boot/loader.conf` via [`Setup/freebsd/desktop/system/system.sh`](../../Setup/freebsd/desktop/system/system.sh):
 
 ```text
-# Default Intel Alder Lake Graphics (Previne perda de sinal e tela preta)
+# Default Intel Alder Lake Graphics (Previne perda de sinal, tela preta e GPU hang)
 compat.linuxkpi.i915_enable_psr="0"
 compat.linuxkpi.i915_enable_fbc="0"
+compat.linuxkpi.i915_enable_dc="0"
 ```
 
 - **`i915_enable_psr="0"`:** Desativa completamente o _Panel Self Refresh_. O painel interno opera com taxa de atualização constante, eliminando o lag do cursor do mouse e a perda de sinal.
 - **`i915_enable_fbc="0"`:** Desativa a compressão do framebuffer (_Framebuffer Compression_), prevenindo falhas de memória gráfica e artefatos de renderização sob o Plasma 6.
+- **`i915_enable_dc="0"`:** Desativa os estados de dormência profunda da GPU (_Display C-states: DC5/DC6_). Elimina travamentos de preempção (`Resetting rcs0 for preemption time out` / `GPU HANG`) que ocorrem durante trocas rápidas de contexto entre renderizadores de navegadores (Firefox WebRender / Chromium) e o compositor Wayland (`kwin_wayland`).
+
+> [!TIP]
+> Caso ocorram travamentos residuais em cargas gráficas extremas, ative o microcontrolador de escalonamento via hardware da Intel (GuC) adicionando `compat.linuxkpi.i915_enable_guc="3"`, transferindo o gerenciamento de filas de preempção do software (_execlists_) para o firmware do processador.
 
 ---
 

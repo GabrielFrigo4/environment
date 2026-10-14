@@ -44,9 +44,10 @@ ng_ubt_load="YES"
 # Default ZFS ARC Cache (50% da RAM física - 8 GB em host de 16 GB)
 vfs.zfs.arc_max="8589934592"
 
-# Default Intel Alder Lake Graphics (Previne congelamentos e tela preta)
+# Default Intel Alder Lake Graphics (Previne congelamentos, tela preta e GPU hang)
 compat.linuxkpi.i915_enable_psr="0"
 compat.linuxkpi.i915_enable_fbc="0"
+compat.linuxkpi.i915_enable_dc="0"
 ```
 
 ### Explicação dos Parâmetros do Loader:
@@ -54,6 +55,7 @@ compat.linuxkpi.i915_enable_fbc="0"
 - **`vfs.zfs.arc_max="8589934592"`:** Impõe um teto estrito de 8 GB ao cache em memória do ZFS. Sem esse parâmetro, o ZFS pode consumir até 90% da memória física, causando pressão de swap no ambiente gráfico e no hipervisor Bhyve.
 - **`compat.linuxkpi.i915_enable_psr="0"`:** Desativa o _Panel Self Refresh_ no driver Intel Iris Xe (Alder Lake-P). Em telas de notebooks da 12ª geração, o PSR tenta desligar o painel durante microssegundos ociosos, gerando perda irrecuperável de clock com o compositor Wayland (tela preta com backlight aceso).
 - **`compat.linuxkpi.i915_enable_fbc="0"`:** Desativa a compressão do framebuffer (_Framebuffer Compression_), eliminando artefatos visuais e micro-congelamentos de renderização no KDE Plasma.
+- **`compat.linuxkpi.i915_enable_dc="0"`:** Desativa estados profundos de economia de energia da GPU (_Display C-states_), evitando o erro `Resetting rcs0 for preemption time out` durante trocas de contexto entre o Firefox/Chromium e o KWin Wayland.
 
 ---
 

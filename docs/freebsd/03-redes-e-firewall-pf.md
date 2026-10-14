@@ -107,3 +107,23 @@ sudo pfctl -s nat -v
 ifconfig bridge0
 ifconfig tap0
 ```
+
+---
+
+## 📶 Resiliência do Wi-Fi LinuxKPI (`rtw88`)
+
+Em notebooks com placas de rede sem fio Realtek gerenciadas pela camada de compatibilidade LinuxKPI (`if_rtw88.ko`), o driver pode sofrer falhas de transição de estado (`lkpi_stop_hw_scan: failed to cancel scan: 35` / `error 95`) ao realizar varreduras em segundo plano (_background scanning_) enquanto já está associado a um ponto de acesso. Essa falha corrompe a fila de envio e esgota o buffer de sockets (`send_packet: No buffer space available`).
+
+### Mitigação Canônica no `/etc/rc.conf`:
+
+Desativa-se a varredura contínua em segundo plano adicionando o parâmetro `-bgscan`:
+
+```sh
+sudo sysrc ifconfig_wlan0="WPA DHCP -bgscan"
+```
+
+Caso a interface trave em tempo de execução, a pilha de rede pode ser reiniciada instantaneamente sem reiniciar a máquina:
+
+```sh
+sudo service netif restart && sudo service routing restart
+```
