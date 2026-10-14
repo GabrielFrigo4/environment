@@ -31,39 +31,39 @@ Otimizar a performance de inicialização, refinar a cobertura de language serve
 
 ### Fase 1: Universal NeoVim — Startup < 25ms & Mason
 
-- [ ] Implementar medição contínua de inicialização:
+- [x] Implementar medição contínua de inicialização:
     ```sh
     nvim --headless --startuptime /tmp/nvim-bench.log +qa
     ```
-- [ ] Otimizar o lazy-loading de plugins em `lua/opt/`: Carregar sintaxe e realce de Treesitter apenas em eventos `BufReadPost` ou `BufNewFile`.
-- [ ] Expandir receitas do Mason LSP em `lua/opt/mason.lua`:
+- [x] Otimizar o lazy-loading de plugins em `lua/opt/`: Carregar sintaxe e realce de Treesitter apenas em eventos `BufReadPost` ou `BufNewFile`.
+- [x] Expandir receitas do Mason LSP em `lua/opt/mason.lua`:
     - C23: `clangd`
     - Rust: `rust-analyzer`
     - Go: `gopls`
     - Lua: `lua-language-server`
     - Shell POSIX: `shellcheck` e `shfmt`
-- [ ] Garantir que em consoles TTY puros o tema Kanagawa faça fallback elegante sem artefatos visuais.
+- [x] Garantir que em consoles TTY puros o tema Kanagawa faça fallback elegante sem artefatos visuais.
 
 ### Fase 2: Universal Helix — Keymaps & Language Servers
 
-- [ ] Refinar atalhos em `config.toml` para troca rápida de buffers (`gn`, `gp`) e navegação ágil entre splits de janela.
-- [ ] Expandir configurações em `languages.toml`:
+- [x] Refinar atalhos em `config.toml` para troca rápida de buffers (`gn`, `gp`) e navegação ágil entre splits de janela.
+- [x] Expandir configurações em `languages.toml`:
     - Adicionar suporte e formatação automática para C23 via `clangd`.
     - Adicionar suporte a Typst (`tinymist`), Nix (`nil`) e Shell POSIX (`shfmt`).
-- [ ] Validar integridade sintática dos arquivos TOML via linters no `make test`.
+- [x] Validar integridade sintática dos arquivos TOML via linters no `make test`.
 
 ### Fase 3: Universal Vim — Resiliência TTY & FZF
 
-- [ ] Otimizar `vimrc` para conexões remotas via SSH e consoles físicos: suprimir carregamento pesado de plugins visuais quando detectado console puro.
-- [ ] Refinar integração do FZF para navegação rápida de arquivos em repositórios com muitos submódulos.
+- [x] Otimizar `vimrc` para conexões remotas via SSH e consoles físicos: suprimir carregamento pesado de plugins visuais quando detectado console puro.
+- [x] Refinar integração do FZF para navegação rápida de arquivos em repositórios com muitos submódulos.
 
 ### Fase 4: Validação Headless em CI
 
-- [ ] Executar validações individuais:
+- [x] Executar validações individuais:
     - `make -C Editor/NeoVim test`
     - `make -C Editor/Helix test`
     - `make -C Editor/Vim test`
-- [ ] Garantir 100% de sucesso sem warnings residuais.
+- [x] Garantir 100% de sucesso sem warnings residuais.
 
 ---
 

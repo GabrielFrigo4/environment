@@ -29,7 +29,7 @@ Implementar utilitários avançados de segurança, auditoria contínua, backups 
 
 ### Fase 1: Script de Auditoria Canônica (`audit-vault.sh`)
 
-- [ ] Criar a rotina de auditoria em `Vault/core/audit.sh` (com atalho via `vault.sh --audit` ou script autônomo):
+- [x] Criar a rotina de auditoria em `Vault/core/audit.sh` (com atalho via `vault.sh --audit` ou script autônomo):
     - Verificar e reportar recursivamente se há diretórios fora de `0700` ou arquivos fora de `0600`.
     - Detectar chaves privadas sem chave pública correspondente (`.pub`) ou chaves públicas órfãs.
     - Verificar a integridade do `.gitignore` para garantir que nenhum arquivo temporário ou descriptografado escape ao versionamento.
@@ -38,29 +38,29 @@ Implementar utilitários avançados de segurança, auditoria contínua, backups 
 
 ### Fase 2: Suporte a Criptografia com `age`
 
-- [ ] Implementar rotinas para suporte ao utilitário moderno [age](https://github.com/FiloSottile/age):
+- [x] Implementar rotinas para suporte ao utilitário moderno [age](https://github.com/FiloSottile/age):
     - Suporte a encriptar/decriptar arquivos sensíveis com chave de identidade `age` ou senha protegida por scrypt.
     - Manter compatibilidade com `git-crypt` existente.
 
 ### Fase 3: Comando de Backup Seguro (`vault-backup`)
 
-- [ ] Implementar comando `vault-backup` que:
+- [x] Implementar comando `vault-backup` que:
     - Gera tarball comprimido em memória dos segredos e chaves.
     - Encripta o bundle diretamente via `age` (ou GPG) para um arquivo de destino seguro (`vault-backup-$(date +%Y%m%d).tar.gz.age`).
     - Auto-limpa arquivos temporários em memória/ramfs sem deixar rastros em disco.
 
 ### Fase 4: Templates Declarativos `.env`
 
-- [ ] Adicionar templates seguros (`example.env` ou `template.env`) nas subpastas pertinentes de servidores e serviços, permitindo que novos ambientes saibam exatamente quais chaves preencher.
+- [x] Adicionar templates seguros (`example.env` ou `template.env`) nas subpastas pertinentes de servidores e serviços, permitindo que novos ambientes saibam exatamente quais chaves preencher.
 
 ### Fase 5: Loader Nativo para Fish Shell (`vault.fish`)
 
-- [ ] Criar o injetor de variáveis `vault.fish` para ambientes que utilizam Fish Shell, garantindo leitura atômica e silenciamento de erros idênticos ao Bash/Zsh.
+- [x] Criar o injetor de variáveis `vault.fish` para ambientes que utilizam Fish Shell, garantindo leitura atômica e silenciamento de erros idênticos ao Bash/Zsh.
 
 ### Fase 6: Quality Gates e Validação
 
-- [ ] Validar sintaxe POSIX via `sh -n` em todos os scripts do Vault.
-- [ ] Assegurar limite de ≤ 256 linhas por arquivo.
+- [x] Validar sintaxe POSIX via `sh -n` em todos os scripts do Vault.
+- [x] Assegurar limite de ≤ 256 linhas por arquivo.
 
 ---
 

@@ -32,37 +32,37 @@ Reestruturar a divisão de responsabilidades entre o **Universal Shell** e o **U
 
 ### Fase 1: Arquitetura de Acolhimento no Shell (`Shell/target/windows/`)
 
-- [ ] Criar a estrutura receptora no `Shell`:
+- [x] Criar a estrutura receptora no `Shell`:
     - `Shell/target/windows/powershell/`: Perfil corporativo PowerShell 7+.
     - `Shell/target/windows/nushell/`: Configuração nativa NuShell.
     - `Shell/target/windows/cmd/`: Scripts Clink em Lua e inicialização `autorun.cmd`.
     - `Shell/target/common/fish/`: Suporte a Fish Shell com funções `up*` e biblioteca `_ui_*`.
-- [ ] Adaptar caminhos relativos e resolução de variáveis de ambiente para a raiz do Shell (`$SHELL_REPO_DIR`).
+- [x] Adaptar caminhos relativos e resolução de variáveis de ambiente para a raiz do Shell (`$SHELL_REPO_DIR`).
 
 ### Fase 2: Atualização do Motor de Deploy (`Shell/install.sh`)
 
-- [ ] Incorporar no script de deploy do Shell a capacidade de linkar declarativamente os perfis de shells Windows e Fish para seus caminhos padrão XDG/Windows (`$PROFILE` do PowerShell, `$nu.config-path`, `~/.config/fish`).
-- [ ] Assegurar idempotência completa e auto-cura de permissões.
+- [x] Incorporar no script de deploy do Shell a capacidade de linkar declarativamente os perfis de shells Windows e Fish para seus caminhos padrão XDG/Windows (`$PROFILE` do PowerShell, `$nu.config-path`, `~/.config/fish`).
+- [x] Assegurar idempotência completa e auto-cura de permissões.
 
 ### Fase 3: Expurgo Limpo no Profile (Clean-Break Invariant)
 
-- [ ] Remover definitivamente os diretórios `Profile/terminals/powershell/`, `Profile/terminals/nushell/` e `Profile/terminals/cmd/`.
-- [ ] Atualizar `Profile/core/sync.sh`:
+- [x] Remover definitivamente os diretórios `Profile/terminals/powershell/`, `Profile/terminals/nushell/` e `Profile/terminals/cmd/`.
+- [x] Atualizar `Profile/core/sync.sh`:
     - Remover blocos de sincronização dos shells migrados.
     - Assegurar que o arquivo permaneça estritamente abaixo de 256 linhas.
     - Manter apenas o gerenciamento de emuladores gráficos de terminal (`windows-terminal/`, `konsole/`).
-- [ ] Atualizar o README de `Profile/terminals/` documentando a nova fronteira limpa.
+- [x] Atualizar o README de `Profile/terminals/` documentando a nova fronteira limpa.
 
 ### Fase 4: Harmonização com o Universal Setup
 
-- [ ] Auditar receitas no `Setup` para garantir que ele apenas instale os binários de pacotes (ex: `pwsh`, `nu`, `fish`), sem gravar dotfiles nos diretórios de usuário.
-- [ ] Delegar 100% da identidade e dotfiles ao motor do Shell.
+- [x] Auditar receitas no `Setup` para garantir que ele apenas instale os binários de pacotes (ex: `pwsh`, `nu`, `fish`), sem gravar dotfiles nos diretórios de usuário.
+- [x] Delegar 100% da identidade e dotfiles ao motor do Shell.
 
 ### Fase 5: Validação e Testes Multi-Shell
 
-- [ ] Executar `python3 Profile/.scripts/audit/all.py` para garantir conformidade estrita após a remoção.
-- [ ] Executar `make -C Shell test` e `make -C Shell bench` para validar que a latência permanece abaixo de 16ms.
-- [ ] Executar `make audit` na raiz do Environment.
+- [x] Executar `python3 Profile/.scripts/audit/all.py` para garantir conformidade estrita após a remoção.
+- [x] Executar `make -C Shell test` e `make -C Shell bench` para validar que a latência permanece abaixo de 16ms.
+- [x] Executar `make audit` na raiz do Environment.
 
 ---
 

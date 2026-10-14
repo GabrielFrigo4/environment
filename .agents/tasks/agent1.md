@@ -35,35 +35,35 @@ O agente deve mapear e inspecionar os seguintes componentes:
 
 ### Fase 1: Fundação & Modularização de Core (`Setup/core/`)
 
-- [ ] Criar a pasta canônica `Setup/core/` (espelhando a arquitetura limpa de `Profile/core/` e `Vault/core/`).
-- [ ] Implementar `Setup/core/ui.sh`: Biblioteca semântica `_ui_*` com suporte a cores ANSI seguras e degradação em TTYs puros.
-- [ ] Implementar `Setup/core/elevate.sh`: Resolução antifrágil de privilégios (`if [ "$(id -u)" -ne 0 ]`) com detecção de `sudo`, `doas` ou execução root.
-- [ ] Implementar `Setup/core/detect.sh`: Detecção robusta de sistema operacional (`FreeBSD`, `Debian`, `Arch`, `Fedora`, `Void`, `Alpine`, `Windows/MSYS2`) e gerenciador de pacotes ativo (`pkg`, `apt`, `pacman`, `dnf`, `xbps`, `apk`, `winget`).
-- [ ] Refatorar `Setup/setup.sh` para atuar puramente como despachante de linha de comando com menos de 128 linhas, delegando lógica pesada para `core/`.
+- [x] Criar a pasta canônica `Setup/core/` (espelhando a arquitetura limpa de `Profile/core/` e `Vault/core/`).
+- [x] Implementar `Setup/core/ui.sh`: Biblioteca semântica `_ui_*` com suporte a cores ANSI seguras e degradação em TTYs puros.
+- [x] Implementar `Setup/core/elevate.sh`: Resolução antifrágil de privilégios (`if [ "$(id -u)" -ne 0 ]`) com detecção de `sudo`, `doas` ou execução root.
+- [x] Implementar `Setup/core/detect.sh`: Detecção robusta de sistema operacional (`FreeBSD`, `Debian`, `Arch`, `Fedora`, `Void`, `Alpine`, `Windows/MSYS2`) e gerenciador de pacotes ativo (`pkg`, `apt`, `pacman`, `dnf`, `xbps`, `apk`, `winget`).
+- [x] Refatorar `Setup/setup.sh` para atuar puramente como despachante de linha de comando com menos de 128 linhas, delegando lógica pesada para `core/`.
 
 ### Fase 2: Refatoração das Receitas Multi-SO (`Setup/common/`)
 
-- [ ] Migrar cada script em `Setup/common/` para importar `core/ui.sh` e `core/elevate.sh`.
-- [ ] Substituir todo `echo "==> ..."` avulso por `_ui_step`, `_ui_sub`, `_ui_ok`, `_ui_warn` e `_ui_err`.
-- [ ] Implementar **idempotência ativa**: Antes de disparar comandos de download ou gerenciadores de pacotes, verificar se o binário já existe no `PATH` (`command -v nome_do_binario`). Se já existir, emitir `_ui_ok "Binário já instalado"` e pular com segurança.
+- [x] Migrar cada script em `Setup/common/` para importar `core/ui.sh` e `core/elevate.sh`.
+- [x] Substituir todo `echo "==> ..."` avulso por `_ui_step`, `_ui_sub`, `_ui_ok`, `_ui_warn` e `_ui_err`.
+- [x] Implementar **idempotência ativa**: Antes de disparar comandos de download ou gerenciadores de pacotes, verificar se o binário já existe no `PATH` (`command -v nome_do_binario`). Se já existir, emitir `_ui_ok "Binário já instalado"` e pular com segurança.
 
 ### Fase 3: Paridade e Modernização de Distribuições Linux
 
-- [ ] Padronizar os scripts sob `Setup/linux/` para que cada distribuição suporte as mesmas classes de ferramentas básicas.
-- [ ] Eliminar bashismos em instaladores de shell (`[[ ]]` ➔ `[ ]`, `&>` ➔ `> ... 2>&1`, `source` ➔ `.`).
-- [ ] Assegurar shebang universal `#!/usr/bin/env sh` em todos os scripts POSIX.
+- [x] Padronizar os scripts sob `Setup/linux/` para que cada distribuição suporte as mesmas classes de ferramentas básicas.
+- [x] Eliminar bashismos em instaladores de shell (`[[ ]]` ➔ `[ ]`, `&>` ➔ `> ... 2>&1`, `source` ➔ `.`).
+- [x] Assegurar shebang universal `#!/usr/bin/env sh` em todos os scripts POSIX.
 
 ### Fase 4: Refinamento das Receitas do FreeBSD
 
-- [ ] Alinhar receitas de áudio (`sndiod` / OSS) e aceleração gráfica DRM/KMS.
-- [ ] Validar a receita de container Bhyve (`Setup/freebsd/container/bhyve.sh`) garantindo persistência sem duplicar linhas no `/etc/rc.conf` (utilizar `sysrc`).
+- [x] Alinhar receitas de áudio (`sndiod` / OSS) e aceleração gráfica DRM/KMS.
+- [x] Validar a receita de container Bhyve (`Setup/freebsd/container/bhyve.sh`) garantindo persistência sem duplicar linhas no `/etc/rc.conf` (utilizar `sysrc`).
 
 ### Fase 5: Auditoria Estática & Quality Gates
 
-- [ ] Executar `python3 .scripts/audit/all.py` e garantir 100% de aprovação em todos os 6 testes.
-- [ ] Garantir que nenhum arquivo exceda 256 linhas (`monoliths.py`).
-- [ ] Garantir que nenhum script executável tenha menos de 8 linhas (`nanos.py`).
-- [ ] Validar geometria de réguas (64 hífens no topo, 32 caracteres com `### ` no corpo).
+- [x] Executar `python3 .scripts/audit/all.py` e garantir 100% de aprovação em todos os 6 testes.
+- [x] Garantir que nenhum arquivo exceda 256 linhas (`monoliths.py`).
+- [x] Garantir que nenhum script executável tenha menos de 8 linhas (`nanos.py`).
+- [x] Validar geometria de réguas (64 hífens no topo, 32 caracteres com `### ` no corpo).
 
 ---
 

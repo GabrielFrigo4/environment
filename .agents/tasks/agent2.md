@@ -32,29 +32,29 @@ O agente deve mapear e inspecionar a árvore do repositório `Editor/Emacs`:
 
 ### Fase 1: Camada Sensorial de Hardware & Display
 
-- [ ] Implementar em Elisp predicados de auto-detecção de sistema e servidor gráfico:
+- [x] Implementar em Elisp predicados de auto-detecção de sistema e servidor gráfico:
     - `(featurep 'pgtk)`: Detecção de Pure GTK sob Wayland.
     - `(eq window-system 'x)`: Detecção de X11 tradicional.
     - `(eq window-system 'w32)`: Detecção de Windows nativo (DirectWrite).
     - `(not window-system)`: Detecção de execução em modo terminal puro (TTY).
-- [ ] Auto-detecção de compilação nativa (`libgccjit`):
+- [x] Auto-detecção de compilação nativa (`libgccjit`):
     - Verificar `(featurep 'native-compile)` antes de configurar `native-comp-async-report-warnings-errors` e diretórios de cache `eln-cache`.
 
 ### Fase 2: Tipografia Adaptativa & Engine de Fontes
 
-- [ ] No Windows: Configurar backend de fontes DirectWrite para evitar fontes borradas ou serrilhadas.
-- [ ] No Linux e FreeBSD: Configurar HarfBuzz e Fontconfig priorizando fontes monoespaçadas com suporte a ligaduras (ex: JetBrains Mono, Fira Code, Hack) com fallback transparente para Nerd Fonts e emojis Noto/Symbola.
-- [ ] Em modo TTY (`not window-system`): Forçar desativação de glyphs compostos pesados e garantir que o tema use cores ANSI de 16/256 cores sem travamentos.
+- [x] No Windows: Configurar backend de fontes DirectWrite para evitar fontes borradas ou serrilhadas.
+- [x] No Linux e FreeBSD: Configurar HarfBuzz e Fontconfig priorizando fontes monoespaçadas com suporte a ligaduras (ex: JetBrains Mono, Fira Code, Hack) com fallback transparente para Nerd Fonts e emojis Noto/Symbola.
+- [x] Em modo TTY (`not window-system`): Forçar desativação de glyphs compostos pesados e garantir que o tema use cores ANSI de 16/256 cores sem travamentos.
 
 ### Fase 3: Desacoplamento Modular com Blindagem `condition-case`
 
-- [ ] Organizar a pasta `lisp/` ou `modules/` em camadas funcionais:
+- [x] Organizar a pasta `lisp/` ou `modules/` em camadas funcionais:
     - `core-ui.el`: Modeline, temas, fontes e janelas.
     - `core-editor.el`: Comportamento modal, navegação, histórico e buffers.
     - `core-dev.el`: Eglot LSP, Tree-sitter, formatadores e REPLs.
     - `core-org.el`: Org-mode, agenda, capture templates.
     - `core-ai.el`: `gptel` e integrações de LLM.
-- [ ] Envolver o carregamento de cada módulo subordinado em um bloco defensivo `condition-case`:
+- [x] Envolver o carregamento de cada módulo subordinado em um bloco defensivo `condition-case`:
     ```elisp
     (condition-case err
         (require 'meu-modulo)
@@ -64,19 +64,19 @@ O agente deve mapear e inspecionar a árvore do repositório `Editor/Emacs`:
 
 ### Fase 4: Modernização da IA Local (`gptel` + Ollama)
 
-- [ ] Atualizar a lista de modelos pré-configurados do Ollama no `gptel`:
+- [x] Atualizar a lista de modelos pré-configurados do Ollama no `gptel`:
     - Expurgar referências a modelos obsoletos.
     - Adicionar modelos modernos: `gemma2:9b`, `qwen2.5-coder:7b`, `phi4:14b`, `deepseek-r1:8b`.
-- [ ] Implementar a função `ollama-detect-p`: Testar via socket/probe TCP leve (`make-network-process`) na porta `11434` se o daemon local do Ollama está ativo, desativando comandos de IA graciosamente caso offline.
+- [x] Implementar a função `ollama-detect-p`: Testar via socket/probe TCP leve (`make-network-process`) na porta `11434` se o daemon local do Ollama está ativo, desativando comandos de IA graciosamente caso offline.
 
 ### Fase 5: Validação Headless & Testes em Batch
 
-- [ ] Testar a inicialização completa sem GUI via:
+- [x] Testar a inicialização completa sem GUI via:
     ```sh
     emacs --batch --eval "(message \"Boot OK em %s\" (emacs-init-time))" -l init.el
     ```
-- [ ] Assegurar que o tempo de inicialização em batch seja inferior a 1.0 segundo.
-- [ ] Executar `make -C Editor/Emacs test` e assegurar zero warnings fatais.
+- [x] Assegurar que o tempo de inicialização em batch seja inferior a 1.0 segundo.
+- [x] Executar `make -C Editor/Emacs test` e assegurar zero warnings fatais.
 
 ---
 
