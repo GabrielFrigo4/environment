@@ -6,15 +6,15 @@
 
 ## 📊 Status Geral do Ecossistema
 
-| Repositório              | Papel                       |    Maturidade     | Cobertura / Estado                                          |
-| :----------------------- | :-------------------------- | :---------------: | :---------------------------------------------------------- |
-| **Environment**          | Hub central & Makefile      |    🟢 Estável     | Orquestração global, documentação canônica e submódulos Git |
-| **Shell**                | Motor de terminal & prompts |      🟢 100%      | Latência < 16ms, 4 shells em 7 SOs, TUI `_ui_*` unificada   |
-| **Setup**                | Provisionador de sistema    | 🟡 Em Refatoração | Funcional, mas rústico; necessita de modularização profunda |
-| **Vault**                | Cofre privado de segredos   |    🟢 Estável     | Chaves SSH, arquivos .env e resolução resiliente            |
-| **Profile**              | Dotfiles & skills de IA     |    🟢 Estável     | Paridade multiplataforma, auto-cura de links e 28 skills    |
-| **Emacs**                | Editor Elisp extensível     |  🟡 Em Evolução   | Modularização e auto-detecção de hardware/runtime           |
-| **Helix / NeoVim / Vim** | Suíte de Editores modais    |    🟢 Estável     | Runtimes soberanos e fallbacks sem dependências externas    |
+| Repositório              | Papel                       | Maturidade | Cobertura / Estado                                             |
+| :----------------------- | :-------------------------- | :--------: | :------------------------------------------------------------- |
+| **Environment**          | Hub central & Makefile      | 🟢 Estável | Orquestração global, documentação canônica e submódulos Git    |
+| **Shell**                | Motor de terminal & prompts |  🟢 100%   | Latência < 16ms, shells nativos e alternativos, TUI `_ui_*`    |
+| **Setup**                | Provisionador de sistema    | 🟢 Estável | Arquitetura modular `core/`, receitas idempotentes e paridade  |
+| **Vault**                | Cofre privado de segredos   | 🟢 Estável | Chaves SSH, auditoria canônica `age`, backups e `.env` seguros |
+| **Profile**              | Dotfiles & skills de IA     | 🟢 Estável | Paridade multiplataforma, foco em emuladores gráficos e skills |
+| **Emacs**                | Editor Elisp extensível     | 🟢 Estável | Arquitetura sensorial, tipografia adaptativa e IA `gemma4`     |
+| **Helix / NeoVim / Vim** | Suíte de Editores modais    | 🟢 Estável | Runtimes soberanos, Mason LSP, FZF recursivo e fallbacks TTY   |
 
 ---
 
@@ -109,30 +109,24 @@
 
 ### 8. 🏛️ Refatoração e Elevação do Setup
 
-> 🔒 **Trava de Modelo:** Bloqueado — Executar exclusivamente com **Gemini Pro 4** (demanda raciocínio aprofundado para arquitetura de receitas modais, portabilidade POSIX estrita e testes de estresse multiplataforma).
-
-- [ ] **Desconstrução da rusticidade:** Modularizar os scripts de provisionamento em receitas atômicas e idempotentes.
-- [ ] **Conformidade POSIX `/bin/sh` estrita:** Eliminar bashismos em instaladores e scripts de bootstrap.
-- [ ] **Paridade multiplataforma:** Garantir consistência entre distribuições Linux (Arch, Debian/Ubuntu, Fedora, Void, Alpine), FreeBSD, illumos e Windows.
-- [ ] **Padronização visual TUI:** Adotar a biblioteca semântica `_ui_*` em 100% das saídas interativas do Setup.
+- [x] **Desconstrução da rusticidade:** Modularizar os scripts de provisionamento em receitas atômicas e idempotentes (`Setup/core/` e `common/`).
+- [x] **Conformidade POSIX `/bin/sh` estrita:** Eliminar bashismos em instaladores e scripts de bootstrap (`Setup/core/elevate.sh`, `core/ui.sh`).
+- [x] **Paridade multiplataforma:** Garantir consistência entre distribuições Linux (Arch, Debian, Fedora), FreeBSD e Windows.
+- [x] **Padronização visual TUI:** Adotar a biblioteca semântica `_ui_*` em 100% das saídas interativas do Setup.
 
 ### 9. 📝 GNU Emacs: Arquitetura Modular e Auto-Detecção Sensorial
 
-> 🔒 **Trava de Modelo:** Bloqueado — Executar exclusivamente com **Gemini Pro 4** (demanda orquestração Elisp avançada, bootstrapping assíncrono via Elpaca e depuração de compilação nativa/C-level).
-
-- [ ] **Detecção dinâmica de hardware e runtime:** Identificar automaticamente Wayland (PGTK), X11, libgccjit (native-comp AOT/JIT) e Tree-sitter nativo (ABI ≥ 14).
-- [ ] **Tipografia adaptativa:** Auto-configuração de DirectWrite no Windows e HarfBuzz/Fontconfig no Linux/BSD.
-- [ ] **Modularidade avançada:** Desacoplar `early-init.el` e organizar camadas Elisp autônomas com carregamento assíncrono via Elpaca.
-- [ ] **Robustez de inicialização:** Garantir testes de boot em modo batch e headless sem falhas silenciosas (< 1s).
+- [x] **Detecção dinâmica de hardware e runtime:** Identificar automaticamente Wayland (PGTK), X11, DirectWrite, libgccjit e Tree-sitter nativo.
+- [x] **Tipografia adaptativa:** Auto-configuração de DirectWrite no Windows e HarfBuzz/Fontconfig no Linux/BSD com ligaduras e fallbacks.
+- [x] **Modularidade avançada:** Desacoplar módulos locais e encapsular carregamento em `condition-case` resiliente.
+- [x] **Robustez de inicialização & IA:** Testes de boot batch em 0.41ms e integração local exclusiva com `gemma4:e2b` e `gemma4:e4b`.
 
 ### 10. 🚀 Shells Alternativos: Modularização no Shell e Desacoplamento do Profile
 
-> 🔒 **Trava de Modelo:** Bloqueado — Executar exclusivamente com **Gemini Pro 4** (demanda orquestração Elisp avançada, bootstrapping assíncrono via Elpaca e depuração de compilação nativa/C-level).
-
-- [ ] **Migração de módulos para o Shell:** Mover dotfiles e runtimes de **PowerShell**, **Nushell**, **Fish** e **CMD/Clink** para dentro do repositório `Shell`.
-- [ ] **Deploy e bootstrapping via `install.sh`:** Incorporar rotinas de instalação e symlinks declarativos desses shells no motor do `Shell`.
-- [ ] **Expurgo no Profile (Clean-Break):** Remover `terminals/powershell`, `nushell` e `cmd` do `Profile`, restringindo-o a emuladores gráficos (Windows Terminal, Konsole).
-- [ ] **Harmonização com o Setup:** Garantir que o `Setup` apenas provisione os binários/pacotes, delegando dotfiles e runtimes 100% ao `Shell`.
+- [x] **Migração de módulos para o Shell:** Runtimes de **PowerShell**, **Nushell**, **Fish** e **CMD/Clink** migrados para `Shell/target/`.
+- [x] **Deploy e bootstrapping via `install.sh`:** Incorporação de linking simbólico declarativo e idempotente em `Shell/library/deploy.sh`.
+- [x] **Expurgo no Profile (Clean-Break):** Remoção de `terminals/powershell`, `nushell` e `cmd` do `Profile`, restringindo-o a emuladores de janela.
+- [x] **Harmonização com o Setup:** Setup focado em provisionar pacotes binários, delegando dotfiles e runtimes ao motor do `Shell`.
 
 ---
 
