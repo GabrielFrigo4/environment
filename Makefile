@@ -244,20 +244,22 @@ lint-md:
 SH_VALIDATOR ?= $(shell command -v bash 2>/dev/null || command -v zsh 2>/dev/null || echo sh)
 
 audit:
-	echo "🔍 [1/5] Auditando Setup..."
+	echo "🔍 [1/6] Auditando Setup..."
 	python3 Setup/.scripts/audit/all.py
-	echo "🔍 [2/5] Auditando Profile..."
+	echo "🔍 [2/6] Auditando Profile..."
 	python3 Profile/.scripts/audit/all.py
-	echo "🔍 [3/5] Validando sintaxe do Shell..."
+	echo "🔍 [3/6] Validando sintaxe do Shell..."
 	find Shell -name "*.sh" -not -path "*/.git/*" -exec $(SH_VALIDATOR) -n {} +
-	echo "🔍 [4/5] Validando sintaxe do Vault..."
+	echo "🔍 [4/6] Validando sintaxe do Vault..."
 	$(SH_VALIDATOR) -n Vault/vault.sh
-	echo "🔍 [5/5] Validando a Suíte de Editores (Sintaxe & Headless)..."
+	echo "🔍 [5/6] Validando a Suíte de Editores (Sintaxe & Headless)..."
 	$(MAKE) -C Editor/Helix test
 	find Editor -name "*.sh" -not -path "*/.git/*" -exec $(SH_VALIDATOR) -n {} + && echo "  ✅ Editor Shell Scripts: sintaxe POSIX OK"
 	$(MAKE) -C Editor/NeoVim test
 	$(MAKE) -C Editor/Vim test
 	$(MAKE) -C Editor/Emacs test
+	echo "🔍 [6/6] Auditando Template..."
+	python3 Template/.scripts/audit/all.py
 	echo "🎉 Todas as auditorias estáticas foram aprovadas com sucesso!"
 
 test:

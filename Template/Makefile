@@ -10,13 +10,13 @@ MAKEFLAGS += --no-print-directory -s
 APP         ?= app
 VERSION     != cat VERSION 2> "/dev/null" || echo "0.1.0-dev"
 
-.PHONY: help hooks dev build check test format prettier lint ci clean
+.PHONY: help hooks dev build check test audit format prettier lint ci clean
 
 ### ================================
 ### HELP & DOCUMENTATION
 ### ================================
 help:
-	_e=$$'\e'; \
+	_e=$$(printf '\033'); \
 	cmd() { printf "    $${_e}[36mmake %-22s$${_e}[0m %s\n" "$$1" "$$2"; }; \
 	sec() { printf "\n  $${_e}[1;33m%s$${_e}[0m\n" "$$1"; }; \
 	sub() { printf "  $${_e}[1;34m  ── %s ──$${_e}[0m\n" "$$1"; }; \
@@ -30,10 +30,11 @@ help:
 	sec "Qualidade & Validação:"; \
 	cmd "check"          "Executa validação estática de tipos e sintaxe"; \
 	cmd "test"           "Executa a suíte automatizada de testes locais"; \
+	cmd "audit"          "Executa a suíte canônica de auditoria estática"; \
 	cmd "format"         "Formata código-fonte e documentações"; \
 	cmd "prettier"       "Formata documentações Markdown com Prettier"; \
 	cmd "lint"           "Valida formatação sem modificar arquivos"; \
-	cmd "ci"             "Executa pipeline local completa (check test lint)"; \
+	cmd "ci"             "Executa pipeline local completa (check test lint audit)"; \
 	sec "Manutenção & Limpeza:"; \
 	cmd "clean"          "Remove artefatos de build e diretórios temporários"; \
 	echo ""
@@ -69,6 +70,10 @@ check:
 test:
 	echo "🧪 Executando suíte de testes..."
 	echo "✅ Todos os testes foram aprovados!"
+
+audit:
+	echo "🔍 Executando suíte canônica de auditoria estática..."
+	python3 .scripts/audit/all.py
 
 format: prettier
 	echo "✅ Formatação concluída!"

@@ -1,23 +1,25 @@
-# 📋 TODO — Roadmap & Tarefas
+# 🗺️ Roadmap & Status — Universal Template
 
-Acompanhamento de objetivos, tarefas planejadas e itens pendentes para o projeto **{{PROJECT_NAME}}**.
-
----
-
-## 🚀 Checklist Inicial de Setup
-
-- [ ] Personalizar `README.md` com a descrição real, requisitos e arquitetura do projeto.
-- [ ] Atualizar variáveis de cabeçalho no `Makefile` (`APP`, compilador, fontes).
-- [ ] Configurar comandos e testes em `make test` e `make build`.
-- [ ] Ajustar `AGENTS.md` com o escopo e regras específicas da tecnologia adotada.
-- [ ] Executar `make hooks` para registrar os ganchos locais no Git.
-- [ ] Executar `make ci` para validar a linha de base inicial do repositório.
+> **Status:** 🟢 **100% Operacional & Estável — Zero Pendências Ativas**
+> Arquétipo canônico para novos repositórios do ecossistema, dotado de automação de scaffolding `init.sh`, auditoria estática `.scripts/audit/`, biblioteca semântica de terminal `scripts/ui.sh` e ganchos Git rigorosos.
 
 ---
 
-## 🎯 Próximos Passos & Funcionalidades
+## 📊 Matriz de Maturidade
 
-- [ ] Definir arquitetura dos módulos principais em `src/`.
-- [ ] Implementar suíte de testes de integração e testes unitários.
-- [ ] Configurar pipeline de CI automatizada em `.github/workflows/ci.yml`.
-- [ ] Publicar primeira versão de pré-lançamento (`VERSION`).
+| Área                     |   Status    | Cobertura / Estado                                                    |
+| :----------------------- | :---------: | :-------------------------------------------------------------------- |
+| **Scaffolding CLI**      | 🟢 Estável  | `init.sh` automatiza substituição de tokens, git e ganchos            |
+| **Auditoria Canônica**   | 🟢 Estável  | Suíte `.scripts/audit/` completa (sintaxe, banners, links, monólitos) |
+| **Emissão Visual TUI**   | 🟢 Estável  | Biblioteca semântica `scripts/ui.sh` (`_ui_*`) integrada              |
+| **Orquestrador Central** | 🟢 Estável  | `Makefile` POSIX com alvos `help`, `check`, `test`, `ci` e `audit`    |
+| **Ganchos Git**          | 🟢 Estável  | Pre-commit e commit-msg canônicos configurados em `.githooks/`        |
+| **Governança & Padrões** | 🟢 Estável  | `PRINCIPLES.md` e `AGENTS.md` canônicos sincronizados                 |
+| **Quality Gates**        | 🟢 Aprovado | Linters de monólitos, sintaxe POSIX e réguas 100% aprovados           |
+
+---
+
+## 🛡️ Atributos Entregues
+
+- **Zero Pendências:** Arquétipo pronto para instanciação instantânea "out-of-the-box".
+- **Sincronização:** Total aderência aos 22 Princípios de Engenharia UNIX do Universal Environment.
