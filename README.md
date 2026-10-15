@@ -135,27 +135,27 @@ make install  # Provisiona todos os repositórios em seus caminhos canônicos no
 
 ## ⚙️ Comandos do Makefile
 
-| Comando          | Ação                                                                  |
-| :--------------- | :-------------------------------------------------------------------- |
-| `make clone`     | Inicializa submódulos de desenvolvimento e clona o Vault (defensivo)  |
-| `make install`   | Clona e provisiona cada repositório soberano em seu caminho canônico  |
-| `make bootstrap` | Alias para `make install` (conveniência e compatibilidade)            |
-| `make deploy`    | Alias para `make install` (conveniência e compatibilidade)            |
-| `make update`    | Atualiza todas as instalações soberanas no SO (Shell, Profile, etc.)  |
-| `make pull`      | Atualiza submódulos e sincroniza todos os repos com o upstream        |
-| `make sync-docs` | Propaga ENVIRONMENT.md e PRINCIPLES.md para todos os submódulos       |
-| `make uped`      | Atualiza individualmente os 4 repositórios da Suíte de Editores       |
-| `make upgit`     | Atualiza recursivamente todos os repositórios Git encontrados         |
-| `make strip`     | Purga metadados (`.git*`, `*.md`) para modo Zero-Bloat                |
-| `make status`    | Exibe status Git resumido de todo o ecossistema (Core + Editores)     |
-| `make hooks`     | Configura `.githooks` executáveis em todos os repositórios            |
-| `make audit`     | Executa suítes de auditoria estática e conformidade em todos os repos |
-| `make test`      | Valida sintaxe POSIX, Zsh e headless em todos os scripts e editores   |
-| `make bench`     | Mede latência de inicialização de shells e módulos (&lt; 64ms)        |
-| `make doctor`    | Executa diagnóstico de integridade e sanity check pós-boot            |
-| `make format`    | Formata recursivamente arquivos (MD, JSON, YAML) com Prettier         |
-| `make lint-md`   | Valida formatação (MD, JSON, YAML) com Prettier sem alterar arquivos  |
-| `make ci`        | Executa pipeline completa de testes, auditoria e pre-commit           |
+| Comando            | Ação                                                                     |
+| :----------------- | :----------------------------------------------------------------------- |
+| `make clone`       | Inicializa submódulos de desenvolvimento e clona o Vault (defensivo)     |
+| `make install`     | Clona e provisiona cada repositório soberano em seu caminho canônico     |
+| `make bootstrap`   | Alias para `make install` (conveniência e compatibilidade)               |
+| `make deploy`      | Alias para `make install` (conveniência e compatibilidade)               |
+| `make update`      | Atualiza todas as instalações soberanas no SO (Shell, Profile, etc.)     |
+| `make pull`        | Atualiza submódulos e sincroniza todos os repos com o upstream           |
+| `make sync-docs`   | Propaga ENVIRONMENT.md e PRINCIPLES.md para todos os submódulos          |
+| `make uped`        | Atualiza individualmente os 4 repositórios da Suíte de Editores          |
+| `make upgit`       | Atualiza recursivamente todos os repositórios Git encontrados            |
+| `make strip`       | Purga metadados (`.git*`, `*.md`) para modo Zero-Bloat                   |
+| `make status`      | Exibe status Git resumido de todo o ecossistema (Core + Editores)        |
+| `make hooks`       | Configura `.githooks` executáveis em todos os repositórios               |
+| `make audit`       | Executa suítes de auditoria estática e conformidade em todos os repos    |
+| `make test`        | Valida sintaxe POSIX, Zsh e headless em todos os scripts e editores      |
+| `make bench`       | Mede latência de inicialização de shells e módulos (&lt; 64ms)           |
+| `make doctor`      | Executa diagnóstico de integridade e sanity check pós-boot               |
+| `make format`      | Formata recursivamente arquivos (MD, JSON, YAML, HTML, CSS) com Prettier |
+| `make lint-format` | Valida formatação recursiva com Prettier sem alterar arquivos            |
+| `make ci`          | Executa pipeline completa de testes, auditoria e pre-commit              |
 
 ---
 

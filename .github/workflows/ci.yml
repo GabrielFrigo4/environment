@@ -64,8 +64,8 @@ jobs:
               with:
                   node-version: "22"
 
-            - name: Validate Markdown Formatting
+            - name: Validate Formatting
               run: |
                   npm install -g prettier
                   cp Profile/tools/.prettierrc ~/.prettierrc
-                  make lint-md
+                  make lint-format

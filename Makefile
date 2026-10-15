@@ -7,7 +7,7 @@ MAKEFLAGS += --no-print-directory -s
 # Makefile: Universal Environment
 # ----------------------------------------------------------------
 
-.PHONY: help status audit sync-docs pull update test fix-banners ci doctor clone hooks format prettier lint-md bench uped upgit strip install deploy bootstrap main
+.PHONY: help status audit sync-docs pull update test fix-banners ci doctor clone hooks format prettier lint-format bench uped upgit strip install deploy bootstrap main
 
 REPOS     = Setup Shell Vault Profile
 EDITORS   = Editor/Emacs Editor/Helix Editor/NeoVim Editor/Vim
@@ -41,9 +41,9 @@ help:
 	sec "Qualidade, Testes & CI:"; \
 	cmd "test"           "Valida sintaxe Zsh, Bash e POSIX em todos os scripts do ecossistema"; \
 	cmd "audit"          "Executa suítes de auditoria estática e conformidade em todos os repos"; \
-	cmd "format"         "Formata todos os arquivos Markdown com Prettier"; \
-	cmd "prettier"       "Formata todos os arquivos Markdown com Prettier"; \
-	cmd "lint-md"        "Valida formatação de Markdown sem alterar arquivos"; \
+	cmd "format"         "Formata recursivamente arquivos (MD, JSON, YAML, HTML, CSS) com Prettier"; \
+	cmd "prettier"       "Formata recursivamente arquivos com Prettier"; \
+	cmd "lint-format"    "Valida formatação recursiva com Prettier sem alterar arquivos"; \
 	cmd "ci"             "Executa pipeline completa de testes, auditoria e pre-commit"; \
 	echo ""
 
@@ -218,43 +218,47 @@ strip:
 prettier: format
 
 format:
-	echo "🎨 Formatando arquivos (MD, JSON, YAML) com Prettier recursivamente..."
+	echo "🎨 Formatando arquivos (MD, JSON, YAML, HTML, CSS) com Prettier recursivamente..."
 	if command -v prettier > "/dev/null" 2>&1; then \
-		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.yml" -o -name "*.yaml" \) \
-			-not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
-			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "./Vault/*" \
+		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.jsonc" -o -name "*.yml" -o -name "*.yaml" -o -name "*.html" -o -name "*.css" \) \
+			-not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
+			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "*/build/*" -not -path "*/dist/*" \
+			-not -path "*/target/*" -not -path "*/.cache/*" -not -path "./Vault/*" \
 			-exec prettier --write {} +; \
 		if [ -d "Vault" ]; then \
-			(cd Vault && find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.yml" -o -name "*.yaml" \) \
+			(cd Vault && find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.jsonc" -o -name "*.yml" -o -name "*.yaml" -o -name "*.html" -o -name "*.css" \) \
 				-not -path "*/.git/*" -exec prettier --write {} + 2> "/dev/null" || true); \
 		fi; \
 		echo "✅ Todos os arquivos foram formatados recursivamente!"; \
 	elif command -v npx > "/dev/null" 2>&1; then \
-		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.yml" -o -name "*.yaml" \) \
-			-not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
-			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "./Vault/*" \
+		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.jsonc" -o -name "*.yml" -o -name "*.yaml" -o -name "*.html" -o -name "*.css" \) \
+			-not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
+			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "*/build/*" -not -path "*/dist/*" \
+			-not -path "*/target/*" -not -path "*/.cache/*" -not -path "./Vault/*" \
 			-exec npx --yes prettier --write {} +; \
 		echo "✅ Todos os arquivos foram formatados recursivamente!"; \
 	else \
 		echo "⚠️ Prettier não encontrado no PATH."; \
 	fi
 
-lint-md:
-	echo "🔍 Validando formatação (MD, JSON, YAML) com Prettier..."
+lint-format:
+	echo "🔍 Validando formatação (MD, JSON, YAML, HTML, CSS) com Prettier..."
 	if command -v prettier > "/dev/null" 2>&1; then \
-		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.yml" -o -name "*.yaml" \) \
-			-not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
-			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "./Vault/*" \
+		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.jsonc" -o -name "*.yml" -o -name "*.yaml" -o -name "*.html" -o -name "*.css" \) \
+			-not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
+			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "*/build/*" -not -path "*/dist/*" \
+			-not -path "*/target/*" -not -path "*/.cache/*" -not -path "./Vault/*" \
 			-exec prettier --check {} +; \
 		if [ -d "Vault" ]; then \
-			(cd Vault && find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.yml" -o -name "*.yaml" \) \
+			(cd Vault && find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.jsonc" -o -name "*.yml" -o -name "*.yaml" -o -name "*.html" -o -name "*.css" \) \
 				-not -path "*/.git/*" -exec prettier --check {} + 2> "/dev/null" || true); \
 		fi; \
 		echo "✅ Formatação 100% em conformidade!"; \
 	elif command -v npx > "/dev/null" 2>&1; then \
-		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.yml" -o -name "*.yaml" \) \
-			-not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
-			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "./Vault/*" \
+		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.jsonc" -o -name "*.yml" -o -name "*.yaml" -o -name "*.html" -o -name "*.css" \) \
+			-not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
+			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "*/build/*" -not -path "*/dist/*" \
+			-not -path "*/target/*" -not -path "*/.cache/*" -not -path "./Vault/*" \
 			-exec npx --yes prettier --check {} +; \
 		echo "✅ Formatação 100% em conformidade!"; \
 	else \
@@ -302,7 +306,7 @@ bench:
 doctor:
 	sh Setup/.scripts/audit/doctor.sh
 
-ci: test audit lint-md
+ci: test audit lint-format
 	echo "⚡ Medindo benchmark de inicialização do Shell..."
 	(cd Shell && sh .githooks/pre-commit)
 	echo "🚀 Ecossistema 100% pronto para produção e commits!"

@@ -26,7 +26,7 @@ jobs:
 
             - name: Check Whitespace & Formatting
               run: |
-                  npx prettier --check "**/*.{md,json,yml,yaml}"
+                  npx prettier --check "**/*.{md,json,jsonc,yml,yaml,html,css}"
 
             - name: Run Makefile CI
               run: |
