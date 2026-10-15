@@ -153,8 +153,8 @@ make install  # Provisiona todos os repositórios em seus caminhos canônicos no
 | `make test`      | Valida sintaxe POSIX, Zsh e headless em todos os scripts e editores   |
 | `make bench`     | Mede latência de inicialização de shells e módulos (&lt; 64ms)        |
 | `make doctor`    | Executa diagnóstico de integridade e sanity check pós-boot            |
-| `make format`    | Formata todos os arquivos Markdown com Prettier                       |
-| `make lint-md`   | Valida formatação de Markdown com Prettier sem alterar arquivos       |
+| `make format`    | Formata recursivamente arquivos (MD, JSON, YAML) com Prettier         |
+| `make lint-md`   | Valida formatação (MD, JSON, YAML) com Prettier sem alterar arquivos  |
 | `make ci`        | Executa pipeline completa de testes, auditoria e pre-commit           |
 
 ---

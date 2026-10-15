@@ -218,27 +218,47 @@ strip:
 prettier: format
 
 format:
-	echo "🎨 Formatando arquivos Markdown com Prettier..."
+	echo "🎨 Formatando arquivos (MD, JSON, YAML) com Prettier recursivamente..."
 	if command -v prettier > "/dev/null" 2>&1; then \
-		find . -name "*.md" -not -path "*/.git/*" -not -path "*/var/*" -not -path "./Vault/*" -exec prettier --write {} +; \
+		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.yml" -o -name "*.yaml" \) \
+			-not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
+			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "./Vault/*" \
+			-exec prettier --write {} +; \
 		if [ -d "Vault" ]; then \
-			(cd Vault && find . -name "*.md" -not -path "*/.git/*" -exec prettier --write {} + 2> "/dev/null" || true); \
+			(cd Vault && find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.yml" -o -name "*.yaml" \) \
+				-not -path "*/.git/*" -exec prettier --write {} + 2> "/dev/null" || true); \
 		fi; \
-		echo "✅ Todos os arquivos Markdown foram formatados!"; \
+		echo "✅ Todos os arquivos foram formatados recursivamente!"; \
+	elif command -v npx > "/dev/null" 2>&1; then \
+		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.yml" -o -name "*.yaml" \) \
+			-not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
+			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "./Vault/*" \
+			-exec npx --yes prettier --write {} +; \
+		echo "✅ Todos os arquivos foram formatados recursivamente!"; \
 	else \
 		echo "⚠️ Prettier não encontrado no PATH."; \
 	fi
 
 lint-md:
-	echo "🔍 Validando formatação de Markdown com Prettier..."
+	echo "🔍 Validando formatação (MD, JSON, YAML) com Prettier..."
 	if command -v prettier > "/dev/null" 2>&1; then \
-		find . -name "*.md" -not -path "*/.git/*" -not -path "*/var/*" -not -path "./Vault/*" -exec prettier --check {} +; \
+		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.yml" -o -name "*.yaml" \) \
+			-not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
+			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "./Vault/*" \
+			-exec prettier --check {} +; \
 		if [ -d "Vault" ]; then \
-			(cd Vault && find . -name "*.md" -not -path "*/.git/*" -exec prettier --check {} + 2> "/dev/null" || true); \
+			(cd Vault && find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.yml" -o -name "*.yaml" \) \
+				-not -path "*/.git/*" -exec prettier --check {} + 2> "/dev/null" || true); \
 		fi; \
-		echo "✅ Formatação de Markdown 100% em conformidade!"; \
+		echo "✅ Formatação 100% em conformidade!"; \
+	elif command -v npx > "/dev/null" 2>&1; then \
+		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.yml" -o -name "*.yaml" \) \
+			-not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
+			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "./Vault/*" \
+			-exec npx --yes prettier --check {} +; \
+		echo "✅ Formatação 100% em conformidade!"; \
 	else \
-		echo "ℹ️ Prettier não instalado; pulando validação de Markdown."; \
+		echo "ℹ️ Prettier não instalado; pulando validação."; \
 	fi
 
 SH_VALIDATOR ?= $(shell command -v bash 2>/dev/null || command -v zsh 2>/dev/null || echo sh)
