@@ -28,5 +28,13 @@
 
 ---
 
+## 📌 Backlog & Próximos Passos
+
+- [ ] **Otimização da Suíte de Editores para Console Puro TTY (Linux & FreeBSD):**
+    - Aperfeiçoar o suporte, rendering visual e fallbacks de **Vim**, **NeoVim**, **Helix** e **GNU Emacs** quando executados diretamente em consoles virtuais TTY puros do Linux (`/dev/tty1`-`6`) e do FreeBSD (`/dev/ttyv0`-`7`) sem ambiente gráfico (X11/Wayland).
+    - Tratar degradação elegante de cores (paletas ANSI 16/256 vs truecolor), fontes/glifos sem dependência estrita de Nerd Fonts em terminais do kernel, suporte a mouse via `gpm`/`moused` e mapeamento de sequências de teclas em drivers de terminal virtuais (`cons25`, `teken`, `vt100/220`).
+
+---
+
 > [!TIP]
 > Para detalhes sobre a arquitetura e convenções de engenharia, consulte o [PRINCIPLES.md](PRINCIPLES.md) e o [ENVIRONMENT.md](ENVIRONMENT.md).
