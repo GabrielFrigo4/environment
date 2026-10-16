@@ -32,13 +32,13 @@ _ui_info() { _ui_has_color && printf "%s  ℹ️ %s %s\n" "${_ui_magenta}" "${_u
 _ui_banner() {
 	_title="$1"
 	_sep="================================================================"
-	echo ""
+	printf "\n"
 	if _ui_has_color; then
 		printf "%s%s%s\n" "${_ui_cyan}" "${_sep}" "${_ui_reset}"
-		printf "  %s\n" "${_title}"
+		printf "%s  %s%s\n" "${_ui_bold}" "${_title}" "${_ui_reset}"
 		printf "%s%s%s\n" "${_ui_cyan}" "${_sep}" "${_ui_reset}"
 	else
 		printf "%s\n  %s\n%s\n" "${_sep}" "${_title}" "${_sep}"
 	fi
-	echo ""
+	printf "\n"
 }
