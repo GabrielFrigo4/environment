@@ -135,6 +135,53 @@ else
 fi
 ```
 
+### 8. Auto-Cura Reentrante de Perfis Multi-Shell (_Cross-Shell Profile Self-Healing_)
+
+Sistemas que operam com múltiplos shells nativos (PowerShell, NuShell, CMD) não devem obrigar o usuário a copiar arquivos de configuração manualmente (`cp`, `Copy-Item`).
+
+O comando de atualização de qualquer shell (`upsh`, `resh`) detecta a presença dos demais e atualiza atomicamente seus arquivos físicos em disco (`Documents\PowerShell\profile.ps1`, `%APPDATA%\nushell\config.nu`, `%LOCALAPPDATA%\clink\profile.lua`):
+
+```powershell
+if ($env:APPDATA) {
+	$appNu = Join-Path $env:APPDATA "nushell"
+	$nuSrc = Join-Path $target "target\windows\nushell"
+	if ((Test-Path $appNu) -and (Test-Path $nuSrc)) {
+		foreach ($f in @("config.nu", "env.nu")) {
+			Copy-Item (Join-Path $nuSrc $f) (Join-Path $appNu $f) -Force
+		}
+	}
+}
+```
+
+### 9. Imunidade a Recursão de Aliases Case-Insensitive (_Case-Insensitive Alias Recursion Guard_)
+
+Em runtimes onde resolução de comandos e aliases é insensível a maiúsculas/minúsculas (como PowerShell), criar um alias com o mesmo nome da função (ex: `New-Alias "foo-bar" "Foo-Bar"`) cria um loop circular auto-referencial. O interpretador suprime a função e tenta buscar `foo-bar.exe` no PATH.
+
+**Regra Antifrágil:** Funções nunca devem ter aliases com o mesmo nome. Aliases de atalho devem usar exclusivamente `Set-Alias -Force -Option AllScope` para garantir reentrância idempotente.
+
+### 10. Sincronização Dual de PATH em Runtimes Case-Sensitive sob Windows
+
+O Windows NT armazena a variável do sistema como `Path`, enquanto runtimes como NuShell tratam variáveis em `$env` de forma case-sensitive. Se o script apenas manipular `$env.PATH` (all caps), a variável do sistema `$env.Path` permanece desatualizada e subprocessos Win32 não encontram ferramentas recém-adicionadas.
+
+**Regra Antifrágil:** Definir `$env.ENV_CONVERSIONS` para ambas as variantes e atribuir o caminho normalizado a ambas:
+
+```nushell
+$env.Path = $_cleaned_path
+$env.PATH = $_cleaned_path
+```
+
+### 11. Injeção Dinâmica Defensiva de Credenciais Git (_Dynamic Credential Helper Injection_)
+
+Em runtimes onde a execução de subprocessos pode isolar ou não herdar perfeitamente o ambiente do helper do Git, repositórios privados recebem a injeção explícita do helper (`gh auth git-credential`) via flag `-c`:
+
+```nushell
+let gh_bin = (get-gh-cmd)
+if ($gh_bin | is-not-empty) {
+	let helper_arg = $"credential.https://github.com.helper=!\"($gh_bin)\" auth git-credential"
+	^$git_bin -C $target -c $helper_arg pull --ff-only
+}
+```
+
 ---
 
 ## 🛠️ Padrões Canônicos por Interpretador
