@@ -7,16 +7,16 @@
 
 ## 📊 Matriz de Maturidade do Ecossistema
 
-| Repositório              | Papel                       | Maturidade | Cobertura / Estado                                             |
-| :----------------------- | :-------------------------- | :--------: | :------------------------------------------------------------- |
-| **Environment**          | Hub central & Makefile      | 🟢 Estável | Orquestração global, documentação canônica e submódulos Git    |
-| **Shell**                | Motor de terminal & prompts |  🟢 100%   | Latência < 16ms, shells nativos e alternativos, TUI `_ui_*`    |
-| **Setup**                | Provisionador de sistema    | 🟢 Estável | Arquitetura modular `core/`, receitas idempotentes e paridade  |
-| **Vault**                | Cofre privado de segredos   | 🟢 Estável | Chaves SSH, auditoria canônica `age`, backups e `.env` seguros |
-| **Profile**              | Dotfiles & skills de IA     | 🟢 Estável | Paridade multiplataforma, foco em emuladores gráficos e skills |
-| **Emacs**                | Editor Elisp extensível     | 🟢 Estável | Arquitetura sensorial, tipografia adaptativa e IA `gemma4`     |
-| **Helix / NeoVim / Vim** | Suíte de Editores modais    | 🟢 Estável | Runtimes soberanos, Mason LSP, FZF recursivo e fallbacks TTY   |
-| **Template**             | Arquétipo de novos projetos | 🟢 Estável | Scaffolding `init.sh`, suíte de auditoria e TUI semântica      |
+| Repositório              | Papel                       | Maturidade | Cobertura / Estado                                                       |
+| :----------------------- | :-------------------------- | :--------: | :----------------------------------------------------------------------- |
+| **Environment**          | Hub central & Makefile      | 🟢 Estável | Orquestração global, documentação canônica e submódulos Git              |
+| **Shell**                | Motor de terminal & prompts |  🟢 100%   | Latência < 16ms, consoles TTY/PTY, prompts pill/micro, TUI `_ui_*`       |
+| **Setup**                | Provisionador de sistema    | 🟢 Estável | Arquitetura modular `core/`, receitas idempotentes e paridade            |
+| **Vault**                | Cofre privado de segredos   | 🟢 Estável | Chaves SSH, auditoria canônica `age`, backups e `.env` seguros           |
+| **Profile**              | Dotfiles & skills de IA     | 🟢 Estável | Paridade multiplataforma, foco em emuladores gráficos e skills           |
+| **Emacs**                | Editor Elisp extensível     | 🟢 Estável | Arquitetura sensorial, tipografia adaptativa, console TTY e IA `gemma4`  |
+| **Helix / NeoVim / Vim** | Suíte de Editores modais    | 🟢 Estável | Runtimes soberanos, Mason LSP, fallbacks TTY 16 cores e mouse gpm/moused |
+| **Template**             | Arquétipo de novos projetos | 🟢 Estável | Scaffolding `init.sh`, suíte de auditoria e TUI semântica                |
 
 ---
 
@@ -30,9 +30,7 @@
 
 ## 📌 Backlog & Próximos Passos
 
-- [ ] **Otimização da Suíte de Editores para Console Puro TTY (Linux & FreeBSD):**
-    - Aperfeiçoar o suporte, rendering visual e fallbacks de **Vim**, **NeoVim**, **Helix** e **GNU Emacs** quando executados diretamente em consoles virtuais TTY puros do Linux (`/dev/tty1`-`6`) e do FreeBSD (`/dev/ttyv0`-`7`) sem ambiente gráfico (X11/Wayland).
-    - Tratar degradação elegante de cores (paletas ANSI 16/256 vs truecolor), fontes/glifos sem dependência estrita de Nerd Fonts em terminais do kernel, suporte a mouse via `gpm`/`moused` e mapeamento de sequências de teclas em drivers de terminal virtuais (`cons25`, `teken`, `vt100/220`).
+> **Zero Pendências:** Nenhum item ativo no backlog central. Melhorias contínuas e refinamentos operacionais são despachados de forma contínua e atômica.
 
 ---
 
