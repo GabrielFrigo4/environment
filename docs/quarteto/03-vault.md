@@ -16,6 +16,7 @@ O repositório **Vault** é o **cofre criptográfico de segurança**. Ele armaze
     - Chaves privadas e arquivos sensíveis: **`0600`** (`rw-------`).
     - Chaves públicas: **`0644`** (`rw-r--r--`).
 3. **Loaders Multi-Shell Seguros:** O Vault disponibiliza rotinas de carregamento de variáveis de ambiente e agentes SSH compatíveis com Bash, Zsh, POSIX Sh, PowerShell e Nushell sem exportar variáveis para subprocessos não autorizados.
+4. **Filtro Estrito de Templates & Exemplos:** Todo carregador do Vault (`vault.sh`, `vault.ps1`, `vault.nu`, `config.nu`) ignora obrigatoriamente arquivos que contenham `template` ou `example` no nome. Isso impede categoricamente que segredos fictícios ou placeholders (ex: `GITHUB_TOKEN="ghp_XXX..."`) vazem para a sessão e interfiram em ferramentas do ecossistema como `git` e `gh`.
 
 ```mermaid
 flowchart TD
