@@ -71,7 +71,7 @@ function upall {
 
 ## 🦀 Nushell: O Shell Estruturado Moderno (`config.nu`)
 
-Para usuários que preferem um pipeline de dados tipado e nativo em Rust, o **Nushell** é provisionado via `Profile/terminals/nushell/config.nu`:
+Para usuários que preferem um pipeline de dados tipado e nativo em Rust, o **Nushell** é provisionado via `Shell/target/windows/nushell/config.nu`:
 
 - Pipelines que operam sobre tabelas e registros JSON/YAML em vez de fluxos de bytes puros.
 - Prompt assíncrono com tema Kanagawa integrado.
