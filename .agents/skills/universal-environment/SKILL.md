@@ -39,6 +39,11 @@ O repositório **Environment** (`~/Documents/Environment`) é **exclusivamente u
 2. **Sem Symlinks para o Hub:** É expressamente proibido criar symlinks de dotfiles ou configurações de shell que apontem para o clone do Environment.
 3. **Provisionamento Soberano (`make install`):** A instalação no SO hospedeiro é executada via `make install` (ou `./environment.sh install`), que clona e provisiona cada repositório em sua localização canônica (`/usr/local/share/shell` ou `~/.local/share/shell`, `~/.config/profile`, `~/.vault`, `~/.emacs.d`, `~/.config/nvim`, `~/.config/helix`, `~/.vim`).
 4. **Desacoplamento de `make sync`:** `make sync` não pertence ao Environment; dotfiles são geridos diretamente pelo clone soberano do Profile via `~/.config/profile/profile.sh sync`.
+5. **Ciclo Sagrado de Propagação & Proibição Absoluta de Cópia Manual:**
+    - Modificações ocorrem exclusivamente na bancada (`~/Documents/Environment/<Componente>`), são testadas via quality gates (`make test`, `make ci`, `make audit`) e enviadas ao GitHub via `git push`.
+    - Os clones de produção no sistema operacional consomem as atualizações **exclusivamente via `git pull`** (ou comandos de ciclo como `upsh`, `make update`).
+    - **PROIBIÇÃO ABSOLUTA DE `cp` / `rsync`:** É TERMINANTEMENTE VEDADO copiar arquivos avulsos da bancada para os diretórios de produção no SO hospedeiro, mesmo para testes em tempo real ou diagnósticos rápidos. Essa prática quebra o controle de versão DVCS e deixa árvores de trabalho sujas (`dirty`).
+    - **Invariante da Produção Imaculada (Zero-Dirty):** Clones de produção DEVEM manter `git status` 100% limpo a todo momento. Qualquer modificação não comitada encontrada em produção é anômala e deve ser imediatamente descartada (`git restore .`).
 
 ---
 

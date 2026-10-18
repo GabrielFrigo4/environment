@@ -182,6 +182,18 @@ if ($gh_bin | is-not-empty) {
 }
 ```
 
+### 12. Auto-Cura de Estado do Cursor e Terminal TTY (_Terminal Cursor & TTY State Self-Healing_)
+
+Em consoles virtuais puros (`/dev/tty[1-6]` no Linux, `ttyv[0-7]` no FreeBSD), programas orientados a texto e editores modais interativos (Helix, Vim, Neovim) manipulam sequências de escape VT como DECSCUSR (`\e[?1 q` para bloco piscante, `\e[?5 q` para barra). Quando esses programas encerram ou são abortados anormalmente (`Ctrl+C`, `SIGTERM`), o terminal pode permanecer com o cursor corrompido, invisível ou piscando de forma agressiva.
+Além disso, ao carregar fontes bitmap modernas de 512 glifos (como Spleen 12x24), o Linux VT reorganiza o mapa de bits de cor (`vc_hi_font_mask = 0x0100`), fazendo com que comandos convencionais de software cursor invertam o bit de intensidade e pintem o fundo de ciano em vez de branco.
+
+**Padrão Canônico Antifrágil:**
+O shell e scripts de terminal aplicam auto-cura de estado:
+
+1. **Preempção no Prompt e wrappers:** Reemitir `\e%G\e[?16;238;0c` ao retornar ao prompt e no wrapper de encerramento de editores (`hx`, `vim`).
+2. **Rearme do interpretador UTF-8 (`\e%G`):** Restaura o decodificador do console mesmo após despejo acidental de binários crus na tela.
+3. **Imunidade a bugs de atributo:** Emprega a máscara XOR precisa `0xee` (`p2=238`) com flag de software puro (`p1=16`), gerando blocos brancos sólidos com texto preto sob o cursor, sem qualquer distorção cromática.
+
 ---
 
 ## 🛠️ Padrões Canônicos por Interpretador
