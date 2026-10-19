@@ -139,7 +139,7 @@ fi
 
 Sistemas que operam com múltiplos shells nativos (PowerShell, NuShell, CMD) não devem obrigar o usuário a copiar arquivos de configuração manualmente (`cp`, `Copy-Item`).
 
-O comando de atualização de qualquer shell (`upsh`, `resh`) detecta a presença dos demais e atualiza atomicamente seus arquivos físicos em disco (`Documents\PowerShell\profile.ps1`, `%APPDATA%\nushell\config.nu`, `%LOCALAPPDATA%\clink\profile.lua`):
+O comando de atualização de qualquer shell (`upsh`, `resh`) detecta a presença dos demais e atualiza atomicamente seus arquivos físicos em disco (`Documents\PowerShell\profile.ps1`, `%APPDATA%\nushell\config.nu`, `%LOCALAPPDATA%\clink\profile.lua`), validando previamente se o arquivo de destino já é um link simbólico (`LinkType`) ou se aponta para o mesmo caminho da origem para prevenir violações de auto-substituição:
 
 ```powershell
 if ($env:APPDATA) {
@@ -147,7 +147,20 @@ if ($env:APPDATA) {
 	$nuSrc = Join-Path $target "target\windows\nushell"
 	if ((Test-Path $appNu) -and (Test-Path $nuSrc)) {
 		foreach ($f in @("config.nu", "env.nu")) {
-			Copy-Item (Join-Path $nuSrc $f) (Join-Path $appNu $f) -Force
+			$srcF = Join-Path $nuSrc $f
+			$dstF = Join-Path $appNu $f
+			if (Test-Path $srcF) {
+				$isLink = $false
+				if (Test-Path $dstF) {
+					$item = Get-Item $dstF -Force -ErrorAction SilentlyContinue
+					if ($item -and ($item.LinkType -or ($item.FullName -eq (Get-Item $srcF -Force).FullName))) {
+						$isLink = $true
+					}
+				}
+				if (-not $isLink) {
+					Copy-Item $srcF $dstF -Force -ErrorAction SilentlyContinue
+				}
+			}
 		}
 	}
 }
