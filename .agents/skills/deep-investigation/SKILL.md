@@ -1,44 +1,49 @@
 ---
 name: deep-investigation
 description: >-
-    Deep root-cause technical investigation and primary sources research for Universal Environment.
-    Use when diagnosing Git submodule issues, cross-repo synchronization failures,
-    Makefile orchestration problems, and GitHub API/CLI interactions.
+    Runbook cognitivo para diagnóstico técnico de causa raiz no hub orquestrador.
+    Usar ao investigar falhas de submódulos Git, descompasso entre repositórios,
+    erros no Makefile central e anomalias na CLI do GitHub.
 ---
 
-# Deep Investigation — Hub Diagnostics & Cross-Repo Analysis
+# 🔍 Deep Investigation — Diagnóstico Técnico de Causa Raiz
 
-Esta skill define o protocolo de investigação técnica de excelência no repositório **Universal Environment** (hub orquestrador).
+Esta skill define o protocolo para análise de defeitos e investigação técnica de causa raiz no repositório **Universal Environment** (hub orquestrador).
 
-Quando nos deparamos com falhas de submódulos, inconsistências de documentação entre repos, problemas no Makefile ou erros de GitHub CLI, **nunca devemos recorrer a adivinhações superficiais**.
-
----
-
-## 1. Regra de Ouro: Fontes Primárias Atuais
-
-1. **Git Submodules:** Documentação oficial do Git (`git-scm.com/docs/git-submodule`).
-2. **GitHub CLI (`gh`):** Documentação oficial do GitHub CLI (`cli.github.com/manual`).
-3. **Makefile / GNU Make:** Manual oficial do GNU Make.
+Diante de quebras em submódulos, dessincronização de documentação, erros de orquestração via Makefile ou falhas de comunicação com a CLI do GitHub, as decisões devem ser fundamentadas rigorosamente na inspeção empírica de fontes primárias, sem suposições conceituais.
 
 ---
 
-## 2. Hierarquia de Fontes Primárias
+## 🏛️ Hierarquia e Consulta a Fontes Primárias
 
-```text
-Nível 1: Documentação Oficial e Man Pages
-   ↳ git-submodule, git-remote, gh, GNU Make.
+Toda hipótese diagnóstica deve ser validada contra documentações oficiais e o estado físico versionado:
 
-Nível 2: Repositórios Upstream do Ecossistema
-   ↳ Setup, Shell, Vault, Profile — seus READMEs e PRINCIPLES.md.
-
-Nível 3: Estado Local do Git
-   ↳ git submodule status, git log, git diff.
-```
+1. **Nível 1 (Manpages e Especificações Oficiais):**
+    - Submódulos e referências Git: documentação oficial de `git-submodule`, `git-remote` e `git-worktree`.
+    - Ferramentas GitHub: manual oficial da CLI `gh` (`cli.github.com/manual`).
+    - Automação de compilação: documentação canônica do GNU Make.
+2. **Nível 2 (Repositórios Upstream do Ecossistema):**
+    - Manuais e declarações de diretrizes nos componentes (`Setup`, `Shell`, `Vault`, `Profile`, `Editor/*`).
+    - Análise cruzada das fontes de verdade (`ENVIRONMENT.md`, `PRINCIPLES.md`).
+3. **Nível 3 (Estado do Ambiente Local):**
+    - Estado de ponteiros e commits locais (`git submodule status`, `git log`, `git diff`).
+    - Integridade da árvore de trabalho e validação de hooks.
 
 ---
 
-## 3. Protocolo de Diagnóstico
+## 📋 Protocolo Sequencial de Diagnóstico
 
-1. **Isolar o Erro:** `git submodule status` para verificar estado dos submódulos.
-2. **Verificar Sincronização:** Comparar hashes de `ENVIRONMENT.md` entre repos.
-3. **Validar Makefile:** Executar `make status` e `make --dry-run clone`.
+Ao receber um relato de falha ou comportamento inesperado:
+
+1. **Isolamento de Estado:**
+    - Inspecione ponteiros de submódulos com `git submodule status`.
+    - Identifique submódulos não inicializados ou descompassados com o branch de trabalho.
+2. **Auditoria de Sincronização:**
+    - Compare hashes criptográficos de arquivos de documentação canônica distribuídos entre os repositórios.
+    - Localize divergências de conteúdo entre o hub e seus componentes.
+3. **Validação Estática e Dry-Run:**
+    - Execute a suíte de status com `make status`.
+    - Realize simulação de execução de alvos críticos via `make --dry-run <alvo>`.
+4. **Resolução de Conflitos de API:**
+    - Valide tokens de autenticação via `gh auth status` antes de operações remotas.
+    - Analise saídas detalhadas de erro sem mascaramento de stderr.

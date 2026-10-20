@@ -1,48 +1,47 @@
 ---
 name: proactive-guardian
 description: >-
-    Proactive code health guardian and autonomous quality enforcement for Universal Environment.
-    Use to continuously audit documentation consistency, submodule state, Makefile integrity,
-    and cross-repo synchronization of ENVIRONMENT.md and PRINCIPLES.md.
+    Runbook cognitivo para governança proativa e garantia contínua de qualidade no hub.
+    Usar ao auditar consistência de documentação canônica, estado de submódulos,
+    integridade do Makefile e integridade de comentários estruturais.
 ---
 
-# Proactive Guardian — Autonomous Hub Quality Enforcement
+# 🛡️ Proactive Guardian — Auditoria Autônoma de Qualidade
 
-Esta skill define as diretrizes operacionais para atuação **proativa** de qualidade no repositório **Universal Environment** (hub orquestrador).
-
-O agente nunca deve agir de forma passiva diante de inconsistências entre documentação canônica e cópias nos sub-repos, submódulos desatualizados, ou comandos do Makefile quebrados. Se um desvio for detectado, o agente deve assumir a responsabilidade de auditar, propor e corrigir imediatamente.
-
----
-
-## 1. Filosofia de Ação Proativa
-
-1. **Sincronização de Documentação:**
-    - Se `ENVIRONMENT.md` ou `PRINCIPLES.md` diferirem entre o Environment e os sub-repos, **alerte e proponha sincronização**.
-2. **Estado dos Submódulos:**
-    - Se os submódulos estiverem atrás do upstream, proponha `git submodule update --remote --merge`.
-3. **Vault Defensivo:**
-    - NUNCA tente forçar o clone do Vault em ambientes sem chave SSH autorizada.
-4. **Arquitetura de Comentários & Clean Code:**
-    - Auditar periodicamente se arquivos de scripts, dotfiles e configurações obedecem à regra de réguas estruturais (64 no topo, 32 no corpo), zero comentários narrativos e zero código morto via `audit_comments.py`.
+Esta skill orienta a postura operacional preventiva no repositório **Universal Environment** (hub orquestrador). O agente atua de forma autônoma para identificar desvios, inconsistências estruturais e quebras de convenção antes da entrega final.
 
 ---
 
-## 2. Checklist de Auditoria Proativa
+## 🏛️ Postura de Ação Autônoma
 
-- [ ] **Submódulos Atualizados:** Setup, Shell e Profile no commit mais recente.
-- [ ] **ENVIRONMENT.md Sincronizado:** Conteúdo idêntico em todos os 5 repos.
-- [ ] **PRINCIPLES.md Sincronizado:** Conteúdo idêntico (adaptado) em todos os 5 repos.
-- [ ] **Arquitetura de Comentários:** Réguas de 64/32 colunas sem vazamento nem parênteses, zero comentários narrativos (`python3 Profile/skills/clean-code-refactor/scripts/audit_comments.py .`).
-- [ ] **Makefile Funcional:** `make status` retorna sem erros.
-- [ ] **Vault Ignorado:** `Vault/` presente no `.gitignore`.
-- [ ] **AGENTS.md Presente:** Existe em todos os 5 repos.
+O agente identifica e propõe a regularização imediata das seguintes anomalias:
+
+- **Sincronização de Documentação Canônica:** Ao constatar alterações em `ENVIRONMENT.md` ou `PRINCIPLES.md` no hub, sinalize a necessidade de propagação via `make sync-docs` para os sub-repositórios.
+- **Ponteiros de Submódulos:** Identifique submódulos desatualizados em relação ao branch remoto e indique a atualização com `git submodule update --remote --merge`.
+- **Acesso Defensivo ao Cofre:** Não force operações contra o submódulo `Vault/` em estações sem credenciais SSH autorizadas.
+- **Arquitetura Canônica de Comentários:** Inspecione scripts e arquivos de configuração para manter réguas de 64 colunas no topo e 32 colunas nos blocos internos, prevenindo narrativas redundantes e código comentado.
 
 ---
 
-## 3. Fluxo de Entrega
+## 📋 Checklist de Verificação Proativa
 
-Antes de finalizar qualquer modificação:
+Antes de concluir qualquer ciclo de modificação no ecossistema:
 
-1. `git diff --check`
-2. `git status` (nada de sub-repos rastreados indevidamente)
-3. `make status`
+- [ ] **Submódulos:** Todos os componentes apontam para os commits designados de trabalho.
+- [ ] **Documentação Canônica:** `ENVIRONMENT.md` e `PRINCIPLES.md` idênticos e atualizados em todos os submódulos.
+- [ ] **Orquestração Make:** Alvos `make status`, `make test` e `make audit` executam com sucesso.
+- [ ] **Proteção de Segredos:** Diretório `Vault/` adequadamente registrado no `.gitignore`.
+- [ ] **Constituições Agentic:** Arquivos `AGENTS.md` presentes e válidos no hub e nos componentes.
+- [ ] **Higienização de Comentários:** Ausência de código morto e respeito às réguas estruturais.
+
+---
+
+## 🚀 Ciclo de Entrega e Fechamento
+
+Execute os passos de fechamento rigorosamente nesta sequência:
+
+```sh
+git diff --check
+git status
+make status
+```
