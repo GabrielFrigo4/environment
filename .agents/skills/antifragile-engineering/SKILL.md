@@ -195,17 +195,34 @@ if ($gh_bin | is-not-empty) {
 }
 ```
 
-### 12. Auto-Cura de Estado do Cursor e Terminal TTY (_Terminal Cursor & TTY State Self-Healing_)
+### 12. Auto-Cura de Estado do Cursor Estático (`noblink`) e Terminal TTY (_Terminal Cursor & TTY State Self-Healing_)
 
-Em consoles virtuais puros (`/dev/tty[1-6]` no Linux, `ttyv[0-7]` no FreeBSD), programas orientados a texto e editores modais interativos (Helix, Vim, Neovim) manipulam sequências de escape VT como DECSCUSR (`\e[?1 q` para bloco piscante, `\e[?5 q` para barra). Quando esses programas encerram ou são abortados anormalmente (`Ctrl+C`, `SIGTERM`), o terminal pode permanecer com o cursor corrompido, invisível ou piscando de forma agressiva.
-Além disso, ao carregar fontes bitmap modernas de 512 glifos (como Spleen 12x24), o Linux VT reorganiza o mapa de bits de cor (`vc_hi_font_mask = 0x0100`), fazendo com que comandos convencionais de software cursor invertam o bit de intensidade e pintem o fundo de ciano em vez de branco.
+Em consoles virtuais puros (`/dev/tty[1-6]` no Linux, `ttyv[0-7]` no FreeBSD) e emuladores gráficos (PTY), programas orientados a texto e editores modais interativos (Helix, Vim, NeoVim, Emacs) manipulam sequências de escape VT como DECSCUSR. No Universal Environment, o cursor canônico é **100% estático (`noblink`)** em todos os ambientes:
+
+1. **Códigos Estáticos (`noblink`) em PTY (`DECSCUSR`):** Empregar sempre códigos pares (`\e[2 q` bloco sólido estático, `\e[4 q` sublinhado estático, `\e[6 q` barra vertical estática) e `a:blinkon0` em `guicursor`, evitando os equivalentes ímpares piscantes (`0 q`, `1 q`, `3 q`, `5 q`).
+2. **Preempção no Prompt e wrappers em Linux VT (`TERM=linux`):** Reemitir `\e%G\e[?16;238;0c` ao retornar ao prompt e no wrapper de encerramento de editores (`nvim`, `vim`, `hx`, `emacs-nw`).
+3. **Rearme do interpretador UTF-8 (`\e%G`):** Restaura o decodificador do console mesmo após despejo acidental de binários crus na tela.
+4. **Imunidade a bugs de atributo de 512 glifos:** Emprega a máscara XOR precisa `0xee` (`p2=238`) com flag de software puro (`p1=16`), gerando blocos brancos sólidos estáticos (`noblink`) com texto preto sob o cursor, sem distorção cromática.
+
+### 13. Imunidade a Timeouts de DSR / DA1 no Console Kernel FreeBSD `vt(4)` (_FreeBSD `vt(4)` `termteken_respond` Bypass_)
+
+No código-fonte do kernel FreeBSD (`sys/kern/subr_terminal.c`), a função `termteken_respond()` encontra-se desativada via `#if 0 /* XXX: Avoid lock order reversal. */`. Como consequência, os terminais virtuais nativos do FreeBSD (`/dev/ttyv*`, que anunciam `TERM=xterm`) **jamais respondem** a consultas de status do dispositivo (`DSR \e[5n`, `OSC 11`) ou atributos primários (`DA1 \e[c`).
+
+No NeoVim 0.11+:
+
+- Na inicialização (`runtime/lua/vim/_core/defaults.lua`), quando `vim.o.ttyfast` é verdadeiro, o NeoVim envia `OSC 11 + DSR (\e[5n)` de forma síncrona e aguarda resposta por 1 segundo, gerando o erro `E1568: Terminal did not respond to DSR request for 'background' color`.
+- No encerramento (`:q`, `tui_stop()` em `src/nvim/tui/tui.c`), o NeoVim envia `\e[c` (`DA1`) e bloqueia no loop de eventos por `EXIT_TIMEOUT_MS` (1000ms) aguardando resposta antes de fechar.
 
 **Padrão Canônico Antifrágil:**
-O shell e scripts de terminal aplicam auto-cura de estado:
 
-1. **Preempção no Prompt e wrappers:** Reemitir `\e%G\e[?16;238;0c` ao retornar ao prompt e no wrapper de encerramento de editores (`hx`, `vim`).
-2. **Rearme do interpretador UTF-8 (`\e%G`):** Restaura o decodificador do console mesmo após despejo acidental de binários crus na tela.
-3. **Imunidade a bugs de atributo:** Emprega a máscara XOR precisa `0xee` (`p2=238`) com flag de software puro (`p1=16`), gerando blocos brancos sólidos com texto preto sob o cursor, sem qualquer distorção cromática.
+1. Exportar `NVIM_NOTTYFAST=1` em sessões `RAW_TTY=1` (`Shell/core/environment.sh`), instruindo o C core do NeoVim (`src/nvim/option.c`) a definir `ttyfast=false` antes da execução de `defaults.lua`, eliminando `E1568` na raiz.
+2. No wrapper `nvim()` (`Shell/context/desktop/common.sh`), quando em console `vt(4)` puro do FreeBSD (`_is_raw_tty && _detect_os = freebsd`), interpor um micro-responder PTY transparente que intercepta `\e[c` e `\e[5n` e responde instantaneamente `\e[?1;2c` e `\e[0n`, reduzindo o tempo de saída (`:q`) de `1000ms+` para `< 22ms`.
+
+### 14. Auto-Cura de Builds Órfãos do Elpaca e Tradução `<escape>` no GNU Emacs
+
+1. **Ordem de Fila Única do Elpaca:** Nunca invocar `(elpaca-wait)` no meio do carregamento de módulos se pacotes subsequentes declararem dependências compartilhadas (como `compat` requerido tanto por `doom-modeline` quanto por `tools.el`). Carregar bibliotecas base (`tools`) antes de `editor`, `lang` e `apps` em uma única fila contínua.
+2. **Auto-Cura de `builds/<pkg>` Desatualizados:** Durante o bootstrap (`etc/init/packages.el`), inspecionar se todos os arquivos `.el` de `sources/<pkg>` possuem seus symlinks correspondentes em `builds/<pkg>`; caso um `git pull` tenha adicionado novos submódulos (ex: `php-core.el` em `php-mode`), remover `builds/<pkg>` automaticamente para que o Elpaca reconstrua os links e autoloads em voo.
+3. **Preservação de `<escape>` para Estados Modais (Evil):** No GNU Emacs gráfico (GUI), vincular `(kbd "<escape>")` diretamente a `keyboard-escape-quit` no `global-map` impede que `function-key-map` traduza o evento físico `<escape>` para `ESC` (`\e`), quebrando a saída do modo Insert no Evil. Deve-se vincular `[escape]`, `(kbd "<escape>")` e `(kbd "ESC")` explicitamente nos mapas de estado do Evil e usar um dispatcher `emacs/escape-dwim` no `global-map`.
 
 ---
 
