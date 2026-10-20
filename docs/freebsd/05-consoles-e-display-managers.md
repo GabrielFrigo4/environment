@@ -77,17 +77,20 @@ O **Ly** é um display manager moderno de interface em modo texto (TUI) com anim
 
 ---
 
-## 🔤 Fontes Spleen de Alta Resolução no Console
+## 🔤 Fontes Spleen & Cursor Estático no Console `vt(4)`
 
-Em telas de alta densidade (Full HD e 4K), as fontes padrão de 8x16 do console de texto do FreeBSD ficam minúsculas e difíceis de ler[cite: 8].
+Em telas de alta densidade (HD, Full HD e 4K), as fontes padrão de 8x16 do console de texto do FreeBSD ficam desproporcionais[cite: 8].
 
-O ecossistema provisiona fontes **Spleen** nítidas no `/etc/rc.conf` via [`Setup/freebsd/desktop/system/system.sh`](../../Setup/freebsd/desktop/system/system.sh)[cite: 8]:
+O ecossistema provisiona fontes **Spleen 12x24** nítidas no `/etc/rc.conf` via [`Setup/freebsd/desktop/system/system.sh`](../../Setup/freebsd/desktop/system/system.sh)[cite: 8]:
 
 ```sh
-allscreens_flags="-f spleen-16x32"
+allscreens_flags="-f spleen-12x24"
 ```
 
-A fonte bitmap `spleen-16x32` garante legibilidade cristalina em qualquer monitor sem requerer renderizadores gráficos pesados[cite: 8].
+A fonte bitmap `spleen-12x24` garante o equilíbrio métrico ideal entre legibilidade e densidade de colunas/linhas em qualquer monitor.
+
+> [!NOTE]
+> No FreeBSD moderno com driver `vt(4)`, o cursor é **intrinsecamente estático por arquitetura de kernel** (`sys/dev/vt/vt_core.c`), desenhado diretamente como um bloco invertido no framebuffer sem temporizador de pisque. Parâmetros legados como `vidcontrol -c normal,noblink` pertenciam ao antigo driver `sc(4)` dos anos 90 e são obsoletos/incompatíveis com `vt(4)`.
 
 ---
 
@@ -99,14 +102,20 @@ A fonte bitmap `spleen-16x32` garante legibilidade cristalina em qualquer monito
 sudo sh ~/Documents/Environment/Setup/freebsd/desktop/system/ttys.sh
 ```
 
-2. **Recarregar tabela de TTYs sem reiniciar o sistema operacional[cite: 8]:**
+2. **Recarregar serviço de console e aplicar fontes em runtime[cite: 8]:**
+
+```sh
+sudo service syscons restart
+```
+
+3. **Recarregar tabela de TTYs sem reiniciar o sistema operacional[cite: 8]:**
 
 ```sh
 sudo kill -HUP 1
 ```
 
-3. **Testar nova fonte Spleen na sessão ativa do console[cite: 8]:**
+4. **Testar fonte Spleen na sessão ativa do console[cite: 8]:**
 
 ```sh
-vidcontrol -f /usr/share/vt/fonts/spleen-16x32.fnt
+vidcontrol -f /usr/share/vt/fonts/spleen-12x24.fnt
 ```
