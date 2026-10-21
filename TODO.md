@@ -37,6 +37,19 @@
 
 > **Zero Pendências:** Nenhum item ativo no backlog central. Melhorias contínuas e refinamentos operacionais são despachados de forma contínua e atômica.
 
+### Setup Operate Sistem
+
+- [ ] Baixar seatd, cage, foot para Linux e FreeBSD
+- [ ] Habilitar o moused e o keyrate="fast" no TTY do FreeBSD
+- [ ] Baixar e Habilitar o gpm no Linux
+- [ ] Baixar terminus-fonts-console no Linux
+
+### Emacs No Window
+
+- [ ] Habilitar o uso do Mouse no Emacs No Window (xterm-mouse-mode)
+- [ ] Habilitar o uso de Respostas curstas no Emacs (use-short-answers t)
+- [ ] Desativar som irritando do Emacs (ring-bell-function #'ignore)
+
 ---
 
 > [!TIP]
