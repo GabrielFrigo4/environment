@@ -37,126 +37,124 @@
 
 > **Zero Pendências:** Nenhum item ativo no backlog central. Melhorias contínuas e refinamentos operacionais são despachados de forma contínua e atômica.
 
-### Arrumar o ToDo aqui...
+### 📦 1. Setup — Provisionamento de Sistema, Pacotes e Console
 
-Ele foi feito pouco a pouco adicionando novas pendencias, refatorar, unir e ordenar para depois pormos a mão na massa :)
+- [ ] **Utilitários Base & Micro-Compositores Wayland (Linux & FreeBSD):**
+    - Instalar `busybox`, `seatd`, `sway`, `labwc`, `cage`, `foot` e `wlr-randr`.
+    - Habilitar o serviço `seatd` (`sysrc seatd_enable="YES"`) e garantir o usuário no grupo `video`.
+- [ ] **Tipografia Terminus Unificada:**
+    - **Linux & FreeBSD:** Instalar `terminus-fonts` e `terminus-ttf`.
+    - **Linux:** Instalar `terminus-fonts-console`.
+- [ ] **Mouse e Teclado no Console Kernel (Raw TTY):**
+    - **FreeBSD:** Habilitar `moused_enable="YES"` e `keyrate="fast"` via `sysrc`.
+    - **Linux:** Baixar e habilitar o `gpm`.
 
-````md
-### Setup Operate Sistem (e Shell tambem)
+---
 
-- [ ] Baixar busybox para Linux e FreeBSD
-- [ ] Baixar seatd, cage, foot e wlr-randr para Linux e FreeBSD
-- [ ] Habilitar o moused e o keyrate="fast" no TTY do FreeBSD
-- [ ] Baixar e Habilitar o gpm no Linux
-- [ ] Baixar terminus-fonts-console no Linux
-- [ ] Baixar terminus-fonts no Linux e FreeBSD
-- [ ] Baixar terminus-ttf no Linux e FreeBSD
-- [ ] Configurar o moused no FreeBSD
+### 🐚 2. Shell — Função `gui` (Cascata `sway > labwc > cage` & Multi-TTY)
 
-```
-#!/usr/bin/env bash
-set -euo pipefail
+- [ ] **Implementar a função POSIX `gui` no Shell:**
+    - **Sem argumentos = `foot`:** Se chamada apenas como `gui`, assume `set -- foot` por padrão.
+    - **Aparência e Input:** Variáveis do Breeze/KDE, escala `1.25`, layout `br` (`abnt2`) e repeat rate rápido.
+    - **Hierarquia com Saída Silenciosa (`sway > labwc > cage`):**
+        1. **`sway`:** Config efêmero sem bordas, com troca de TTY funcional (`Ctrl+Alt+F*`) e auto-exit via `exec sh -c '$* ; swaymsg exit'`.
+        2. **`labwc`:** Executa via `labwc -C "$XDG_RUNTIME_DIR" -s "$*"`.
+        3. **`cage`:** Modo kiosk com troca de TTY liberada via `cage -s -- "$@"`.
+    - **Restauração do Console no FreeBSD:** VT bounce via descritor de terminal local (`< "$_current_tty"`) para forçar o kernel a redesenhar a tela imediatamente ao fechar o compositor.
 
-doas sysrc -x moused_port 2>/dev/null || true
-doas sysrc -x moused_type 2>/dev/null || true
-doas sysrc moused_enable="NO"
-doas sysrc keyrate="fast"
-
-cat << 'EOF' | doas tee /usr/local/sbin/moused-auto > /dev/null
-#!/bin/sh
-killall -9 moused 2>/dev/null
-sleep 0.5
-libinput list-devices 2>/dev/null | awk '
-    /^Device:/ { dev=$0 }
-    /^Kernel:/ {
-        node=$2
-        if (dev ~ /(Mouse|TouchPad)/ && dev !~ /System mouse/) {
-            print node
-        }
-    }
-' | sort -u | while read -r devnode; do
-    if [ -c "$devnode" ]; then
-        /usr/sbin/moused -p "$devnode" -t evdev
+```sh
+gui() {
+    if [ "$#" -eq 0 ]; then
+        set -- foot
     fi
-done
+
+    export XDG_RUNTIME_DIR="/tmp/runtime-$(id -u)"
+    if [ ! -d "$XDG_RUNTIME_DIR" ]; then
+        mkdir -p -m 0700 "$XDG_RUNTIME_DIR"
+    fi
+
+    export XKB_DEFAULT_LAYOUT="br"
+    export XKB_DEFAULT_MODEL="abnt2"
+    export WLR_KEYBOARD_REPEAT_DELAY=200
+    export WLR_KEYBOARD_REPEAT_RATE=50
+
+    export QT_QPA_PLATFORM="wayland"
+    export QT_QPA_PLATFORMTHEME="kde"
+    export QT_STYLE_OVERRIDE="Breeze"
+    export XCURSOR_THEME="breeze_cursors"
+    export XCURSOR_SIZE=36
+    export QT_SCALE_FACTOR=1.25
+
+    if [ "$(uname -s)" = "FreeBSD" ]; then
+        _current_tty=$(tty)
+        _current_vt=$(printf '%s\n' "$_current_tty" | sed -E 's#/dev/ttyv([0-9a-f])#\1#' | tr '0-9a-f' '1-9a-f')
+    fi
+
+    if command -v sway >/dev/null 2>&1; then
+        _sway_cfg="$XDG_RUNTIME_DIR/sway-gui-$$.conf"
+        cat << EOF > "$_sway_cfg"
+default_border none
+default_floating_border none
+titlebar_border_thickness 0
+seat * xcursor_theme breeze_cursors 36
+
+input type:keyboard {
+    xkb_layout br
+    xkb_model abnt2
+    repeat_delay 200
+    repeat_rate 50
+}
+
+exec sh -c '$* ; swaymsg exit'
 EOF
+        sway -c "$_sway_cfg" >/dev/null 2>&1
+        rm -f "$_sway_cfg"
+        unset _sway_cfg
+    elif command -v labwc >/dev/null 2>&1; then
+        labwc -C "$XDG_RUNTIME_DIR" -s "$*" >/dev/null 2>&1
+    else
+        cage -s -- "$@" >/dev/null 2>&1
+    fi
 
-doas chmod +x /usr/local/sbin/moused-auto
-
-cat << 'EOF' | doas tee /etc/devd/moused_hotplug.conf > /dev/null
-notify 100 {
-    match "system" "DEVFS";
-    match "subsystem" "CDEV";
-    match "type" "CREATE";
-    match "cdev" "input/event[0-9]+";
-    action "/usr/local/sbin/moused-auto";
-};
-EOF
-
-cat << 'EOF' | doas tee /etc/rc.local > /dev/null
-#!/bin/sh
-/usr/local/sbin/moused-auto
-EOF
-
-doas chmod +x /etc/rc.local
-
-doas service devd restart
-doas /usr/local/sbin/moused-auto
-
-pgrep -lf moused
+    if [ "$(uname -s)" = "FreeBSD" ] && [ -n "${_current_vt:-}" ]; then
+        _bounce_vt=1
+        [ "$_current_vt" = "1" ] && _bounce_vt=2
+        vidcontrol -s "$_bounce_vt" < "$_current_tty" 2>/dev/null || true
+        vidcontrol -s "$_current_vt" < "$_current_tty" 2>/dev/null || printf '\033c'
+        unset _current_vt _current_tty _bounce_vt
+    fi
+}
 ```
 
-- [ ] Corrigir o cage para funcionar com a aparencia do sistema correta (isso é um script mas eu vou converter para uma função chamada gui pro Shell, esse codigo ai é um rascunho apenas...)
+---
 
-```
-#!/usr/bin/env sh
-set -e
+### 🔮 3. Emacs (No Window & Geral)
 
-export XDG_RUNTIME_DIR="/tmp/runtime-$(id -u)"
-if [ ! -d "$XDG_RUNTIME_DIR" ]; then
-    mkdir -p -m 0700 "$XDG_RUNTIME_DIR"
-fi
+- [ ] **Configurações Básicas no Terminal (`-nw`):**
+    - Habilitar o uso do mouse no Emacs No Window (`xterm-mouse-mode`).
+    - Habilitar respostas curtas (`use-short-answers t`).
+    - Desativar som irritante do Emacs (`ring-bell-function #'ignore`).
+- [ ] **Saneamento de Pacotes Externos (Emacs 31+):**
+    - Corrigir mensagens de erro/aviso de macro obsoleta (`when-let` -> `when-let*` / `and-let*`) geradas nas compilações do Elpaca:
 
-export XKB_DEFAULT_LAYOUT="br"
-export XKB_DEFAULT_MODEL="abnt2"
-export WLR_KEYBOARD_REPEAT_DELAY=200
-export WLR_KEYBOARD_REPEAT_RATE=50
-
-export QT_QPA_PLATFORM=wayland
-export QT_QPA_PLATFORMTHEME=kde
-export QT_STYLE_OVERRIDE=Breeze
-export XCURSOR_THEME=breeze_cursors
-export XCURSOR_SIZE=36
-export QT_SCALE_FACTOR=1.25
-
-exec cage -- "${@:-foot}"
-```
-
-### Emacs No Window
-
-- [ ] Habilitar o uso do Mouse no Emacs No Window (xterm-mouse-mode)
-- [ ] Habilitar o uso de Respostas curstas no Emacs (use-short-answers t)
-- [ ] Desativar som irritando do Emacs (ring-bell-function #'ignore)
-
-### Emacs Geral
-
-- [ ] Corrigir mensagens de erro obsolete para Pacotes Externos
-
-```
+```text
 Wrote /home/gabrielf/cage.sh
 .emacs.d/var/lib/elpaca/builds/apheleia/apheleia-formatters.el: Warning: ‘when-let’ is an obsolete macro (as of 31.1); use ‘when-let*’ or ‘and-let*’ instead. [5 times]
 .emacs.d/var/lib/elpaca/builds/apheleia/apheleia-rcs.el: Warning: ‘when-let’ is an obsolete macro (as of 31.1); use ‘when-let*’ or ‘and-let*’ instead.
 Mark set
 ```
-````
 
-### Editores no GUI / PTY e TTY
+---
 
-O emacs as vezes funciona o mouse no PTY e TTY no FreeBSD e as vezes não... Seila porque
-não sei se tem haver quando eu abro uma instancia GUI depois ou não sla...
-Já o vim/nvim funciona sempre o mouse no PTY mas nunca no TTY... No FreeBSD... Porque??
-E uma coisa que eu vi MUITO legal no helix foi que no TTY no FreeBSD que voce não pode mudar o formato do cursor, ele muda apenas a cor (que já acontecia no pty) mas o efeito como é em um bloco inteiro foi MUITO interessante
-Eu acho legal migrar esse comportamento para todos os outros editores para o TTY no FREEBSD (e podemos ver se continuamos com os formatos no Linux TTY ou fazemos o mesmo... Enfim) e para tirar curiosidade tanto o Micro como o Helix funcionam no Cursor do TTY kkkk, tem que arrumar isso no Vim e Nvim em
+### 📝 4. Editores no GUI, PTY e TTY (Mouse e Formato de Cursor)
+
+- [ ] **Investigar e Corrigir Comportamento do Mouse no FreeBSD:**
+    - **Emacs:** O mouse às vezes funciona no PTY e TTY no FreeBSD e às vezes não (investigar se tem relação com abrir uma instância GUI antes/depois).
+    - **Vim / NeoVim:** O mouse funciona sempre no PTY mas nunca no TTY no FreeBSD — enquanto tanto o Micro quanto o Helix funcionam com o mouse no TTY. Descobrir a causa e arrumar no Vim e NeoVim.
+- [ ] **Padronizar Cursor em Bloco Colorido por Modo no TTY:**
+    - No TTY do FreeBSD não é possível mudar o formato físico do cursor (barra/underline), mas o **Helix** contorna isso mudando a cor do cursor por modo; como no TTY o cursor é um bloco inteiro, o efeito visual ficou excelente.
+    - Migrar esse comportamento de mudar a cor do bloco inteiro do cursor para todos os outros editores (Vim, NeoVim e Emacs) no TTY do FreeBSD.
+    - Avaliar se no Linux TTY mantemos a alteração de formato ou se padronizamos esse mesmo efeito de bloco colorido.
 
 ---
 
