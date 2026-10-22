@@ -37,8 +37,14 @@
 
 > **Zero Pendências:** Nenhum item ativo no backlog central. Melhorias contínuas e refinamentos operacionais são despachados de forma contínua e atômica.
 
+### Arrumar o ToDo aqui...
+
+Ele foi feito pouco a pouco adicionando novas pendencias, refatorar, unir e ordenar para depois pormos a mão na massa :)
+
+````md
 ### Setup Operate Sistem (e Shell tambem)
 
+- [ ] Baixar busybox para Linux e FreeBSD
 - [ ] Baixar seatd, cage, foot e wlr-randr para Linux e FreeBSD
 - [ ] Habilitar o moused e o keyrate="fast" no TTY do FreeBSD
 - [ ] Baixar e Habilitar o gpm no Linux
@@ -142,6 +148,15 @@ Wrote /home/gabrielf/cage.sh
 .emacs.d/var/lib/elpaca/builds/apheleia/apheleia-rcs.el: Warning: ‘when-let’ is an obsolete macro (as of 31.1); use ‘when-let*’ or ‘and-let*’ instead.
 Mark set
 ```
+````
+
+### Editores no GUI / PTY e TTY
+
+O emacs as vezes funciona o mouse no PTY e TTY no FreeBSD e as vezes não... Seila porque
+não sei se tem haver quando eu abro uma instancia GUI depois ou não sla...
+Já o vim/nvim funciona sempre o mouse no PTY mas nunca no TTY... No FreeBSD... Porque??
+E uma coisa que eu vi MUITO legal no helix foi que no TTY no FreeBSD que voce não pode mudar o formato do cursor, ele muda apenas a cor (que já acontecia no pty) mas o efeito como é em um bloco inteiro foi MUITO interessante
+Eu acho legal migrar esse comportamento para todos os outros editores para o TTY no FREEBSD (e podemos ver se continuamos com os formatos no Linux TTY ou fazemos o mesmo... Enfim) e para tirar curiosidade tanto o Micro como o Helix funcionam no Cursor do TTY kkkk, tem que arrumar isso no Vim e Nvim em
 
 ---
 
