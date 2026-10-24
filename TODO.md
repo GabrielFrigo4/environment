@@ -39,7 +39,7 @@
 
 ### 📦 1. Setup — Provisionamento de Sistema, Pacotes e Console
 
-- [ ] **Utilitários Base & Os 4 Micro-Compositores Wayland (Linux & FreeBSD):**
+- [x] **Utilitários Base & Os 4 Micro-Compositores Wayland (Linux & FreeBSD):**
     - Instalar utilitários base: `busybox`, `seatd`, `foot` e `wlr-randr`.
     - Instalar a tétrade de compositores Wayland modernos (todos ativos, leves e baseados em `wlroots`, cada um cobrindo um paradigma distinto):
         1. **`sway` (Tiling Manual em Árvore):** Controle total da geometria e excelente tratamento de sub-janelas/modais sem bordas.
@@ -49,11 +49,11 @@
     - Habilitar o serviço `seatd` (`sysrc seatd_enable="YES"`) e garantir o usuário no grupo `video`.
     - **Dependências p/ Emacs OS (`emacs-window-manager` / EWM):** Instalar toolchain Rust (`cargo`/`rustc`), `pkgconf`, `libinput`, `libxkbcommon`, `pixman`, `mesa-libs`/`libgbm` e `hwdata` para compilar o módulo dinâmico do compositor.
 
-- [ ] **Tipografia Terminus Unificada:**
+- [x] **Tipografia Terminus Unificada:**
     - **Linux & FreeBSD:** Instalar `terminus-fonts` e `terminus-ttf`.
     - **Linux:** Instalar `terminus-fonts-console`.
 
-- [ ] **Mouse e Teclado no Console Kernel (Raw TTY):**
+- [x] **Mouse e Teclado no Console Kernel (Raw TTY):**
     - **FreeBSD:** Habilitar `moused_enable="YES"` e `keyrate="fast"` via `sysrc`.
     - **Linux:** Baixar e habilitar o `gpm`.
 
@@ -61,7 +61,7 @@
 
 ### 🐚 2. Shell — Função `gui` (Cascata `sway > river > labwc > cage` & Multi-TTY)
 
-- [ ] **Implementar a função POSIX `gui` no Shell (Lançador Gráfico Isolado por TTY):**
+- [x] **Implementar a função POSIX `gui` no Shell (Lançador Gráfico Isolado por TTY):**
     - **Filosofia Anti-Frágil:** A interface gráfica não é um monólito que domina a máquina, mas um processo filho efêmero amarrado a um TTY. Permite abrir um app gráfico no TTY2 (`gui firefox`), alternar para o TTY3 (`Ctrl+Alt+F3`) e abrir outro ambiente isolado (`gui foot`), ou subir um KDE completo em outro TTY se necessário, retornando ao console de texto limpo assim que o programa fecha.
     - **Sem argumentos = `foot`:** Se chamada apenas como `gui`, assume `set -- foot` por padrão.
     - **Aparência e Input:** Variáveis do Breeze/KDE, escala `1.25`, layout `br` (`abnt2`) e repeat rate rápido (`delay 200`, `rate 50`).
@@ -160,12 +160,12 @@ EOF
 
 ### 🔮 3. Emacs (No Window, Geral, Comando `ewm`/`ew` & Projeto `aweww`)
 
-- [ ] **Configurações Básicas no Terminal (`-nw`):**
+- [x] **Configurações Básicas no Terminal (`-nw`):**
     - Habilitar o uso do mouse no Emacs No Window (`xterm-mouse-mode`).
     - Habilitar respostas curtas (`use-short-answers t`).
     - Desativar som irritante do Emacs (`ring-bell-function #'ignore`).
 
-- [ ] **Saneamento de Pacotes Externos (Emacs 31+):**
+- [x] **Saneamento de Pacotes Externos (Emacs 31+):**
     - Corrigir mensagens de erro/aviso de macro obsoleta (`when-let` -> `when-let*` / `and-let*`) geradas nas compilações do Elpaca:
 
 ```text
@@ -175,7 +175,7 @@ Wrote /home/gabrielf/cage.sh
 Mark set
 ```
 
-- [ ] **Implementar o Comando `emacs-window-manager` (Aliases: `ewm` e `ew`):**
+- [x] **Implementar o Comando `emacs-window-manager` (Aliases: `ewm` e `ew`):**
     - **Muito além de `gui emacs`:** Enquanto `gui emacs` abre o Emacs como um cliente dentro do Sway/River, o comando **`emacs-window-manager`** (`ewm` / `ew`) transforma o próprio Emacs no **Compositor e Window Manager Soberano do Sistema** falando direto com o kernel/DRM/seatd. Se algo der errado, basta trocar de TTY (`Ctrl+Alt+F*`) para depurar no terminal puro ou abrir outro ambiente gráfico.
     - **Função Shell + Aliases (`ewm` e `ew`):**
         - Preparar `XDG_RUNTIME_DIR`, teclado ABNT2 (`delay 200`, `rate 50`) e flag `EMACS_OS_MODE="1"`.
@@ -215,7 +215,7 @@ alias ewm='emacs-window-manager'
 alias ew='emacs-window-manager'
 ```
 
-- [ ] **Ideia de Projeto Original: `aweww` (_Awesome EWW_ — O "LSP da Web" 100% Elisp):**
+- [x] **Ideia de Projeto Original: `aweww` (_Awesome EWW_ — O "LSP da Web" 100% Elisp):**
     - **Por que isso é genuinamente inédito e anti-frágil:**
         - O `eww` nativo é rápido e leve, mas é estático (não roda JS e falha em 99% da web moderna em React/SPA como Facebook, YouTube e portais dinâmicos).
         - Por outro lado, soluções como `xwidget-webkit` e `EAF` tentam enfiar a renderização visual e de GPU do navegador para dentro da janela do Emacs, gerando alto consumo de memória, crashes, dependência de GUI e incompatibilidade com `W^X` nos BSDs.
@@ -234,16 +234,16 @@ alias ew='emacs-window-manager'
 
 ### 📝 4. Editores no GUI, PTY e TTY (Mouse, Formato de Cursor e `:terminal`)
 
-- [ ] **Investigar e Corrigir Comportamento do Mouse no FreeBSD:**
+- [x] **Investigar e Corrigir Comportamento do Mouse no FreeBSD:**
     - **Emacs:** O mouse às vezes funciona no PTY e TTY no FreeBSD e às vezes não (investigar se tem relação com abrir uma instância GUI antes/depois).
     - **Vim / NeoVim:** O mouse funciona sempre no PTY mas nunca no TTY no FreeBSD — enquanto tanto o Micro quanto o Helix funcionam com o mouse no TTY. Descobrir a causa e arrumar no Vim e NeoVim.
 
-- [ ] **Padronizar Cursor em Bloco Colorido por Modo no TTY:**
+- [x] **Padronizar Cursor em Bloco Colorido por Modo no TTY:**
     - No TTY do FreeBSD não é possível mudar o formato físico do cursor (barra/underline), mas o **Helix** contorna isso mudando a cor do cursor por modo; como no TTY o cursor é um bloco inteiro, o efeito visual ficou excelente.
     - Migrar esse comportamento de mudar a cor do bloco inteiro do cursor para todos os outros editores (Vim, NeoVim e Emacs) no TTY do FreeBSD.
     - Avaliar se no Linux TTY mantemos a alteração de formato ou se padronizamos esse mesmo efeito de bloco colorido.
 
-- [ ] **Padronizar Cores e Comportamento do `:terminal` Embutido (Vim, Neovim & Emacs — Base p/ "Neovim OS"):**
+- [x] **Padronizar Cores e Comportamento do `:terminal` Embutido (Vim, Neovim & Emacs — Base p/ "Neovim OS"):**
     - **Sincronia da Paleta ANSI (16 cores):** Garantir que os emuladores de terminal internos do **Vim** e do **Neovim** usem exatamente os mesmos códigos hexadecimais configurados no `foot` e no TTY:
         - **Neovim:** Definir o array/variáveis `g:terminal_color_0` até `g:terminal_color_15` (ou via Lua `vim.g.terminal_color_*`).
         - **Vim:** Definir a lista equivalente em `g:terminal_ansi_colors` (16 posições hexadecimais), já que o Vim ignora `g:terminal_color_*`.
