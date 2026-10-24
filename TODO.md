@@ -155,7 +155,7 @@ EOF
 
 ---
 
-### 🔮 3. Emacs (No Window, Geral & Comando `emacs-window-manager` / `ewm` / `ew`)
+### 🔮 3. Emacs (No Window, Geral, Comando `ewm`/`ew` & Ideia do "Neo-EWW")
 
 - [ ] **Configurações Básicas no Terminal (`-nw`):**
     - Habilitar o uso do mouse no Emacs No Window (`xterm-mouse-mode`).
@@ -173,13 +173,13 @@ Mark set
 ```
 
 - [ ] **Implementar o Comando `emacs-window-manager` (Aliases: `ewm` e `ew`):**
-    - **Muito além de `gui emacs`:** Enquanto `gui emacs` apenas abre o Emacs como um cliente comum dentro do Sway/River, o comando **`emacs-window-manager`** (`ewm` / `ew`) transforma o próprio Emacs no **Compositor e Window Manager Soberano do Sistema** direto sobre o TTY/DRM/seatd (ou X11 em modo legado).
+    - **Além de `gui emacs`:** O comando `ewm` / `ew` transforma o próprio Emacs no **Compositor Soberano** falando direto com o kernel/DRM/seatd (sem compositor intermediário como Sway/River). E se der qualquer BO, basta trocar de TTY (`Ctrl+Alt+F*`) para consertar no terminal ou subir um KDE de emergência.
     - **Função Shell + Aliases (`ewm` e `ew`):**
-        - Preparar `XDG_RUNTIME_DIR`, variáveis de teclado (`XKB_DEFAULT_LAYOUT=br`, `abnt2`), escala e tema Breeze.
-        - Iniciar o Emacs carregando a camada de compositor (`--eval "(ewm-start-module)"` no Wayland) e realizar o mesmo _VT bounce_ (`vidcontrol -s`) ao encerrar a sessão no FreeBSD para devolver o TTY intacto.
+        - Preparar `XDG_RUNTIME_DIR`, teclado ABNT2 (`delay 200`, `rate 50`) e flag `EMACS_OS_MODE="1"`.
+        - Subir via `emacs --eval "(ewm-start-module)"` e executar o VT bounce do `vidcontrol` ao sair no FreeBSD.
     - **Arquitetura Dual no `init.el` ("Documentar os 2, Ativar 1 por Ambiente"):**
-        - **Caminho Principal (Wayland Nativo via `EWM` + Smithay/Rust):** O Emacs carrega o módulo dinâmico `ewm-core` em uma thread dedicada em Rust. As janelas de aplicativos externos (Firefox, Foot, Zathura) tornam-se buffers nativos do Emacs com suporte ao protocolo `text-input-v3` e sem travar a interface gráfica se o Elisp estiver processando algo pesado.
-        - **Caminho Documentado/Condicional (X11 Clássico via `EXWM`):** Bloco isolado no `init.el` (`:if (eq window-system 'x)`) pronto para assumir caso o `emacs-window-manager` seja invocado em um ambiente X11/Xenocara (OpenBSD ou hardware legado), mantendo o sistema principal livre de dependências do Xorg.
+        - **Wayland Nativo (EWM + Rust/Smithay):** Módulo dinâmico em thread separada (interface não trava com Elisp ocupado), janelas externas viram buffers e suporte a `text-input-v3`.
+        - **X11 Legado (EXWM Condicional):** Bloco isolado com `:if (eq window-system 'x)` para testes em OpenBSD/Xenocara ou hardware sem DRM moderno.
 
 ```sh
 emacs-window-manager() {
@@ -197,7 +197,6 @@ emacs-window-manager() {
         _current_vt=$(printf '\%s\n' "$_current_tty" | sed -E 's#/dev/ttyv([0-9a-f])#\1#' | tr '0-9a-f' '1-9a-f')
     fi
 
-    # Sobe o Emacs diretamente como Compositor Wayland (EWM) falando com o seatd/DRM
     emacs --eval "(ewm-start-module)" "$@"
 
     if [ "$(uname -s)" = "FreeBSD" ] && [ -n "${_current_vt:-}" ]; then
@@ -212,6 +211,17 @@ emacs-window-manager() {
 alias ewm='emacs-window-manager'
 alias ew='emacs-window-manager'
 ```
+
+- [ ] **Explorar um "Neo-EWW" (Navegação em Sites Modernos c/ JS no Buffer do Emacs):**
+    - **O Problema do `eww` padrão e do `xwidget-webkit`:** O `eww` não roda JS (quebra em 99% dos sites atuais com React/SPA como Facebook/YouTube), e o `xwidget-webkit` roda dentro do processo do Emacs (pesado, instável e incompatível com `W^X` nos BSDs).
+    - **Arquitetura Headless CDP (Texto & Botões ultra-rápidos):**
+        - Rodar um motor Chromium/Firefox em modo Headless externo (processo separado) conectado ao Emacs via socket local (CDP).
+        - O motor executa o HTML5/CSS3/JS real e devolve a **Árvore de Acessibilidade / DOM Semântico** para o Emacs desenhar o buffer com texto puro, campos de input e botões reais (`button.el` / `widget.el`).
+        - **Performance para o usuário:** Zero lag para leitura e clique (resposta em $< 20\text{ ms}$ via socket local, pois não há streaming de pixels).
+    - **Limitações e Soluções p/ Vídeo (YouTube) dentro do Buffer:**
+        - Streaming de imagem inline via Elisp (`Page.startScreencast`) engasga a thread única do Emacs acima de 15 FPS.
+        - **Alternativa 1 (Inline em Buffer Terminal via Sixel/TrueColor):** Testar renderização embutida no buffer usando `eat`/`vterm` com `mpv --vo=sixel` ou `mpv --vo=tct` (ou avaliar o projeto `browsh`, que já faz exatamente esse bridge de Firefox Headless para terminal/Emacs).
+        - **Alternativa 2 (Controle no Neo-EWW + Vídeo via IPC):** Ler toda a página, comentários e busca do YouTube no buffer do Neo-EWW e controlar o player (`mpv` acelerado por GPU) diretamente pelos atalhos do buffer via socket JSON IPC.
 
 ---
 
