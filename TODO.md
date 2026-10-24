@@ -39,10 +39,13 @@
 
 ### 📦 1. Setup — Provisionamento de Sistema, Pacotes e Console
 
-- [ ] **Utilitários Base & Micro-Compositores Wayland (Linux & FreeBSD):**
+- [ ] **Utilitários Base & Os 4 Micro-Compositores Wayland (Linux & FreeBSD):**
     - Instalar utilitários base: `busybox`, `seatd`, `foot` e `wlr-randr`.
-    - Instalar compositores da cascata principal (Tier 1): `sway` (tiling estático), `river` (tiling dinâmico em Zig controlado via IPC), `labwc` (stacking/floating) e `cage` (kiosk single-app).
-    - Avaliar compositores minimalistas extras (Tier 2): `hikari` (nativo do mundo FreeBSD, estilo `cwm`) e `dwl` (estilo `dwm`/suckless). _(Ignorar compositores pesados/inchados como Hyprland, Wayfire e Weston)._
+    - Instalar a tétrade de compositores Wayland modernos (todos ativos, leves e baseados em `wlroots`, cada um cobrindo um paradigma distinto):
+        1. **`sway` (Tiling Manual em Árvore):** Controle total da geometria e excelente tratamento de sub-janelas/modais sem bordas.
+        2. **`river` (Tiling Dinâmico baseado em Tags & IPC):** Escrito em Zig, sem arquivo de config proprietário; controlado 100% via chamadas de processo (`riverctl`).
+        3. **`labwc` (Stacking / Floating estilo Openbox):** Ideal para aplicações que dependem de múltiplas janelas flutuantes ou paletas de ferramentas.
+        4. **`cage` (Modo Kiosk Puro):** O menor overhead possível para esticar uma única aplicação em tela cheia.
     - Habilitar o serviço `seatd` (`sysrc seatd_enable="YES"`) e garantir o usuário no grupo `video`.
     - **Dependências p/ Emacs OS (`emacs-window-manager` / EWM):** Instalar toolchain Rust (`cargo`/`rustc`), `pkgconf`, `libinput`, `libxkbcommon`, `pixman`, `mesa-libs`/`libgbm` e `hwdata` para compilar o módulo dinâmico do compositor.
 
@@ -59,14 +62,14 @@
 ### 🐚 2. Shell — Função `gui` (Cascata `sway > river > labwc > cage` & Multi-TTY)
 
 - [ ] **Implementar a função POSIX `gui` no Shell (Lançador Gráfico Isolado por TTY):**
-    - **Filosofia:** Não é um Desktop Environment, mas um wrapper para abrir qualquer aplicação gráfica diretamente de um TTY cru, permitindo alternar para outro TTY (`Ctrl+Alt+F*`), rodar outro `gui <app>` simultaneamente e retornar ao TTY limpo assim que o app fechar.
+    - **Filosofia Anti-Frágil:** A interface gráfica não é um monólito que domina a máquina, mas um processo filho efêmero amarrado a um TTY. Permite abrir um app gráfico no TTY2 (`gui firefox`), alternar para o TTY3 (`Ctrl+Alt+F3`) e abrir outro ambiente isolado (`gui foot`), ou subir um KDE completo em outro TTY se necessário, retornando ao console de texto limpo assim que o programa fecha.
     - **Sem argumentos = `foot`:** Se chamada apenas como `gui`, assume `set -- foot` por padrão.
     - **Aparência e Input:** Variáveis do Breeze/KDE, escala `1.25`, layout `br` (`abnt2`) e repeat rate rápido (`delay 200`, `rate 50`).
     - **Hierarquia de Inicialização com Saída Silenciosa (`sway > river > labwc > cage`):**
-        1. **`sway`:** Prioridade 1. Config efêmero sem bordas, gerencia sub-janelas/modais em tiling, troca de TTY funcional e auto-exit via `exec sh -c '$* ; swaymsg exit'`.
-        2. **`river`:** Prioridade 2. Script init POSIX efêmero (`chmod +x`) rodando `riverctl` sem bordas, teclado ABNT2 e auto-exit via `riverctl exit` ao encerrar o processo principal.
-        3. **`labwc`:** Prioridade 3. Compositor floating leve, executa via `labwc -C "$XDG_RUNTIME_DIR" -s "$*"`.
-        4. **`cage`:** Prioridade 4 (Fallback Kiosk). Executa com troca de TTY liberada via `cage -s -- "$@"`.
+        1. **`sway`:** Config efêmero sem bordas, troca de TTY funcional (`Ctrl+Alt+F*`) e auto-exit via `exec sh -c '$* ; swaymsg exit'`.
+        2. **`river`:** Script init POSIX efêmero (`chmod +x`) rodando `riverctl` sem bordas, teclado ABNT2 e auto-exit via `riverctl exit` ao encerrar o processo principal.
+        3. **`labwc`:** Executa via `labwc -C "$XDG_RUNTIME_DIR" -s "$*"`.
+        4. **`cage`:** Modo kiosk com troca de TTY liberada via `cage -s -- "$@"`.
     - **Restauração do Console no FreeBSD:** VT bounce via descritor de terminal local (`< "$_current_tty"`) para forçar o kernel a redesenhar a tela imediatamente ao fechar o compositor.
 
 > **💡 Observação Arquitetural (River + `/usr/libexec/flua` no FreeBSD):**
@@ -155,7 +158,7 @@ EOF
 
 ---
 
-### 🔮 3. Emacs (No Window, Geral, Comando `ewm`/`ew` & Ideia do "Neo-EWW")
+### 🔮 3. Emacs (No Window, Geral, Comando `ewm`/`ew` & Projeto `aweww`)
 
 - [ ] **Configurações Básicas no Terminal (`-nw`):**
     - Habilitar o uso do mouse no Emacs No Window (`xterm-mouse-mode`).
@@ -173,13 +176,13 @@ Mark set
 ```
 
 - [ ] **Implementar o Comando `emacs-window-manager` (Aliases: `ewm` e `ew`):**
-    - **Além de `gui emacs`:** O comando `ewm` / `ew` transforma o próprio Emacs no **Compositor Soberano** falando direto com o kernel/DRM/seatd (sem compositor intermediário como Sway/River). E se der qualquer BO, basta trocar de TTY (`Ctrl+Alt+F*`) para consertar no terminal ou subir um KDE de emergência.
+    - **Muito além de `gui emacs`:** Enquanto `gui emacs` abre o Emacs como um cliente dentro do Sway/River, o comando **`emacs-window-manager`** (`ewm` / `ew`) transforma o próprio Emacs no **Compositor e Window Manager Soberano do Sistema** falando direto com o kernel/DRM/seatd. Se algo der errado, basta trocar de TTY (`Ctrl+Alt+F*`) para depurar no terminal puro ou abrir outro ambiente gráfico.
     - **Função Shell + Aliases (`ewm` e `ew`):**
         - Preparar `XDG_RUNTIME_DIR`, teclado ABNT2 (`delay 200`, `rate 50`) e flag `EMACS_OS_MODE="1"`.
         - Subir via `emacs --eval "(ewm-start-module)"` e executar o VT bounce do `vidcontrol` ao sair no FreeBSD.
     - **Arquitetura Dual no `init.el` ("Documentar os 2, Ativar 1 por Ambiente"):**
-        - **Wayland Nativo (EWM + Rust/Smithay):** Módulo dinâmico em thread separada (interface não trava com Elisp ocupado), janelas externas viram buffers e suporte a `text-input-v3`.
-        - **X11 Legado (EXWM Condicional):** Bloco isolado com `:if (eq window-system 'x)` para testes em OpenBSD/Xenocara ou hardware sem DRM moderno.
+        - **Caminho Principal (Wayland Nativo via `EWM` + Rust/Smithay):** Módulo dinâmico rodando em thread separada em Rust (a UI e o mouse não congelam se o Elisp estiver ocupado), janelas Wayland externas viram buffers do Emacs e suporte nativo a `text-input-v3`.
+        - **Caminho Documentado/Condicional (X11 Legado via `EXWM`):** Bloco isolado com `:if (eq window-system 'x)` para máquinas antigas ou testes futuros em OpenBSD/Xenocara, sem poluir a instalação base Wayland com pacotes do Xorg.
 
 ```sh
 emacs-window-manager() {
@@ -212,16 +215,20 @@ alias ewm='emacs-window-manager'
 alias ew='emacs-window-manager'
 ```
 
-- [ ] **Explorar um "Neo-EWW" (Navegação em Sites Modernos c/ JS no Buffer do Emacs):**
-    - **O Problema do `eww` padrão e do `xwidget-webkit`:** O `eww` não roda JS (quebra em 99% dos sites atuais com React/SPA como Facebook/YouTube), e o `xwidget-webkit` roda dentro do processo do Emacs (pesado, instável e incompatível com `W^X` nos BSDs).
-    - **Arquitetura Headless CDP (Texto & Botões ultra-rápidos):**
-        - Rodar um motor Chromium/Firefox em modo Headless externo (processo separado) conectado ao Emacs via socket local (CDP).
-        - O motor executa o HTML5/CSS3/JS real e devolve a **Árvore de Acessibilidade / DOM Semântico** para o Emacs desenhar o buffer com texto puro, campos de input e botões reais (`button.el` / `widget.el`).
-        - **Performance para o usuário:** Zero lag para leitura e clique (resposta em $< 20\text{ ms}$ via socket local, pois não há streaming de pixels).
-    - **Limitações e Soluções p/ Vídeo (YouTube) dentro do Buffer:**
-        - Streaming de imagem inline via Elisp (`Page.startScreencast`) engasga a thread única do Emacs acima de 15 FPS.
-        - **Alternativa 1 (Inline em Buffer Terminal via Sixel/TrueColor):** Testar renderização embutida no buffer usando `eat`/`vterm` com `mpv --vo=sixel` ou `mpv --vo=tct` (ou avaliar o projeto `browsh`, que já faz exatamente esse bridge de Firefox Headless para terminal/Emacs).
-        - **Alternativa 2 (Controle no Neo-EWW + Vídeo via IPC):** Ler toda a página, comentários e busca do YouTube no buffer do Neo-EWW e controlar o player (`mpv` acelerado por GPU) diretamente pelos atalhos do buffer via socket JSON IPC.
+- [ ] **Ideia de Projeto Original: `aweww` (_Awesome EWW_ — O "LSP da Web" 100% Elisp):**
+    - **Por que isso é genuinamente inédito e anti-frágil:**
+        - O `eww` nativo é rápido e leve, mas é estático (não roda JS e falha em 99% da web moderna em React/SPA como Facebook, YouTube e portais dinâmicos).
+        - Por outro lado, soluções como `xwidget-webkit` e `EAF` tentam enfiar a renderização visual e de GPU do navegador para dentro da janela do Emacs, gerando alto consumo de memória, crashes, dependência de GUI e incompatibilidade com `W^X` nos BSDs.
+        - **A sacada do `aweww` (par do _Aweshell_):** Tratar o motor do navegador exatamente como o Emacs trata um servidor LSP! Um processo externo em background (Chromium/Firefox Headless) funciona apenas como "compilador de HTML5/CSS3/JS", enquanto o front-end continua sendo **100% Emacs Lisp puro (`websocket.el` + `json.el` + `shr.el` + `widget.el`)**.
+    - **Como funciona na prática (Zero GPU & Resposta Instantânea):**
+        - O Emacs conecta ao navegador Headless via socket local usando o protocolo **CDP (_Chrome DevTools Protocol_)**.
+        - O navegador executa todo o JavaScript pesado, gerencia cookies/sessões e devolve para o Emacs o **DOM já hidratado e a Árvore de Acessibilidade (A11y Tree)**.
+        - O `aweww` renderiza a página como um buffer de texto nativo do Emacs, transformando botões, links e inputs dinâmicos do JS em widgets reais clicáveis (`button.el`), despachando eventos (`click`, `input`, `submit`) de volta pelo WebSocket em $< 20\text{ ms}$.
+        - Funciona em qualquer lugar: no TTY puro (`emacs -nw`), no Wayland (`gui emacs`) ou dentro do `ewm`, sem gastar GPU. E se um site específico exigir Canvas/WebGPU pesado, basta um atalho para abrir a mesma URL em uma janela gráfica real do Firefox via `ewm` ou `gui`.
+    - **Integração com Vídeo (YouTube dentro do `aweww`):**
+        - Toda a navegação, busca, leitura de comentários e controle de playlists do YouTube acontece em texto ultra-rápido dentro do buffer do `aweww`.
+        - **Reprodução Inline no Buffer:** Testar renderização de vídeo diretamente dentro do buffer via protocolo **Sixel** ou blocos TrueColor (`eat` / `vterm` rodando `mpv --vo=sixel` ou `mpv --vo=tct`), ou inspirar-se na ponte TTY do `browsh`.
+        - **Reprodução Híbrida via IPC:** Controlar o vídeo (pause, seek, volume) pelos atalhos do buffer do `aweww` via socket JSON IPC do `mpv` (rodando em janela dividida no `ewm` ou modo apenas-áudio).
 
 ---
 
@@ -240,7 +247,7 @@ alias ew='emacs-window-manager'
     - **Sincronia da Paleta ANSI (16 cores):** Garantir que os emuladores de terminal internos do **Vim** e do **Neovim** usem exatamente os mesmos códigos hexadecimais configurados no `foot` e no TTY:
         - **Neovim:** Definir o array/variáveis `g:terminal_color_0` até `g:terminal_color_15` (ou via Lua `vim.g.terminal_color_*`).
         - **Vim:** Definir a lista equivalente em `g:terminal_ansi_colors` (16 posições hexadecimais), já que o Vim ignora `g:terminal_color_*`.
-        - **Emacs (`vterm` / `eat` / `ansi-term`):** Sincronizar o vetor `ansi-color-names-vector` e as faces `vterm-color-*` com a mesma paleta de 16 cores.
+        - **Emacs (`vterm` / `eat` / `ansi-term` / `aweshell`):** Sincronizar o vetor `ansi-color-names-vector` e as faces `vterm-color-*` com a mesma paleta de 16 cores.
     - **Ergonomia de "Neovim OS" no `:terminal`:**
         - Mapear `Esc` ou `C-\ C-n` de forma consistente entre Vim, Neovim e `vterm` do Emacs para sair do modo de inserção do terminal e navegar pelo buffer como texto normal.
         - Ocultar números de linha (`nonumber`, `norelativenumber`) e colunas de sinal (`signcolumn=no`) automaticamente ao abrir buffers `term://` no Vim/Neovim para que o terminal embutido pareça nativo.
