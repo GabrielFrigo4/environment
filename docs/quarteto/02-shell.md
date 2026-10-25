@@ -77,4 +77,9 @@ Uma das inovações mais antifrágeis do Universal Shell é o conceito de **proc
 
 - **Isolamento por Terminal Virtual:** Permite subir uma sessão gráfica isolada atrelada a um TTY específico via `gui [app]` (Wayland nativo) ou `xgui [app]` (Xorg). Ao fechar a aplicação, o compositor é finalizado e o terminal retorna imediatamente ao prompt de texto limpo.
 - **Concorrência Multi-Ambiente:** O usuário pode rodar `gui -k firefox` no TTY2 (KDE Plasma), `gui foot` no TTY3 (GNOME Adwaita) e alternar entre eles instantaneamente via `Ctrl+Alt+F*`.
-- **Modo Quiosque Soberano:** O Sway opera com regras de tela cheia automática (`fullscreen enable`), garantindo que novas janelas ocupem o display inteiro sem fatiar o espaço visual em divisões 50/50 indesejadas, preservando o foco operacional.
+- **Modo Quiosque Soberano na Tétrade Wayland:**
+    - **Sway:** Opera com regras efêmeras de tela cheia automática (`fullscreen enable`), garantindo que novas janelas ocupem o display inteiro sem fatiar o espaço visual em 50/50, com suporte a troca de TTY (`Ctrl+Alt+F*`).
+    - **Labwc:** Gera `rc.xml` efêmero com `<windowRule identifier="*" serverDecoration="no"><action name="Maximize"/></windowRule>`, maximizando janelas sem bordas nem decorações.
+    - **River:** Opera sem o gerador de tiling (`rivertile`), impedindo o fatiamento da tela, abrindo views no topo com tecla rápida `Super+F` para fullscreen.
+    - **Cage:** Mantido como último fallback defensivo de quiosque puro mono-aplicação.
+- **Paridade Estrita no X11 (`xgui` com `xterm` e `xrdb`):** O XTerm herda idêntica paleta Adwaita Dark, fontes `JetBrainsMono Nerd Font` e padding de 16px via injeção efêmera de `Xresources` no `xinit`, abrindo com `-maximized` para ocupar 100% da resolução do monitor. Editores e apps filhas (como `emacs`) utilizam criação de frame maximizado (`-F "((fullscreen . maximized))"`).
