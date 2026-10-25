@@ -68,3 +68,13 @@ A ferramenta avalia:
 - **Latência de Inicialização do Shell:** Tempo de carga a frio e a quente do interpretador.
 - **Latência de Navegação Interativa (`cd`):** Custo dos hooks de diretório (`zoxide`, `chpwd`).
 - **Latência de Renderização de Prompt:** Custo do cálculo dinâmico de git dirty e formatação ANSI.
+
+---
+
+## 🪟 Lançadores Gráficos Efêmeros & Sessões Multi-TTY (`gui`)
+
+Uma das inovações mais antifrágeis do Universal Shell é o conceito de **processos gráficos efêmeros por TTY**, eliminando a dependência de Display Managers monolíticos (GDM, SDDM):
+
+- **Isolamento por Terminal Virtual:** Permite subir uma sessão gráfica isolada atrelada a um TTY específico via `gui [app]` (Wayland nativo) ou `xgui [app]` (Xorg). Ao fechar a aplicação, o compositor é finalizado e o terminal retorna imediatamente ao prompt de texto limpo.
+- **Concorrência Multi-Ambiente:** O usuário pode rodar `gui -k firefox` no TTY2 (KDE Plasma), `gui foot` no TTY3 (GNOME Adwaita) e alternar entre eles instantaneamente via `Ctrl+Alt+F*`.
+- **Modo Quiosque Soberano:** O Sway opera com regras de tela cheia automática (`fullscreen enable`), garantindo que novas janelas ocupem o display inteiro sem fatiar o espaço visual em divisões 50/50 indesejadas, preservando o foco operacional.
