@@ -105,6 +105,15 @@ $$C_{\text{final}} = \text{round}(C_{\text{cur}} \times \alpha + C_{\text{bg}} \
 - **No FreeBSD `vt(4)`:** O driver de console suporta sequências **OSC 12** (`\e]12;#RRGGBB\7`) para reprogramar a cor RGB do cursor em tempo real, porém não implementa controle de scanlines VGA. Portanto, **Alpha Blending via OSC 12 é o mecanismo canônico de indicação modal**.
 - **No Linux VT:** O driver de console **NÃO** suporta OSC 12 (ignora a sequência) e sua cor é acoplada à máscara de atributos de célula. Em contrapartida, suporta nativamente **scanlines de hardware (`\e[?c`)**, tornando a indicação modal por **forma física** o padrão canônico no Linux.
 
+### 4.4 O Caso do Helix: Scopes Imunes a Inversão & Comutação Raw TTY
+
+Diferente do Vim, NeoVim e Emacs, o Helix não possui engine interna de scripts ou hooks de eventos (`autocmds`). Seu tema padrão de fábrica (`dark_plus`) define `"ui.cursor" = { fg = "cursor", modifiers = ["reversed"] }`:
+
+- **Anomalia Upstream Resolvida:** No TTY, `modifiers = ["reversed"]` inverte a cor sintática da célula sob o cursor. Quando posicionado sobre comentários (`dark_green`) ou strings (`green`), o cursor se tornava **verde sólido** e assumia cores arbitrárias em cada token. Além disso, em consoles VT que ignoram DECSCUSR `bar` e `underline`, o cursor de hardware era exibido sem diferenciação modal.
+- **Solução Definitiva:**
+    1. **Substituição dos Scopes de Cursor (`themes/dark_plus.toml`):** Fixação explícita de cores monocromáticas nos modos (`"ui.cursor.normal" = { bg = "white" }`, `"ui.cursor.insert" = { bg = "#ebebeb" }`, `"ui.cursor.select" = { bg = "#adadad" }`) eliminando completamente a diretiva `reversed`. O cursor mantém contraste perfeito sem assumir cores do código.
+    2. **Configuração Dedicada de Raw TTY (`config-tty.toml` & `themes/term16_dark.toml`):** Em consoles virtuais puros (`_is_raw_tty`), o wrapper `hx()` no Universal Shell comuta automaticamente para `config-tty.toml`, desativando TrueColor (`true-color = false`), desativando mouse/linhas de cursor e definindo formas em bloco em software com a paleta ANSI de 16 cores (`white` -> `light-gray` -> `gray`).
+
 ---
 
 ## 🌈 5. Padronização da Paleta DAC de 16 Cores com FreeBSD `vt(4)`
