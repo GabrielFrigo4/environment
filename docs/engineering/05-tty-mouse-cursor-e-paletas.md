@@ -17,7 +17,7 @@ No FreeBSD, a integração de mouse opera inteiramente em **nível de driver de 
 
 ---
 
-### 1.2 O Modelo GPM no Linux VT & O PTY Mouse Bridge
+### 1.2 O Modelo GPM no Linux VT & Diretriz Soberana de I/O Direto
 
 No Linux, o driver do terminal virtual (`drivers/tty/vt/`) não provê emulação de sequências xterm no `stdin`. O ecossistema depende historicamente do **GPM** (_General Purpose Mouse_):
 
@@ -32,19 +32,15 @@ No Linux, o driver do terminal virtual (`drivers/tty/vt/`) não provê emulaçã
 │                             │                          │
 │                             ▼                          │
 │                  UNIX Socket: /dev/gpmctl              │
-│                    │                     │             │
-│                    ▼                     ▼             │
-│            [Vim / Emacs]         [PTY Mouse Bridge]    │
-│            (libgpm nativo)       (ctypes + python)     │
-│                                          │             │
-│                                          ▼ SGR 1006    │
-│                                   [NeoVim / Helix]     │
+│                    │                                   │
+│                    ▼                                   │
+│            [Vim (+mouse_gpm)]                          │
+│            (libgpm nativo em C)                        │
 └────────────────────────────────────────────────────────┘
 ```
 
-1. **Vim (`+mouse_gpm`):** Linka com `libgpm.so.2`. Deve manter `ttymouse` vazio sob `$TERM == 'linux'` para ativar a leitura do socket `/dev/gpmctl`.
-2. **GNU Emacs (`gpm-mouse-mode`):** Implementado no módulo interno `t-mouse.el`. Ativado via `(gpm-mouse-mode 1)` quando `$TERM == 'linux'`.
-3. **NeoVim, Helix e Micro:** Operam através do wrapper `_raw_tty_pty_bridge()` em `Shell/context/desktop/common.sh`. O wrapper aloca um PTY, abre o socket do GPM via `libgpm.so.2` com `ctypes` e injeta sequências SGR 1006 (`\x1b[<btn;x;yM`) no descritor mestre (`master`) do PTY.
+1. **Vim (`+mouse_gpm`):** Linka com `libgpm.so.2`. Deve manter `ttymouse` vazio sob `$TERM == 'linux'` para ativar a leitura do socket `/dev/gpmctl`. O mouse reage estritamente ao clique (`GPM_DOWN`), ignorando hover.
+2. **Rejeição do Bridge PTY Virtual:** Envelopar editores de texto interativos (`nvim`, `hx`, `micro`, `emacs`) sob wrappers virtuais de PTY (`pty.fork`) em Python introduz latência de I/O, instabilidade no repasse de sinais (`SIGWINCH`, `SIGTSTP`) e risco de anomalias no cursor. O ecossistema adota a **Diretriz Soberana de I/O Direto**: editores executam diretamente contra o descritor de terminal provido pelo kernel (`direct stdio`), priorizando estabilidade e simplicidade sobre pontes artificiais de mouse.
 
 ---
 
@@ -66,7 +62,7 @@ O Linux VT provê controle de scanlines do cursor de hardware VGA via códigos d
 No arquivo de terminfo padrão (`/usr/share/terminfo/l/linux`), as entradas de visibilidade contêm `cnorm=\E[?25h\E[?0c`. O código `\E[?0c` reseta o hardware para o bloco padrão do kernel a cada redesenho de tela.
 
 - **Mitigação 1 (Terminfo Sanitizado):** Compilação automática de `~/.terminfo/l/linux` com `cnorm=\E[?25h`, `cvvis=\E[?25h`, `civis=\E[?25l` via `tic`.
-- **Mitigação 2 (Despacho Agendado):** No NeoVim, disparos de `set_cur()` são duplicados através de `vim.schedule()` para sobrescrever qualquer reset emitido pelo ciclo de redraw do TUI.
+- **Mitigação 2 (Despacho Agendado):** No NeoVim, disparos de `set_cur()` são duplicados através de `vim.schedule()` e `vim.defer_fn(emit, 15)` para sobrescrever qualquer reset emitido pelo ciclo de redraw do TUI.
 
 ---
 
@@ -74,22 +70,39 @@ No arquivo de terminfo padrão (`/usr/share/terminfo/l/linux`), as entradas de v
 
 Ao pressionar `r` para substituir um único caractere, o editor aguarda a entrada sem trocar formalmente de modo:
 
-- **Vim:** Função `s:replace_single_char()` com `getcharstr()`, exibindo o cursor de replace durante a espera e restaurando o cursor anterior imediatamente após a tecla.
-- **Emacs Evil:** Advice `:around` na função `evil-replace` com `unwind-protect`, garantindo a exibição do cursor de replace e sua restauração limpa.
-- **NeoVim:** Interceptação por `vim.on_key` rastreando o estado de espera em modo normal e modo insert (`<C-o>r`).
+- **Vim:** Função `s:replace_single_char()` com `getcharstr()`, chamando `redraw` explícito antes e depois da leitura, cobrindo `r` no modo normal e `<C-o>r` no modo insert.
+- **Emacs Evil:** Interceptação via advice em `evil-refresh-cursor` verificando `evil-force-cursor == 'replace'` gerado pela especificação `interactive` de `evil-replace`.
+- **NeoVim:** Interceptação por `vim.on_key` rastreando o estado de espera em modo normal (`n`) e transição de insert (`niI`).
 
 ---
 
-## 🎨 4. Calibração Tonal Dinâmica de Tema
+## 🎨 4. Alpha Blending Real & Simetria de Plataformas
 
-Para respeitar as diretrizes de design de temas e prevenir quebra de contraste:
+Para respeitar as diretrizes de design de temas e garantir invariância de contraste em **Dark Mode** e **Light Mode**:
 
-1. **Proibição de Cores Fixas:** Cores literais como `#ffffff` ou `#a8a8a8` são vedadas em modos de edição.
-2. **Escala Relativa de Luminância:** O cursor amostra a cor base do tema ativo (`cursor` face no Emacs, grupos `Cursor`/`Normal` no NeoVim e Vim) e calcula a luminosidade proporcional:
-    - **Normal:** 100% (tom base)
-    - **Insert:** 85% (atenuado)
-    - **Replace:** 70% (moderado)
-    - **Visual:** 55% (escurecido, priorizando o highlight da seleção)
+### 4.1 A Falha da Atenuação Linear Simples
+
+Multiplicar os canais RGB por um fator ($R \times 0.85$) falha criticamente em temas claros:
+
+- Em **Light Mode** (cursor preto `(0, 0, 0)` sobre fundo branco `(255, 255, 255)`), multiplicar `0` por qualquer valor resulta em `0` (continua preto sólido). Se o cursor for cinza escuro, multiplicar por 0.55 o torna _ainda mais escuro_ (aumentando o contraste em vez de suavizá-lo).
+
+### 4.2 A Fórmula Matemática de Alpha Blending
+
+A transparência genuína é obtida interpolando linearmente (lerp) a cor do cursor ($C_{\text{cur}}$) contra a **cor de fundo ativa do tema** ($C_{\text{bg}}$) usando o coeficiente de opacidade $\alpha \in [0.0, 1.0]$:
+
+$$C_{\text{final}} = \text{round}(C_{\text{cur}} \times \alpha + C_{\text{bg}} \times (1 - \alpha))$$
+
+| Modo de Edição | Opacidade ($\alpha$) | Dark Mode (Fundo Escuro)  | Light Mode (Fundo Claro)  |
+| :------------- | :------------------: | :------------------------ | :------------------------ |
+| **Normal**     |        `1.0`         | Sólido (100% contraste)   | Sólido (100% contraste)   |
+| **Insert**     |        `0.85`        | Levemente translúcido     | Levemente translúcido     |
+| **Replace**    |        `0.70`        | Moderadamente translúcido | Moderadamente translúcido |
+| **Visual**     |        `0.55`        | Translúcido atenuado      | Translúcido atenuado      |
+
+### 4.3 Simetria Técnica: FreeBSD `vt(4)` vs Linux VT
+
+- **No FreeBSD `vt(4)`:** O driver de console suporta sequências **OSC 12** (`\e]12;#RRGGBB\7`) para reprogramar a cor RGB do cursor em tempo real, porém não implementa controle de scanlines VGA. Portanto, **Alpha Blending via OSC 12 é o mecanismo canônico de indicação modal**.
+- **No Linux VT:** O driver de console **NÃO** suporta OSC 12 (ignora a sequência) e sua cor é acoplada à máscara de atributos de célula. Em contrapartida, suporta nativamente **scanlines de hardware (`\e[?c`)**, tornando a indicação modal por **forma física** o padrão canônico no Linux.
 
 ---
 
