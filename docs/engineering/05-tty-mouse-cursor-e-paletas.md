@@ -143,3 +143,27 @@ A tabela DAC de 16 cores do Linux VT é reprogramada para espelhar exatamente os
 
 - **Shell (`Shell/core/environment.sh`):** Sequência OSC `\e]P0000000\e]P17f0000...\e]PFffffff` no boot do console.
 - **Setup (`Setup/linux/common/system/console.sh`):** Configuração persistente via sysfs em `/etc/tmpfiles.d/console-cursor.conf` escrevendo os arrays em `/sys/module/vt/parameters/default_{red,grn,blu}`.
+
+---
+
+## ⏱️ 6. Frequência Canônica de Pisque do Cursor (Cursor Blink Rate)
+
+Para assegurar conforto ergonômico, evitar distrações visuais e garantir **paridade estrita com o padrão industrial do GNOME / GTK (Ptyxis, VTE) e KDE Plasma / Qt (Konsole)**:
+
+### 6.1 A Taxa Canônica Universal (1200ms)
+
+O padrão de acessibilidade e ergonomia adotado pelo GNOME (`org.gnome.desktop.interface cursor-blink-time`) define **1200ms para o período de ciclo completo**, com ciclo de trabalho balanceado (50% on, 50% off):
+
+$$\text{Período} = 1200\text{ ms} \quad (\text{ON: } 600\text{ ms}, \text{ OFF: } 600\text{ ms}) \quad \approx 0.833\text{ Hz}$$
+
+Essa cadência é suave, reduz a fadiga ocular em sessões prolongadas de programação e elimina a sensação de pulsação acelerada típica de emuladores descalibrados.
+
+### 6.2 Paridade entre Emuladores do Ecossistema
+
+| Emulador de Terminal     | Mecanismo de Configuração        | Chave / Parâmetro                 | Valor Canônico              |
+| :----------------------- | :------------------------------- | :-------------------------------- | :-------------------------- |
+| **Foot (Wayland)**       | `~/.config/foot/foot.ini`        | `[cursor] blink-rate`             | `600` (ms entre transições) |
+| **XTerm (X11)**          | `~/.Xresources` / `~/.Xdefaults` | `*cursorOnTime`, `*cursorOffTime` | `600`, `600`                |
+| **XTerm (CLI Launcher)** | Linha de comando / Desktop entry | `-bcn 600 -bcf 600`               | `600` on, `600` off         |
+| **Ptyxis / GNOME Term**  | GSettings / DConf                | `cursor-blink-time`               | `1200` (padrão de fábrica)  |
+| **Konsole (KDE)**        | Qt Application Theme             | `cursorFlashTime`                 | `1000–1200` (padrão Qt)     |
