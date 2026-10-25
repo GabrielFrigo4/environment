@@ -29,12 +29,13 @@ flowchart TD
 
 ## 📚 Índice da Seção
 
-| Arquivo                                                                            | Título                                  | Foco Metodológico                                                                                |
-| :--------------------------------------------------------------------------------- | :-------------------------------------- | :----------------------------------------------------------------------------------------------- |
-| **[`01-os-22-principios-unix.md`](01-os-22-principios-unix.md)**                   | Os 22 Princípios UNIX & Clean Code      | Análise comentada dos 22 princípios canônicos definidos no `PRINCIPLES.md`.                      |
-| **[`02-antifragilidade-e-self-healing.md`](02-antifragilidade-e-self-healing.md)** | Sistemas Antifrágeis & Auto-Cura        | Resolução dinâmica em cascata, cura em tempo de voo, elevação `ELEVATE` e shift seguro.          |
-| **[`03-clean-break-refactoring.md`](03-clean-break-refactoring.md)**               | Refatoração Sem Legado (Clean-Break)    | A política zero-cruft: por que ecossistemas soberanos não toleram aliases ou shims obsoletos.    |
-| **[`04-bancada-vs-producao.md`](04-bancada-vs-producao.md)**                       | Bancada de Desenvolvimento vs. Produção | Ciclo de propagação canônico: Bancada $\rightarrow$ Git Push $\rightarrow$ Git Pull em produção. |
+| Arquivo                                                                            | Título                                      | Foco Metodológico                                                                                |
+| :--------------------------------------------------------------------------------- | :------------------------------------------ | :----------------------------------------------------------------------------------------------- |
+| **[`01-os-22-principios-unix.md`](01-os-22-principios-unix.md)**                   | Os 22 Princípios UNIX & Clean Code          | Análise comentada dos 22 princípios canônicos definidos no `PRINCIPLES.md`.                      |
+| **[`02-antifragilidade-e-self-healing.md`](02-antifragilidade-e-self-healing.md)** | Sistemas Antifrágeis & Auto-Cura            | Resolução dinâmica em cascata, cura em tempo de voo, elevação `ELEVATE` e shift seguro.          |
+| **[`03-clean-break-refactoring.md`](03-clean-break-refactoring.md)**               | Refatoração Sem Legado (Clean-Break)        | A política zero-cruft: por que ecossistemas soberanos não toleram aliases ou shims obsoletos.    |
+| **[`04-bancada-vs-producao.md`](04-bancada-vs-producao.md)**                       | Bancada de Desenvolvimento vs. Produção     | Ciclo de propagação canônico: Bancada $\rightarrow$ Git Push $\rightarrow$ Git Pull em produção. |
+| **[`05-tty-mouse-cursor-e-paletas.md`](05-tty-mouse-cursor-e-paletas.md)**         | Subsistemas de TTY: Mouse, Cursor & Paletas | Arquitetura de mouse FreeBSD vs Linux, PTY Mouse Bridge, scanlines e paleta DAC de 16 cores.     |
 
 ---
 
