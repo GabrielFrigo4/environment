@@ -92,12 +92,13 @@ A transparência genuína é obtida interpolando linearmente (lerp) a cor do cur
 
 $$C_{\text{final}} = \text{round}(C_{\text{cur}} \times \alpha + C_{\text{bg}} \times (1 - \alpha))$$
 
-| Modo de Edição | Opacidade ($\alpha$) | Dark Mode (Fundo Escuro)  | Light Mode (Fundo Claro)  |
-| :------------- | :------------------: | :------------------------ | :------------------------ |
-| **Normal**     |        `1.0`         | Sólido (100% contraste)   | Sólido (100% contraste)   |
-| **Insert**     |        `0.85`        | Levemente translúcido     | Levemente translúcido     |
-| **Replace**    |        `0.70`        | Moderadamente translúcido | Moderadamente translúcido |
-| **Visual**     |        `0.55`        | Translúcido atenuado      | Translúcido atenuado      |
+| Modo de Edição | Opacidade ($\alpha$) | Dark Mode (Fundo Escuro)   | Light Mode (Fundo Claro)   |
+| :------------- | :------------------: | :------------------------- | :------------------------- |
+| **Normal**     |    `1.00` (100%)     | Sólido (100% contraste)    | Sólido (100% contraste)    |
+| **Insert**     |     `0.92` (92%)     | Levemente translúcido      | Levemente translúcido      |
+| **Minibuffer** |     `0.84` (84%)     | Focado na linha de comando | Focado na linha de comando |
+| **Replace**    |     `0.76` (76%)     | Moderadamente translúcido  | Moderadamente translúcido  |
+| **Visual**     |     `0.68` (68%)     | Translúcido atenuado       | Translúcido atenuado       |
 
 ### 4.3 Simetria Técnica: FreeBSD `vt(4)` vs Linux VT
 
