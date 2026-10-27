@@ -42,6 +42,9 @@
 
 ## 📌 Backlog & Próximos Passos
 
+- [ ] **Camada Opcional de GNU Coreutils em Sistemas BSD/Unix (Repositório `Shell`):**
+    - Avaliar e definir a arquitetura ideal para ativar o userland GNU (`coreutils`, `gsed`, `gawk`, `ggrep`, `gtar`, `gfind`) de forma opcional no FreeBSD e demais BSDs/macOS sem torná-lo o padrão impositivo e sem quebrar scripts nativos do sistema base ou da árvore de Ports.
+    - Comparar trade-offs entre: (1) flag de ambiente opt-in (ex: `SHELL_GNU_USERLAND=1`) que mapeia aliases seguros apenas em sessões interativas (`gls`, `gcat`, `gcp`, `gmv`, `gstat`, `gsed`), (2) injeção condicional do diretório `/usr/local/libexec/gnubin` no `PATH`, ou (3) gerenciamento de symlinks em `~/.local/bin`.
 - [ ] **Ajuste da Barra de Ferramentas (Tool-Bar / Bar-Tools) no EWM:** Investigar e restaurar a exibição e estilização consistente da `tool-bar` dentro do ambiente EWM (`wewm`), alinhando layout e offsets de renderização.
 - [ ] **Correção de Diálogo de Arquivo no GUI Emacs / Sway e Diretório Inicial:**
     - Investigar erro disparado no Sway ("there are errors in your config file" em vermelho) ao acionar "open new file" / diálogo gráfico de seleção de arquivo no `wgui`/`xgui emacs`, que bloqueia subsequentes popups de seleção.
