@@ -51,6 +51,18 @@
     - Blindar o `default-directory` do Emacs no ciclo pós-inicialização para garantir que inicialize sempre no diretório home (`~`) do usuário, evitando captura esporádica de diretórios transitórios de build do Elpaca (ex: `~/.emacs.d/var/lib/elpaca/builds/ob-mermaid`).
 - [ ] **Autodocumentação Integral no GNU Emacs (Self-Documenting Philosophy):** Auditar e enriquecer progressivamente todos os módulos Elisp (`etc/`, `lib/`, `usr/local/aweshell`, `usr/local/aweww`) para que 100% das funções (`defun`/`defmacro`), variáveis (`defvar`/`defcustom`), faces (`defface`) e keymaps possuam docstrings canônicas introspectáveis via `C-h f`, `C-h v`, `C-h k`, `M-x apropos` e `which-key` (1ª linha concisa $\le 80$ colunas, parâmetros em `MAIÚSCULAS` e hiperlinks `` `simbolo' `` para o buffer `*Help*`).
 - [ ] **Correção e Fluidez no Redimensionamento de Janelas no KDE Plasma (KWin):** Investigar e corrigir o bloqueio/travamento ao redimensionar janelas sob o KDE, ajustando regras de gerenciamento de geometria, decorações de borda e propriedades de tamanho (`size hints` / `frame-resize-pixelwise`) para garantir redimensionamento contínuo e responsivo.
+- [ ] **Melhorar os Compositores Wayland E X11 no Geral:** para funcionarem independentemente do (x/w)gui e (x/w)ewm para serem alternativas TAMBEM do ambiente principal como KDE e GNOME (mas não é nem para voce matar o KDE e o GNOME e nem matar o GUI e o EWM... Entenda que eu estou pedindo para melhorar e não para destruir...). Inclusive o sway tem erro na linha 6 da configuração algo assim. Fazer esses compositores usarem o teclado correto e terem uma pré configuração boa... E fazer pra todos okk? Sway, labwc, river e cage (claro leve em conta o proposito e filosofia deles e isso não pode estragar o comando (x/w)gui)
+- [ ] **Melhorar os Compositores Wayland E X11 no comando GUI:** Polir esses comandos...
+- [ ] **Mini ToDo de alias para pensar/evoluir e colocar no Shell e no Emacs Aweshell:**
+
+```todo
+- [ ] Firefox (of)
+- [ ] Web Browser (ow)
+- [ ] OnlyOffice (oo)
+- [ ] LibreOffice (ol)
+- [ ] Terminal (ot)
+...
+```
 
 ---
 
