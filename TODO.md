@@ -47,6 +47,7 @@
     - Investigar erro disparado no Sway ("there are errors in your config file" em vermelho) ao acionar "open new file" / diálogo gráfico de seleção de arquivo no `wgui`/`xgui emacs`, que bloqueia subsequentes popups de seleção.
     - Blindar o `default-directory` do Emacs no ciclo pós-inicialização para garantir que inicialize sempre no diretório home (`~`) do usuário, evitando captura esporádica de diretórios transitórios de build do Elpaca (ex: `~/.emacs.d/var/lib/elpaca/builds/ob-mermaid`).
 - [ ] **Autodocumentação Integral no GNU Emacs (Self-Documenting Philosophy):** Auditar e enriquecer progressivamente todos os módulos Elisp (`etc/`, `lib/`, `usr/local/aweshell`, `usr/local/aweww`) para que 100% das funções (`defun`/`defmacro`), variáveis (`defvar`/`defcustom`), faces (`defface`) e keymaps possuam docstrings canônicas introspectáveis via `C-h f`, `C-h v`, `C-h k`, `M-x apropos` e `which-key` (1ª linha concisa $\le 80$ colunas, parâmetros em `MAIÚSCULAS` e hiperlinks `` `simbolo' `` para o buffer `*Help*`).
+- [ ] **Correção e Fluidez no Redimensionamento de Janelas no KDE Plasma (KWin):** Investigar e corrigir o bloqueio/travamento ao redimensionar janelas sob o KDE, ajustando regras de gerenciamento de geometria, decorações de borda e propriedades de tamanho (`size hints` / `frame-resize-pixelwise`) para garantir redimensionamento contínuo e responsivo.
 
 ---
 
