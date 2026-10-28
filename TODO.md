@@ -42,47 +42,82 @@
 
 ## 📌 Backlog & Próximos Passos
 
+### 🔴 1. Correções Críticas de Sessão Gráfica, EWM e EXWM (Baseado em Logs)
+
+- [ ] **Correção de Segfault e Inicialização DRM/D-Bus no EWM (`wewm` / `libewm_core.so`):**
+    - **Memory Safety (`libxkbcommon`):** Investigar e corrigir o _Segmentation fault_ em `xkb_keymap_unref` (`0x8499e3513`) e `xkb_state_unref` (`0x8499e63ef`) disparado dentro de `libewm_core.so` imediatamente após a atualização de input (`Input config updated: 3 entries` / `Keyboard repeat: rate=50, delay=200`).
+    - **Detecção de Outputs DRM:** Diagnosticar por que o backend DRM inicializa em `/dev/dri/card0` (`DrmNode { dev: 96, ty: Control }`) reportando área zerada (`Total output area: 0x0 (0 outputs)` / `Sent 0 output_detected events`).
+    - **Barramento D-Bus e Serviços no FreeBSD / Ambientes Non-Systemd:**
+        - Corrigir a falha de conexão ao socket D-Bus em `/var/run/xdg/$USER/bus` (`os error 2` ao iniciar `org.freedesktop.ScreenSaver`) e o erro `exit status: 71` (`EX_OSERR`) no `import-environment`.
+        - Tratar graciosamente a ausência de `org.freedesktop.login1` em sistemas com `seatd`/ConsoleKit2 (`Failed to acquire lid switch inhibitor`) e tornar opcional/silencioso o spawn de `xwayland-satellite` quando o binário não estiver instalado (`os error 2`).
+    - **Tool-Bar no EWM (`wewm`):** Investigar e restaurar a exibição, estilização e offsets de renderização consistentes da `tool-bar` (Bar-Tools) dentro do ambiente EWM.
+- [ ] **Estabilização do Ciclo de Vida X11 / EXWM (`xewm` / `xinit` no FreeBSD 15.1):**
+    - **Flag Inválida no ConsoleKit2:** Remover a flag `--exit-with-session` passada indevidamente ao `ck-launch-session` (`WARNING: Unknown option --exit-with-session` — flag pertence ao `dbus-launch`, não ao `ck-launch-session`), que aborta o processo cliente imediatamente e derruba o servidor Xorg (`xinit: connection to X server lost`).
+    - **Driver Gráfico & Higiene Xorg:** Avaliar o fallback em `scfb` (`scfb trace: probe start/done` em `Xorg.1.log`), garantir a pré-criação limpa do arquivo de autoridade `xauth` (`~/.serverauth.*`) e silenciar os warnings benignos do `xkbcomp` de redefinição de `<FK23>`/`<FK24>` e keysyms ausentes (`XF86ElectronicPrivacyScreenOn`, etc.).
+
+---
+
+### 🖥️ 2. Compositores Wayland/X11, Lançadores `(x/w)gui` e Despachante `wm`
+
+- [ ] **Detecção de Binários Gráficos vs. TUI no `(x/w)gui` (`graphical-launcher`):**
+    - **Classificação Incorreta de Apps Gráficos (`firefox` / `chrome`):** Corrigir a heurística do `(x/w)gui` que identifica erroneamente o Firefox e o Chrome/Chromium como aplicações de terminal (TUI), fazendo com que abram encaixotados/sem fullscreen e com uma janela de emulador de terminal (`foot`/`xterm`) presa ao fundo.
+    - **Execução Silenciosa Falha no VS Code (`(x/w)gui vscode`):** Investigar por que a invocação do VS Code via wrapper gráfico falha silenciosamente sem abrir janela (verificar resolução de binário `code`/`code-oss`, flags de Electron/Wayland `--ozone-platform-hint=auto` ou bloqueio de sandbox).
+    - **Peculiaridade de Binário no FreeBSD (`chrome` vs `chromium`):** Documentar e tratar nos scripts de despacho o fato de que o pacote Chromium no FreeBSD instala o binário executável sob o nome `chrome` (`/usr/local/bin/chrome`), evitando falhas de detecção ou colisão com o Google Chrome no Linux.
+- [ ] **Soberania e Pré-Configuração da Tétrade Wayland (`sway`, `river`, `labwc`, `cage`) e X11:**
+    - Garantir que todos os compositores possuam configurações base autônomas, elegantes e respeitando a filosofia de cada projeto — funcionando perfeitamente tanto como alternativas leves ao KDE/GNOME (via `way`/`xorg`) quanto acoplados ao `(x/w)gui` e `(x/w)ewm`, sem regredir ou quebrar os ambientes principais.
+    - **Polimento de Input, Locale e Escala (HiDPI):** Padronizar layout de teclado correto, variáveis de idioma/locale e escala de resolução (ex: 125% condicional).
+    - **Ajuste Visual do `labwc` e `foot`:** Corrigir a escala desproporcional do terminal `foot` dentro do `labwc` (que aparenta abrir em ~150% mesmo com resolução em 100%) e estilizar o menu raiz do `labwc` (substituindo o fundo 100% preto e o popup cru `terminal/reconfigure/exit` por uma configuração visual limpa e intuitiva).
+    - **Sway Config & Diálogo de Arquivo no Emacs GUI:** Corrigir o erro de sintaxe na linha 6 da configuração do Sway (banner vermelho `"there are errors in your config file"`) e corrigir o bug onde acionar _"open new file"_ (diálogo gráfico de arquivo) no `wgui`/`xgui emacs` trava a abertura de popups subsequentes.
+- [ ] **Novo Despachante / Alias `wm` (Window Manager Puro):**
+    - Criar o comando/alias `wm` (`wwm` / `xwm`) seguindo a fila de prioridade do `gui` (`Sway > Labwc > River > Cage`), herdando toda a pré-configuração de teclado, escala e estética do `(x/w)gui` e `(x/w)ewm`, mas iniciando o compositor **puro** (sem atrelar a vida da sessão a um aplicativo alvo único).
+    - Em compositores orientados a quiosque/janela única onde iniciar vazio não faz sentido (como `cage`), inicializar automaticamente com o terminal padrão da sessão (`foot` no Wayland / `xterm` no X11), permitindo digitar `wm` direto do TTY e já ter um ambiente gráfico produtivo sem depender de KDE ou GNOME.
+- [ ] **Simetria Multi-SO nos Comandos `way` e `x11`/`xorg`:**
+    - Auditar e unificar o tratamento de erros e diferenças de inicialização de sessão gráfica entre FreeBSD e Linux nos despachantes `way`, `x11` e `xorg`.
+- [ ] **Fluidez de Redimensionamento de Janelas no KDE Plasma (KWin):**
+    - Investigar e corrigir o travamento/bloqueio ao redimensionar janelas sob o KDE Plasma (KWin), ajustando regras de gerenciamento de geometria, decorações de borda e propriedades de tamanho (`size hints` / `frame-resize-pixelwise`) para garantir redimensionamento contínuo e responsivo.
+
+---
+
+### 🐃 3. GNU Emacs, Editores Modais e Ergonomia em Raw TTY
+
+- [ ] **Blindagem do Diretório Inicial (`default-directory`) no GNU Emacs:**
+    - Garantir no ciclo pós-inicialização que o Emacs abra sempre no diretório home (`~`) do usuário, impedindo a captura esporádica de diretórios transitórios de build do Elpaca (ex: `~/.emacs.d/var/lib/elpaca/builds/ob-mermaid`).
+- [ ] **Comandos Interativos de Lançamento de Apps Gráficos no Emacs:**
+    - Expandir a suíte de comandos nativos do Emacs (seguindo o padrão já existente de `M-x firefox`) para abrir diretamente aplicativos de produtividade e diagnóstico do ecossistema:
+        - **Kate** (`M-x kate`)
+        - **GIMP** (`M-x gimp`)
+        - **Wireshark** (`M-x wireshark`)
+        - **KDE Connect** (`M-x kdeconnect` / `kdeconnect-app`)
+        - **Thunderbird** (`M-x thunderbird`)
+        - **Google Chrome & Chromium** (`M-x chrome` / `M-x chromium` — _Observação técnica: no FreeBSD, o binário do pacote Chromium chama-se `chrome`; o comando deve resolver ambos de forma transparente entre Linux e FreeBSD_).
+- [ ] **Autodocumentação Integral no GNU Emacs (Self-Documenting Philosophy):**
+    - Auditar e enriquecer progressivamente todos os módulos Elisp (`etc/`, `lib/`, `usr/local/aweshell`, `usr/local/aweww`) para que 100% das funções (`defun`/`defmacro`), variáveis (`defvar`/`defcustom`), faces (`defface`) e keymaps possuam docstrings canônicas introspectáveis via `C-h f`, `C-h v`, `C-h k`, `M-x apropos` e `which-key` (1ª linha concisa $\le 80$ colunas, parâmetros em `MAIÚSCULAS` e hiperlinks `` `simbolo' `` para o buffer `*Help*`).
+- [ ] **Ergonomia, Keymaps e Latência em Console Puro (Raw TTY):**
+    - **Navegação por Palavra (`Ctrl+Left` / `Ctrl+Right`) no TTY:** Corrigir o mapeamento de teclas de modificação no console puro do FreeBSD (`vt(4)`) e do Linux, onde pressionar `Ctrl+Left` / `Ctrl+Right` emite a mesma sequência bruta das setas normais (`^[[D` / `^[[C`) em vez de sequências modificadas (`^[[1;5D` / `^[[1;5C`), impedindo o avanço/recuo por palavra (`backward-word` / `forward-word`) no Shell e no Emacs TTY (enquanto `Home` e `End` já operam normalmente). Configurar `kbdcontrol` / keymaps de console e fallbacks de input no Shell/Emacs.
+    - **Latência de Encerramento do NeoVim no TTY:** Investigar e eliminar o delay de ~1 a 2 segundos ao sair (`:q`) do NeoVim exclusivamente em sessões Raw TTY (verificar timeouts de provider de clipboard tentando buscar display X11/Wayland inexistente, encerramento de daemons LSP/autocommands `VimLeave` ou resquícios de configurações legadas de terminal como `ttyfast`).
+
+---
+
+### 🐚 4. Repositório `Shell` — Camada GNU Coreutils & Reforma de Aliases (`open-*`)
+
 - [ ] **Camada Opcional de GNU Coreutils em Sistemas BSD/Unix (Repositório `Shell`):**
     - Avaliar e definir a arquitetura ideal para ativar o userland GNU (`coreutils`, `gsed`, `gawk`, `ggrep`, `gtar`, `gfind`) de forma opcional no FreeBSD e demais BSDs/macOS sem torná-lo o padrão impositivo e sem quebrar scripts nativos do sistema base ou da árvore de Ports.
     - Comparar trade-offs entre: (1) flag de ambiente opt-in (ex: `SHELL_GNU_USERLAND=1`) que mapeia aliases seguros apenas em sessões interativas (`gls`, `gcat`, `gcp`, `gmv`, `gstat`, `gsed`), (2) injeção condicional do diretório `/usr/local/libexec/gnubin` no `PATH`, ou (3) gerenciamento de symlinks em `~/.local/bin`.
-- [ ] **Ajuste da Barra de Ferramentas (Tool-Bar / Bar-Tools) no EWM:** Investigar e restaurar a exibição e estilização consistente da `tool-bar` dentro do ambiente EWM (`wewm`), alinhando layout e offsets de renderização.
-- [ ] **Correção de Diálogo de Arquivo no GUI Emacs / Sway e Diretório Inicial:**
-    - Investigar erro disparado no Sway ("there are errors in your config file" em vermelho) ao acionar "open new file" / diálogo gráfico de seleção de arquivo no `wgui`/`xgui emacs`, que bloqueia subsequentes popups de seleção.
-    - Blindar o `default-directory` do Emacs no ciclo pós-inicialização para garantir que inicialize sempre no diretório home (`~`) do usuário, evitando captura esporádica de diretórios transitórios de build do Elpaca (ex: `~/.emacs.d/var/lib/elpaca/builds/ob-mermaid`).
-- [ ] **Autodocumentação Integral no GNU Emacs (Self-Documenting Philosophy):** Auditar e enriquecer progressivamente todos os módulos Elisp (`etc/`, `lib/`, `usr/local/aweshell`, `usr/local/aweww`) para que 100% das funções (`defun`/`defmacro`), variáveis (`defvar`/`defcustom`), faces (`defface`) e keymaps possuam docstrings canônicas introspectáveis via `C-h f`, `C-h v`, `C-h k`, `M-x apropos` e `which-key` (1ª linha concisa $\le 80$ colunas, parâmetros em `MAIÚSCULAS` e hiperlinks `` `simbolo' `` para o buffer `*Help*`).
-- [ ] **Correção e Fluidez no Redimensionamento de Janelas no KDE Plasma (KWin):** Investigar e corrigir o bloqueio/travamento ao redimensionar janelas sob o KDE, ajustando regras de gerenciamento de geometria, decorações de borda e propriedades de tamanho (`size hints` / `frame-resize-pixelwise`) para garantir redimensionamento contínuo e responsivo.
-- [ ] **Melhorar os Compositores Wayland E X11 no Geral:** para funcionarem independentemente do (x/w)gui e (x/w)ewm para serem alternativas TAMBEM do ambiente principal como KDE e GNOME (mas não é nem para voce matar o KDE e o GNOME e nem matar o GUI e o EWM... Entenda que eu estou pedindo para melhorar e não para destruir...). Inclusive o sway tem erro na linha 6 da configuração algo assim. Fazer esses compositores usarem o teclado correto e terem uma pré configuração boa... E fazer pra todos okk? Sway, labwc, river e cage (claro leve em conta o proposito e filosofia deles e isso não pode estragar o comando (x/w)gui)
-- [ ] **Ajustes finos no Emacs, NeoVim e Vim no TTY:** Por exemplo no NVim no TTY demora um pouco para sair... Saca coisa besta nada d+... Em geral tanto o Vim como o Nvim como o Emacs estão maravilhosos... É mais isso mesmo.
-- [ ] **Melhorar os Compositores Wayland E X11 no comando GUI (gui / ewm / wm):** Polir esses comandos... Por exemplo tem configura para o teclado correto, para a lingua correta, para a "resolução 125%" correta tlg? Esses polimentos faltam... Quando eu inicio o sway cru nem sei como abrir um aplicativo... E o labwc é full preto mas da para abri o foot (que esta gigante, parece que ele esta 150% maior e olha que a resolucao esta em 100% e nao em 125% kkkkkkk) e é um popup feio "terminal/reconfigure/exit" simples mas feio... Queria saber o que poderiamos fazer para melhorar :)... No caso o novo comando / alias que eu quero criar chamado wm (window manager) é para iniciar `<Sway, Labwc, River, Cage>` na ordem do GUI, conigurado que nem o (x/w)gui e o (x/w)ewm MAS iniciando ele "sem" um app padrao mas sim ele "puro" (configurado bonito e etc... Mas ele saca) e se algum deles isso nao fizer sentido inicializa com o foot / xterm (dependendo se for Wayland ou X11)... Saca? Tipo eu abro um TTY e eu digito wm e ja posso fazer as minhas coisas sem um KDE ou GNOME... Falando nessas 2 figuras os comandos way e x11/xorg tem erros kkkkkk e muda dependendo do sistema (FreeBSD/Linux)
-- [ ] **Ajustar atalhos e no TTY:** Por exemplo alguns atalhos classicos no Emacs e Shells são o Control-Left e Control-Right que avança uma palavra tlg? Mas isso não funciona no TTY
-- [ ] **Mini ToDo de alias para pensar/evoluir e colocar no Shell e no Emacs Aweshell:**
+- [ ] **Reforma da Família de Aliases `o*` / `open-*` (Shell & Emacs `aweshell`):**
+    - **Remoção de Wrappers Redundantes para Editores TUI:** Remover `open-vim` (`ov`), `open-neovim` / `open-nvim` (`on`) e `open-micro` (`om` — que além de redundante para um app de terminal, disparava `Error: . is a directory and cannot be opened` ao ser chamado sem argumentos). O alias `on` passa a ficar livre no namespace.
+    - **Nova Matriz de Aliases de Aplicações e Sessão:**
+        - [ ] `ov` $\rightarrow$ **VLC** (substituindo o antigo `open-vim`)
+        - [ ] `om` $\rightarrow$ **MPV** (substituindo o antigo `open-micro`)
+        - [ ] `of` $\rightarrow$ **Firefox**
+        - [ ] `ow` $\rightarrow$ **Web Browser Universal** (ordem de fallback: `<Google Chrome, Brave, Microsoft Edge, Safari, Chromium, Firefox>`, respeitando o binário `chrome` do Chromium no FreeBSD)
+        - [ ] `oo` $\rightarrow$ **OnlyOffice**
+        - [ ] `ol` $\rightarrow$ **LibreOffice**
+        - [ ] `ot` $\rightarrow$ **Terminal / Thunderbird** _(definir se `ot` assumirá o Terminal padrão e `oth`/`omail` assumirá o Thunderbird para evitar colisão)_
+        - [ ] `wm` $\rightarrow$ **Window Manager Puro** (`<Sway, Labwc, River, Cage>`)
 
-```todo
-- [ ] Firefox (of)
-- [ ] Thunder (ot)
-- [ ] Web Browser <Google Chrome, Brave, Microsoft Edge, Safari, Chromium, Firefox> (ow)
-- [ ] OnlyOffice (oo)
-- [ ] LibreOffice (ol)
-- [ ] Terminal (ot)
-- [ ] VLC (ov) [obs: ov já é o open-vim... Faz sentido mudar?]
-- [ ] MPV (om)
-- [ ] Window Manager <Sway, Labwc, River, Cage> (wm)
-... (Enfim, tem outros e é de se pensar se faz sentido adicionar esses alias...)
-```
+---
 
-## Observation:
-
-```
-$ om
-Error: . is a directory and cannot be opened
-
-Press enter to continue
-
-$ which om
-om: aliased to open-micr
-```
-
-## PARA DEPOIS:
+## 🔮 Para Depois (Backlog Futuro)
 
 - [ ] **Integração de Agentes e LLMs no Emacs via Assinatura (Zero Custo por Token / Sem API Avulsa):**
     - **Objetivo Central:** Integrar ferramentas de IA no Emacs consumindo assinaturas vigentes/planos de consumidor (Claude Pro/Max, Google AI, etc.) sem faturamento por token via API direta (AI Studio / Anthropic Console).
