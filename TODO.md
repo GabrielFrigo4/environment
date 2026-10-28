@@ -82,6 +82,21 @@ $ which om
 om: aliased to open-micr
 ```
 
+## PARA DEPOIS:
+
+- [ ] **Integração de Agentes e LLMs no Emacs via Assinatura (Zero Custo por Token / Sem API Avulsa):**
+    - **Objetivo Central:** Integrar ferramentas de IA no Emacs consumindo assinaturas vigentes/planos de consumidor (Claude Pro/Max, Google AI, etc.) sem faturamento por token via API direta (AI Studio / Anthropic Console).
+    - **Ferramentas Alvo:** `agy` (Google Antigravity CLI), `claude` (Claude Code), `opencode` / `open-code-interpreter` e `openclaw`.
+    - **Métodos Arquiteturais de Integração:**
+        1. **Bridge / Proxy HTTP Local (Adapter `gptel` & `avante.nvim`):**
+            - Subir micro-daemon local compatível com endpoints OpenAPI/SSE (`http://127.0.0.1:PORT/v1/chat/completions`) que reaproveita a sessão autenticada.
+            - Plugar diretamente no `gptel` (`gptel-make-openai`) e no ecossistema modal com zero fricção.
+        2. **Runner de Subprocesso Assíncrono / Headless CLI (Elisp Nativo):**
+            - Invocar o modo não interativo das ferramentas (`agy -p`, `claude -p`) via pipes UNIX e buffers efêmeros (`make-process` / `async-shell-command`).
+            - Aplicar transformações, refatoração de região selecionada (`shell-command-on-region`) e auto-injeção de diffs sem intermediários.
+        3. **Sessão TUI Interativa via Terminal Embutido:**
+            - Executar as interfaces nativas TUI com suporte total a permissões e contexto via `vterm` ou `eat` em buffers dedicados/splits laterais.
+
 ---
 
 > [!TIP]
