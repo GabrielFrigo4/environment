@@ -44,14 +44,16 @@
 
 ### 🔴 1. Correções Críticas de Sessão Gráfica, EWM e EXWM (Baseado em Logs)
 
-- [ ] **Correção de Segfault e Inicialização DRM/D-Bus no EWM (`wewm` / `libewm_core.so`):**
+- [x] **Correção de Segfault e Inicialização DRM/D-Bus no EWM (`wewm` / `libewm_core.so`):**
+    - ✅ **Implementado (pendente validação no host FreeBSD — recompilar via `Setup/common/editors/ewm.sh`):** patch FreeBSD no `drm-rs` (tipo do nó derivado do `devname`, não do `minor(dev)` arbitrário do devfs) aplicado via `--config patch.crates-io`; `ewm-input-config` sem nomes XKB (evita `set_xkb_config` → segfault; keymap via `XKB_DEFAULT_*`); `wewm` sob `dbus-run-session` quando não há barramento; `RUST_LOG` silencia `login1`/`xwayland-satellite`; tool-bar habilitada com offset combinado menu-bar + tool-bar (`ewm-show-tool-bar`).
     - **Memory Safety (`libxkbcommon`):** Investigar e corrigir o _Segmentation fault_ em `xkb_keymap_unref` (`0x8499e3513`) e `xkb_state_unref` (`0x8499e63ef`) disparado dentro de `libewm_core.so` imediatamente após a atualização de input (`Input config updated: 3 entries` / `Keyboard repeat: rate=50, delay=200`).
     - **Detecção de Outputs DRM:** Diagnosticar por que o backend DRM inicializa em `/dev/dri/card0` (`DrmNode { dev: 96, ty: Control }`) reportando área zerada (`Total output area: 0x0 (0 outputs)` / `Sent 0 output_detected events`).
     - **Barramento D-Bus e Serviços no FreeBSD / Ambientes Non-Systemd:**
         - Corrigir a falha de conexão ao socket D-Bus em `/var/run/xdg/$USER/bus` (`os error 2` ao iniciar `org.freedesktop.ScreenSaver`) e o erro `exit status: 71` (`EX_OSERR`) no `import-environment`.
         - Tratar graciosamente a ausência de `org.freedesktop.login1` em sistemas com `seatd`/ConsoleKit2 (`Failed to acquire lid switch inhibitor`) e tornar opcional/silencioso o spawn de `xwayland-satellite` quando o binário não estiver instalado (`os error 2`).
     - **Tool-Bar no EWM (`wewm`):** Investigar e restaurar a exibição, estilização e offsets de renderização consistentes da `tool-bar` (Bar-Tools) dentro do ambiente EWM.
-- [ ] **Estabilização do Ciclo de Vida X11 / EXWM (`xewm` / `xinit` no FreeBSD 15.1):**
+- [x] **Estabilização do Ciclo de Vida X11 / EXWM (`xewm` / `xinit` no FreeBSD 15.1):**
+    - ✅ **Implementado (pendente validação no host FreeBSD):** `ck-launch-session` nunca recebe flags (script de sessão auto-reexecutado via `dbus-run-session -- ck-launch-session "$0"`); `xinit` com `-auth` pré-criado em `0600` preferido sobre `startx` (fim do `~/.serverauth.*`); aviso de fallback `scfb` quando `/dev/dri/card0` não existe; ruído do `xkbcomp`/`scfb trace` filtrado da saída de diagnóstico.
     - **Flag Inválida no ConsoleKit2:** Remover a flag `--exit-with-session` passada indevidamente ao `ck-launch-session` (`WARNING: Unknown option --exit-with-session` — flag pertence ao `dbus-launch`, não ao `ck-launch-session`), que aborta o processo cliente imediatamente e derruba o servidor Xorg (`xinit: connection to X server lost`).
     - **Driver Gráfico & Higiene Xorg:** Avaliar o fallback em `scfb` (`scfb trace: probe start/done` em `Xorg.1.log`), garantir a pré-criação limpa do arquivo de autoridade `xauth` (`~/.serverauth.*`) e silenciar os warnings benignos do `xkbcomp` de redefinição de `<FK23>`/`<FK24>` e keysyms ausentes (`XF86ElectronicPrivacyScreenOn`, etc.).
 
@@ -73,13 +75,14 @@
     - Em compositores orientados a quiosque/janela única onde iniciar vazio não faz sentido (como `cage`), inicializar automaticamente com o terminal padrão da sessão (`foot` no Wayland / `xterm` no X11), permitindo digitar `wm` direto do TTY e já ter um ambiente gráfico produtivo sem depender de KDE ou GNOME.
 - [ ] **Simetria Multi-SO nos Comandos `way` e `x11`/`xorg`:**
     - Auditar e unificar o tratamento de erros e diferenças de inicialização de sessão gráfica entre FreeBSD e Linux nos despachantes `way`, `x11` e `xorg`.
-- [ ] **Fluidez de Redimensionamento de Janelas no KDE Plasma (KWin):**
-    - Investigar e corrigir o travamento/bloqueio ao redimensionar janelas sob o KDE Plasma (KWin), ajustando regras de gerenciamento de geometria, decorações de borda e propriedades de tamanho (`size hints` / `frame-resize-pixelwise`) para garantir redimensionamento contínuo e responsivo.
 
 ---
 
 ### 🐃 3. GNU Emacs, Editores Modais e Ergonomia em Raw TTY
 
+- [ ] **Fluidez no Redimensionamento de Janelas do GNU Emacs (FreeBSD / KDE Plasma):**
+    - Investigar e corrigir o travamento/congelamento que ocorre **exclusivamente com o Emacs** ao redimensionar sua janela no FreeBSD sob o KDE Plasma / KWin (e validar se o comportamento também se manifesta no GNOME/Mutter, indicando ser uma questão intrínseca do Emacs/toolkit gráfico no FreeBSD e não do compositor).
+    - Ajustar propriedades de geometria do frame no Elisp (`frame-resize-pixelwise`, `frame-inhibit-implied-resize`), `size hints` ICCCM/EWMH (incrementos de coluna/linha vs. pixels) e sincronização de repintura do toolkit (GTK3/PGTK ou Lucid).
 - [ ] **Blindagem do Diretório Inicial (`default-directory`) no GNU Emacs:**
     - Garantir no ciclo pós-inicialização que o Emacs abra sempre no diretório home (`~`) do usuário, impedindo a captura esporádica de diretórios transitórios de build do Elpaca (ex: `~/.emacs.d/var/lib/elpaca/builds/ob-mermaid`).
 - [ ] **Comandos Interativos de Lançamento de Apps Gráficos no Emacs:**
@@ -108,6 +111,7 @@
     - **Nova Matriz de Aliases de Aplicações e Sessão:**
         - [ ] `ov` $\rightarrow$ **VLC** (substituindo o antigo `open-vim`)
         - [ ] `om` $\rightarrow$ **MPV** (substituindo o antigo `open-micro`)
+        - [ ] `os` $\rightarrow$ **Wireshark** (_open-shark_ / sniffer de pacotes)
         - [ ] `of` $\rightarrow$ **Firefox**
         - [ ] `ow` $\rightarrow$ **Web Browser Universal** (ordem de fallback: `<Google Chrome, Brave, Microsoft Edge, Safari, Chromium, Firefox>`, respeitando o binário `chrome` do Chromium no FreeBSD)
         - [ ] `oo` $\rightarrow$ **OnlyOffice**
@@ -117,8 +121,33 @@
 
 ---
 
+## 💡 Insights & Notas Arquiteturais (Diagnósticos de Referência)
+
+> [!NOTE]
+> Registro técnico das causas-raiz identificadas durante a triagem de logs e testes em FreeBSD e Linux para guiar a implementação:
+
+- **Por que `firefox` e `chrome` abrem encaixotados e com terminal ao fundo no `(x/w)gui`:** Quando um script lançador decide se um binário é TUI ou GUI (checando `Terminal=true` no `.desktop` ou dependências de bibliotecas), discrepâncias no nome do `.desktop` — especialmente no FreeBSD, onde o binário do Chromium chama-se `chrome` (`/usr/local/bin/chrome`), mas o arquivo de entrada pode ser `chromium-browser.desktop` — ou wrappers de shell intermediários fazem o lançador cair no _fallback_ de "aplicativo de terminal", executando equivocadamente `foot -e chrome` ou `xterm -e firefox`.
+- **Por que `Ctrl+Left` e `Ctrl+Right` emitem `^[[D` / `^[[C` (setas normais) no Raw TTY:** Por herança histórica da emulação VT100/cons25, os mapas de teclado do kernel tanto no FreeBSD (`vt(4)` em `/usr/share/vt/keymaps/`) quanto no Linux (`kbd` / `loadkeys`) não diferenciam a tecla `Left` de `Ctrl+Left` na tabela de scancodes padrão — ambas apontam para a mesma ação `lkey` (`^[[D`). Ao contrário de `Home` e `End` (que possuem slots dedicados na tabela do kernel), o Shell e o Emacs sequer recebem a informação de que o modificador `Ctrl` foi pressionado. A solução definitiva no repositório `Setup` consiste em injetar regras customizadas via `kbdcontrol` (FreeBSD) e `loadkeys` (Linux) mapeando `Ctrl+Left/Right` para as sequências CSI modificadas padrão xterm (`^[[1;5D` e `^[[1;5C`).
+- **Por que apenas o GNU Emacs trava ao redimensionar no FreeBSD (KDE):** Por padrão (`frame-resize-pixelwise nil`), o Emacs negocia o tamanho da sua janela com o Window Manager em múltiplos exatos da largura/altura da fonte (colunas $\times$ linhas via `WM_NORMAL_HINTS`). No FreeBSD sob KWin (Wayland/X11) com compositores modernos e escalas fracionárias, o loop de eventos GTK/X11 do Emacs entra em condição de corrida (_resize loop_) tentando arredondar os pixels enviados pelo compositor e redesenhar o buffer a cada frame. Ativar `(setq frame-resize-pixelwise t)` no `early-init.el` costuma eliminar o gargalo imediatamente.
+- **Colisão do Alias `r` com Builtin do Zsh (`fc -e -`):** Enquanto no `sh` e no `bash` a letra `r` está livre, no **Zsh** `r` é um comando _builtin_ histórico pré-definido (equivalente a `fc -e -`, que reexecuta imediatamente o último comando do histórico). Criar `alias r='rg'` funciona no Zsh, mas exige cuidado: se em algum subshell ou função os aliases não forem expandidos (ou antes do carregamento do `.zshrc`), digitar `r` repetirá o comando anterior acidentalmente. Para blindar o Zsh, recomenda-se desativar o builtin obsoleto com `disable r` antes de declarar `alias r='rg'`.
+
+---
+
 ## 🔮 Para Depois (Backlog Futuro)
 
+- [ ] **Polimento Estético, Dark Mode Unificado e Herança Dinâmica de Temas nos Compositores (`sway`, `labwc`, `river`, `cage`):**
+    - **Estética Clean & Dark Mode Out-of-the-Box:** Refinar o visual dos compositores leves para que iniciem com uma identidade visual minimalista, escura (_Dark Mode_) e coesa (bordas finas, cores harmônicas, fontes Terminus/nerdfonts alinhadas e barras/menus limpos).
+    - **Detecção e Herança Inteligente de Temas (KDE / GNOME):** Implementar detecção automática das configurações e temas instalados no sistema hospedeiro (ex: extrair esquema de cores/ícones Breeze Dark do KDE Plasma ou Adwaita Dark do GNOME via `gsettings`, `qt5ct`/`qt6ct`, variáveis `GTK_THEME`, `~/.config/gtk-3.0/settings.ini` e `xdg-desktop-portal`), garantindo que qualquer aplicativo GTK, Qt ou Electron aberto dentro do `(x/w)gui`, `wm` ou `ewm` respeite integralmente o tema escuro, cursores e fontes do ambiente principal.
+- [ ] **Expansão de Ferramentas CLI Modernas em Rust & Aliases Ultra-Curtos (Single-Char):**
+    - **Objetivo:** Substituir e complementar utilitários UNIX tradicionais por alternativas escritas em **Rust** que sejam estritamente modernas, ativas, altamente performáticas e bem mantidas (descartando crates abandonadas/legadas, como o antigo `exa` em favor do `eza`).
+    - **Mapeamento de Aliases de 1 Caractere (`l`, `c`, `b`, `g`, `r`, `f`, `d`, etc.) e Candidatos Rust:**
+        - **Busca de Texto (`r` / `g`):** `ripgrep` (`rg`) — tratando a desativação do builtin `r` no Zsh (`disable r`) para evitar reexecução acidental de histórico (`fc -e -`).
+        - **Listagem e Árvore (`l`):** `eza` (sucessor ativo do `exa`, com ícones, git status e tree).
+        - **Visualização e Paginação (`c` / `b`):** `bat` (substituto do `cat`/`less` com syntax highlighting e integração Git).
+        - **Busca de Arquivos (`f`):** `fd` (`fd-find`, alternativa ultra-rápida e ergonômica ao `find`).
+        - **Navegação Inteligente (`z` / `j`):** `zoxide` (substituto inteligente do `cd`).
+        - **Diffs & Git (`d`):** `delta` (`git-delta`, visualização moderna de diffs lado a lado).
+        - **Análise de Disco e Processos (Avaliar):** `dust` (substituto visual do `du`), `procs` (substituto moderno do `ps`), `bottom` (`btm`, monitor de sistema TUI) e `sd` (alternativa intuitiva ao `sed`).
 - [ ] **Integração de Agentes e LLMs no Emacs via Assinatura (Zero Custo por Token / Sem API Avulsa):**
     - **Objetivo Central:** Integrar ferramentas de IA no Emacs consumindo assinaturas vigentes/planos de consumidor (Claude Pro/Max, Google AI, etc.) sem faturamento por token via API direta (AI Studio / Anthropic Console).
     - **Ferramentas Alvo:** `agy` (Google Antigravity CLI), `claude` (Claude Code), `opencode` / `open-code-interpreter` e `openclaw`.
