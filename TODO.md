@@ -44,6 +44,11 @@
 
 ### 🔴 1. Correções Críticas de Sessão Gráfica, EWM e EXWM (Baseado em Logs)
 
+- [ ] **Correções Pós-Teste no Host FreeBSD (`wewm`, `xewm` e Higiene de TTY):**
+    - [x] **Fim do Segfault e Detecção de GPU/Output Confirmada no `wewm`:** O patch no `drm-rs` resolveu a detecção da GPU (`DrmNode { dev: 96, ty: Primary }`, `eDP-1 1920x1080@120Hz`) e a remoção de `:xkb-layouts` eliminou o segfault no `libxkbcommon`.
+    - [ ] **Tela Cinza no `wewm` (Frame do Emacs não exibido sobre o compositor):** O compositor inicia, prepara o frame para `eDP-1` e conecta o `IM relay`, mas o frame gráfico do Emacs (`--fg-daemon=ewm`) não é mapeado/renderizado na superfície Wayland (`wayland-ewm`). Investigar se o daemon está conectando ao display X11/Wayland errado ou se `ewm-start-module` requer criação explícita de frame client PGTK em `WAYLAND_DISPLAY=wayland-ewm`.
+    - [x] **Erro Elpaca `Duplicate item ID queued: intern` no `xewm` (`exwm.el`) & `when-let` Obsoleto:** Corrigida a chamada macro `(elpaca (intern pkg))` (que passava o símbolo literal `intern` duas vezes ao Elpaca) para `(elpaca xelb)` / `(elpaca exwm)`, e substituído `when-let` por `when-let*` em `init.el`.
+    - [x] **Lixo no Prompt do Terminal (`$&.`) ao Sair do `xgui` / `xewm`:** Removida a emissão de sequências OSC 112 (`\e]112\a\e]112\e\\`) em consoles Raw TTY (`_is_raw_tty`) dentro de `_restore_tty_cursor` + adicionado `stty sane`.
 - [x] **Correção de Segfault e Inicialização DRM/D-Bus no EWM (`wewm` / `libewm_core.so`):**
     - ✅ **Implementado (pendente validação no host FreeBSD — recompilar via `Setup/common/editors/ewm.sh`):** patch FreeBSD no `drm-rs` (tipo do nó derivado do `devname`, não do `minor(dev)` arbitrário do devfs) aplicado via `--config patch.crates-io`; `ewm-input-config` sem nomes XKB (evita `set_xkb_config` → segfault; keymap via `XKB_DEFAULT_*`); `wewm` sob `dbus-run-session` quando não há barramento; `RUST_LOG` silencia `login1`/`xwayland-satellite`; tool-bar habilitada com offset combinado menu-bar + tool-bar (`ewm-show-tool-bar`).
     - **Memory Safety (`libxkbcommon`):** Investigar e corrigir o _Segmentation fault_ em `xkb_keymap_unref` (`0x8499e3513`) e `xkb_state_unref` (`0x8499e63ef`) disparado dentro de `libewm_core.so` imediatamente após a atualização de input (`Input config updated: 3 entries` / `Keyboard repeat: rate=50, delay=200`).
@@ -62,6 +67,7 @@
 ### 🖥️ 2. Compositores Wayland/X11, Lançadores `(x/w)gui` e Despachante `wm`
 
 - [ ] **Detecção de Binários Gráficos vs. TUI no `(x/w)gui` (`graphical-launcher`):**
+    - 🔄 **Parcialmente implementado:** whitelist explícita de binários GUI (`firefox`, `chrome`, `chromium`, `vscode`/`code`, `emacs`, etc.) adicionada em `_is_terminal_app` para impedir que wrappers POSIX em `/usr/local/bin/` sejam abertos dentro do `foot`/`xterm`. Falta testar `xgui`/`wgui vscode` no host FreeBSD.
     - **Classificação Incorreta de Apps Gráficos (`firefox` / `chrome`):** Corrigir a heurística do `(x/w)gui` que identifica erroneamente o Firefox e o Chrome/Chromium como aplicações de terminal (TUI), fazendo com que abram encaixotados/sem fullscreen e com uma janela de emulador de terminal (`foot`/`xterm`) presa ao fundo.
     - **Execução Silenciosa Falha no VS Code (`(x/w)gui vscode`):** Investigar por que a invocação do VS Code via wrapper gráfico falha silenciosamente sem abrir janela (verificar resolução de binário `code`/`code-oss`, flags de Electron/Wayland `--ozone-platform-hint=auto` ou bloqueio de sandbox).
     - **Peculiaridade de Binário no FreeBSD (`chrome` vs `chromium`):** Documentar e tratar nos scripts de despacho o fato de que o pacote Chromium no FreeBSD instala o binário executável sob o nome `chrome` (`/usr/local/bin/chrome`), evitando falhas de detecção ou colisão com o Google Chrome no Linux.
@@ -69,8 +75,9 @@
     - Garantir que todos os compositores possuam configurações base autônomas, elegantes e respeitando a filosofia de cada projeto — funcionando perfeitamente tanto como alternativas leves ao KDE/GNOME (via `way`/`xorg`) quanto acoplados ao `(x/w)gui` e `(x/w)ewm`, sem regredir ou quebrar os ambientes principais.
     - **Polimento de Input, Locale e Escala (HiDPI):** Padronizar layout de teclado correto, variáveis de idioma/locale e escala de resolução (ex: 125% condicional).
     - **Ajuste Visual do `labwc` e `foot`:** Corrigir a escala desproporcional do terminal `foot` dentro do `labwc` (que aparenta abrir em ~150% mesmo com resolução em 100%) e estilizar o menu raiz do `labwc` (substituindo o fundo 100% preto e o popup cru `terminal/reconfigure/exit` por uma configuração visual limpa e intuitiva).
-    - **Sway Config & Diálogo de Arquivo no Emacs GUI:** Corrigir o erro de sintaxe na linha 6 da configuração do Sway (banner vermelho `"there are errors in your config file"`) e corrigir o bug onde acionar _"open new file"_ (diálogo gráfico de arquivo) no `wgui`/`xgui emacs` trava a abertura de popups subsequentes.
-- [ ] **Novo Despachante / Alias `wm` (Window Manager Puro):**
+    - [x] **Sway Config & Diálogo de Arquivo no Emacs GUI:** Corrigido `seat * hide_cursor when-typing disable` (substituindo `hide_cursor_when_typing no` inválido na linha 6) e restringido `fullscreen enable` apenas a janelas `tiling`/`normal` (excluindo `dialog`, `utility`, `popup_menu` e `floating`).
+- [x] **Novo Despachante / Alias `wm` (Window Manager Puro):**
+    - ✅ **Implementado (pendente validação no host):** `wm` (`wwm` / `xwm`) desacoplado de `way`/`xorg`, priorizando `Sway > Labwc > River > Cage (com foot)` no Wayland e WMs leves (`i3 > openbox > bspwm > awesome > dwm...`) no X11 antes de cair em fallback para `way`/`xorg` (KDE/GNOME).
     - Criar o comando/alias `wm` (`wwm` / `xwm`) seguindo a fila de prioridade do `gui` (`Sway > Labwc > River > Cage`), herdando toda a pré-configuração de teclado, escala e estética do `(x/w)gui` e `(x/w)ewm`, mas iniciando o compositor **puro** (sem atrelar a vida da sessão a um aplicativo alvo único).
     - Em compositores orientados a quiosque/janela única onde iniciar vazio não faz sentido (como `cage`), inicializar automaticamente com o terminal padrão da sessão (`foot` no Wayland / `xterm` no X11), permitindo digitar `wm` direto do TTY e já ter um ambiente gráfico produtivo sem depender de KDE ou GNOME.
 - [ ] **Simetria Multi-SO nos Comandos `way` e `x11`/`xorg`:**
@@ -85,7 +92,8 @@
     - Ajustar propriedades de geometria do frame no Elisp (`frame-resize-pixelwise`, `frame-inhibit-implied-resize`), `size hints` ICCCM/EWMH (incrementos de coluna/linha vs. pixels) e sincronização de repintura do toolkit (GTK3/PGTK ou Lucid).
 - [ ] **Blindagem do Diretório Inicial (`default-directory`) no GNU Emacs:**
     - Garantir no ciclo pós-inicialização que o Emacs abra sempre no diretório home (`~`) do usuário, impedindo a captura esporádica de diretórios transitórios de build do Elpaca (ex: `~/.emacs.d/var/lib/elpaca/builds/ob-mermaid`).
-- [ ] **Comandos Interativos de Lançamento de Apps Gráficos no Emacs:**
+- [x] **Comandos Interativos de Lançamento de Apps Gráficos no Emacs:**
+    - ✅ **Implementado:** adicionados `M-x kate`, `M-x gimp`, `M-x wireshark`, `M-x kdeconnect` / `M-x kdeconnect-app`, `M-x thunderbird`, `M-x chrome` e `M-x chromium` em `etc/apps/apps.el`.
     - Expandir a suíte de comandos nativos do Emacs (seguindo o padrão já existente de `M-x firefox`) para abrir diretamente aplicativos de produtividade e diagnóstico do ecossistema:
         - **Kate** (`M-x kate`)
         - **GIMP** (`M-x gimp`)
