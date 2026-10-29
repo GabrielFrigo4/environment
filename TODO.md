@@ -205,5 +205,11 @@ Eu iniciei o sistema via o comando way e o zsh do konsole está no tema do TTY k
 
 ---
 
+## Environment
+
+- [ ] Arrumas / Adicionar os .gitattributes com o do Template
+
+---
+
 > [!TIP]
 > Para detalhes sobre a arquitetura e convenções de engenharia, consulte o [PRINCIPLES.md](PRINCIPLES.md) e o [ENVIRONMENT.md](ENVIRONMENT.md).
