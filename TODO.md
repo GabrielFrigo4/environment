@@ -195,6 +195,14 @@ O moude é lerdo... Ele não tem a aceleração que no exwm por exemplo tem (e p
 
 - O Autocomplete dele é instantaneo... Seria legal se tivesse um mini delay antes de aparecer as opções... Ou outra maneira melhor (isso que eu falei pode ser uma ideia merda)... E o inline? Sla quero melhorar o autocomplete no Emacs como um todo mas tambem no Aweshell... Mas o que me incomoda é que eu quero escrever "el" e quando eu dei enter foi eletrical... Tipo po isso atrapalha mais do que ajuda tlg? O autocomplete do Zsh é bem menos intrusivo... E util. Enfim temos que ver as objetivopções. E o autocomplete me obriga a dar 2 enterns no ':w' para salvar vei... pqp
 
+## Colocar no Setup
+
+- Instalar o Cmake (cmake-core cmake-man cmake-gui)
+
+## Melhorar no Way / X11, Xorg
+
+Eu iniciei o sistema via o comando way e o zsh do konsole está no tema do TTY kkkk. e isso acontece com o :terminal do vim/nvim e no term e vterm do Emacs... Temos que melhorar isso nos comandos que inicializam um sistema via TTY... Tem que resetar esse tipo de variavel
+
 ---
 
 > [!TIP]
