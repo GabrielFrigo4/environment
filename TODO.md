@@ -175,5 +175,27 @@
 
 ---
 
+# ToDo para o ToDo
+
+## Erro que deu no Emacs quando eu salvei esse ToDo
+
+```el
+Saving file /home/gabrielf/Documents/Environment/TODO.md...
+Wrote /home/gabrielf/Documents/Environment/TODO.md
+../../.emacs.d/var/lib/elpaca/builds/apheleia/apheleia-formatters.el: Warning: ‘when-let’ is an obsolete macro (as of 31.1); use ‘when-let*’ or ‘and-let*’ instead. [5 times]
+../../.emacs.d/var/lib/elpaca/builds/apheleia/apheleia-rcs.el: Warning: ‘when-let’ is an obsolete macro (as of 31.1); use ‘when-let*’ or ‘and-let*’ instead.
+Mark set
+```
+
+## Erro que acontece no gui e possivelmente no ewm
+
+O moude é lerdo... Ele não tem a aceleração que no exwm por exemplo tem (e provavelmente no xgui) e no KDE e no GNOME (tive que configurar? Sim mas está otimo agora nesses ambientes ai, as vezes vem por padrão)
+
+## Melhorar o Emacs
+
+- O Autocomplete dele é instantaneo... Seria legal se tivesse um mini delay antes de aparecer as opções... Ou outra maneira melhor (isso que eu falei pode ser uma ideia merda)... E o inline? Sla quero melhorar o autocomplete no Emacs como um todo mas tambem no Aweshell... Mas o que me incomoda é que eu quero escrever "el" e quando eu dei enter foi eletrical... Tipo po isso atrapalha mais do que ajuda tlg? O autocomplete do Zsh é bem menos intrusivo... E util. Enfim temos que ver as objetivopções. E o autocomplete me obriga a dar 2 enterns no ':w' para salvar vei... pqp
+
+---
+
 > [!TIP]
 > Para detalhes sobre a arquitetura e convenções de engenharia, consulte o [PRINCIPLES.md](PRINCIPLES.md) e o [ENVIRONMENT.md](ENVIRONMENT.md).
