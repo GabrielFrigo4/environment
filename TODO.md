@@ -32,7 +32,7 @@
 - **Tétrade de Compositores e Tipografia Terminus:** Provisionamento idempotente de compositores Wayland, players multimídia e fontes Terminus no Linux e FreeBSD.
 - **Suíte Tripartite Windows Hardened:** Resolução da inconsistência dual `Path`/`PATH` no NuShell, eliminação de recursão de aliases circulares no PowerShell (`Clean-System`) e paridade total de atalhos do Antigravity CLI (`agy`).
 - **Paridade Universal em Loaders do Vault:** Garantia de que todos os carregadores (`vault.sh`, `vault.ps1`, `vault.nu`, etc.) excluam uniformemente arquivos de template e exemplo, blindando o ecossistema contra vazamento de tokens fictícios.
-- **Auto-Cura Reentrante Multi-Shell:** Propagação cruzada automática de perfis físicos em disco (`Documents\PowerShell`, `%APPDATA%\nushell`, `%LOCALAPPDATA%\clink`) via `upsh` e `resh` sem qualquer intervenção manual de cópia.
+- **Auto-Cura Reentrante Multi-Shell:** Propagação cruzada automática de perfis físicos em disco (`Documents\PowerShell`, `%APPDATA%\nushell`, `%LOCALAPAPDATA%\clink`) via `upsh` e `resh` sem qualquer intervenção manual de cópia.
 - **Higienização Pré-Pull na Suíte de Editores:** Limpeza defensiva de stubs locais (`usr/local/`) em `Update-Editors` prevenindo abortos de `git pull --ff-only`.
 - **Paridade UTF-8 no Git:** Configuração universal `core.quotepath = false` garantindo legibilidade de caminhos acentuados em todas as plataformas.
 - **Hermetismo e Soberania:** O ecossistema é 100% autônomo e opera sem qualquer dependência externa ou intervenção manual pós-clone.
@@ -46,20 +46,31 @@
 
 > **Contexto do Incidente:** Congelamento total do display e do input (teclado/mouse param de responder, até o LED do Caps Lock trava, enquanto o áudio em segundo plano continua tocando normalmente). Ocorre tanto em Wayland (KDE Plasma, Sway) quanto em X11 (KDE X11, EXWM), sendo acelerado pelo tempo de uptime do sistema, abertura de múltiplas abas/aplicações pesadas e disparo de _file watchers_ sobre múltiplos repositórios (ex: abrir `~/Documents` no VS Code).
 
-- [ ] **Correção Definitiva da OID do LinuxKPI (`Setup` / `/boot/loader.conf`):**
-    - **Correção Crítica de Sintaxe de Módulo:** Auditoria revelou que as flags no `/boot/loader.conf` estavam declaradas com o prefixo obsoleto/incorreto `compat.kpi.` em vez de `compat.linuxkpi.`, fazendo com que o kernel ignorasse silenciosamente todas as proteções (`enable_dc`, `enable_psr`, `enable_fbc`). Garantir que todos os scripts do repositório `Setup` injetem estritamente com `compat.linuxkpi.`:
+- [ ] **Correção Definitiva da OID do LinuxKPI e Desativação do GuC Submission/RC (`Setup` / `/boot/loader.conf`):**
+    - [x] **Prefixo `compat.linuxkpi.` aplicado no `/boot/loader.conf` do host:** As flags `i915_enable_psr="0"`, `i915_enable_psr2_sel_fetch="0"`, `i915_enable_fbc="0"` e `i915_enable_dc="0"` já estão no `/boot/loader.conf` com o prefixo correto. _(Nota: o driver `i915` sempre faz o upload do binário `adlp_dmc.bin` no boot mesmo com `enable_dc="0"`; a flag atua zerando `allowed_dc_mask` em runtime)._
+    - [ ] **Adicionar `compat.linuxkpi.i915_enable_guc="2"` (ou `"0"`) no `/boot/loader.conf` e nos scripts do `Setup`:** Como essa linha estava ausente no `/boot/loader.conf`, o driver Alder Lake-P (`0x46a8`) usou o padrão automático (`-1`), ativando `GUC: submission enabled`, `GUC: SLPC enabled` e `GUC: RC enabled` (visto no `dmesg2`). No FreeBSD 15.1 (`LinuxKPI`), o _GuC Submission_ + _GuC RC_ (Render C-states) causa _GPU ring hangs_ sob pressão de RAM. Configurar:
         ```ini
         compat.linuxkpi.i915_enable_psr="0"
         compat.linuxkpi.i915_enable_psr2_sel_fetch="0"
         compat.linuxkpi.i915_enable_fbc="0"
         compat.linuxkpi.i915_enable_dc="0"
-        compat.linuxkpi.i915_enable_guc="3"
+        compat.linuxkpi.i915_enable_guc="2"
         ```
+        _(Como resolver/validar no host: adicionar `compat.linuxkpi.i915_enable_guc="2"` ao `/boot/loader.conf`, reiniciar e rodar `sysctl compat.linuxkpi.i915_enable_dc compat.linuxkpi.i915_enable_psr compat.linuxkpi.i915_enable_guc`. Se o bit `2` [HuC] ainda apresentar engasgos, usar `"0"` para desativar GuC/HuC totalmente)._
 - [ ] **Mitigação de Pressão de Memória ZFS ARC vs. Alocador DRM `LinuxKPI` (`Setup` / `/boot/loader.conf`):**
-    - **Migração da Sysctl Depreciada:** Substituir definitivamente `vfs.zfs.arc_max` (com _underline_, que gera `WARNING: sysctl vfs.zfs.arc_max is deprecated. Use vfs.zfs.arc.max instead` no boot) pela nova OID `vfs.zfs.arc.max` (com ponto) nos scripts do repositório `Setup`.
-    - **Redução do Teto do ZFS ARC (8 GB $\rightarrow$ 4 GB):** Em máquinas de 16 GB de RAM com GPU integrada Intel Iris Xe (que compartilha RAM do sistema e exige alocações físicas rápidas via `LinuxKPI`), reduzir `vfs.zfs.arc.max` de `8589934592` (8 GB) para `4294967296` (4 GB) e definir `vfs.zfs.arc.min=1073741824` (1 GB). Isso impede que a varredura de repositórios Git inche o ARC a ponto de sufocar e travar o driver `i915kms` ao abrir novas janelas/abas.
+    - [x] **Redução do Teto do ZFS ARC (8 GB $\rightarrow$ 4 GB) aplicada no `/boot/loader.conf` e `/etc/sysctl.conf`:** `vfs.zfs.arc.max="4294967296"` configurado (eliminando 2 dos 3 avisos de depreciação entre o `dmesg1` e o `dmesg2`).
+    - [ ] **Rastrear e remover a última ocorrência oculta de `vfs.zfs.arc_max` (com _underline_):** O `dmesg2` ainda exibe 1 único `WARNING: sysctl vfs.zfs.arc_max is deprecated` na linha 9 do boot. Como o `/boot/loader.conf` possui entradas do `auto-admin` (`desktop-installer`), rodar no host:
+        ```sh
+        grep -rn "arc_max" /boot/ /etc/ 2>/dev/null
+        kenv | grep arc
+        ```
+        para localizar e remover a entrada residual em `/boot/loader.conf.local` ou `/boot/loader.conf.d/`, além de definir `vfs.zfs.arc.min="1073741824"` (1 GB) nos scripts do `Setup`.
+- [ ] **Desativar Autostart da VM Bhyve no Boot e Resolver Cache Anônimo do KDE no ZFS (`Shell` & `Setup`):**
+    - **Economia imediata de 2 GB de RAM Física (`vm-bhyve`):** O `dmesg2` mostra que `vm-public` e `tap0` continuam subindo automaticamente no boot, cravando 2 GB de RAM física (_wired memory_) para a VM Linux antes mesmo de abrir o KDE/Wayland. Remover a VM `lx` do `vm_list` no `/etc/rc.conf` (`sudo sysrc vm_list=""`) para iniciar desligada e atualizar o comando `lx` no `Shell` para ligá-la sob demanda.
+    - **Correção do `kf.coreaddons` (`16 MB` de cache falhando no ZFS em `way.log` e `startx.log`):** O KDE falha ao mapear `/var/tmp/kdecache-$USER` (`The operating system is unable to promise 16875624 bytes for mapped cache... will fallback to anonymous memory`) porque o ZFS não suporta `posix_fallocate()`. Como resolver: montar `/var/tmp` em `tmpfs` ou exportar `KDEVARTMP="/tmp"` (se `/tmp` for `tmpfs`), estancando o gasto extra de RAM anônima em cada aplicativo Qt/KDE.
+    - **Isolamento do driver Wi-Fi `rtw880` (`LinuxKPI`) quando no cabo `re0`:** Nos `dmesg1` e `dmesg2`, mesmo com o cabo gigabit `re0` ativo (`UP`), o driver `rtw880` entra em loop de erro `lkpi_iv_newstate: error 95 during state transition 2 (AUTH) -> 2 (AUTH)` e `failed to cancel scan: 35`, disputando locks na camada `LinuxKPI`.
 - [ ] **Aceleração de Hardware VA-API para Intel Gen 12 (`Setup`):**
-    - [x] Instalado manualmente no host (`sudo pkg install libva-intel-media-driver` + `gmmlib`), eliminando o erro `vaInitialize failed: unknown libva error` no Chromium/Electron.
+    - [x] Instalado manualmente no host (`sudo pkg install libva-intel-media-driver` + `gmmlib`), eliminando o erro `vaInitialize failed: unknown libva error` no Chromium/Electron (confirmado em `startx.log.txt`: `va_openDriver() returns 0`).
     - [ ] Automatizar a instalação de `libva-intel-media-driver` e `libva-utils` nos scripts de provisionamento de hardware Intel do repositório `Setup` e exportar `LIBVA_DRIVER_NAME=iHD` no `Profile`.
 - [ ] **Tuning de File Descriptors (`maxfiles`), IPC Shared Memory e Inotify/Kqueue (`Setup` / `/etc/sysctl.conf`):**
     - Garantir nos scripts do `Setup` um piso superior explícito para workloads pesados de desenvolvimento + Wayland/X11, além de memória compartilhada (`shm`) generosa para Chromium/Firefox/KDE:
@@ -79,6 +90,8 @@
         }
         ```
     - **Desativação do Indexador `baloo` no KDE Plasma:** Incluir nos scripts de configuração do ambiente desktop a desativação do indexador de arquivos do KDE (`balooctl6 disable && balooctl6 purge`), que falhava no `way.log` e disputava I/O e descritores ao varrer diretórios com múltiplos repositórios.
+
+---
 
 ### 🔴 1. Correções Críticas de Sessão Gráfica, EWM e EXWM (Baseado em Logs)
 
@@ -162,11 +175,11 @@
         - [ ] `om` $\rightarrow$ **MPV** (substituindo o antigo `open-micro`)
         - [ ] `os` $\rightarrow$ **Wireshark** (_open-shark_ / sniffer de pacotes)
         - [ ] `of` $\rightarrow$ **Firefox**
-        - [ ] `ow` $\rightarrow$ **Web Browser Universal** (ordem de fallback: `<Google Chrome, Brave, Microsoft Edge, Safari, Chromium, Firefox>`, respeitando o binário `chrome` do Chromium no FreeBSD)
+        - [ ] `ow` $\rightarrow$ **Web Browser Universal** (ordem de fallback: `<Google Brave, Chrome, Chromium, Edge, Firefox Microsoft Safari,>`, respeitando o binário `chrome` do Chromium no FreeBSD)
         - [ ] `oo` $\rightarrow$ **OnlyOffice**
         - [ ] `ol` $\rightarrow$ **LibreOffice**
         - [ ] `ot` $\rightarrow$ **Terminal / Thunderbird** _(definir se `ot` assumirá o Terminal padrão e `oth`/`omail` assumirá o Thunderbird para evitar colisão)_
-        - [ ] `wm` $\rightarrow$ **Window Manager Puro** (`<Sway, Labwc, River, Cage>`)
+        - [ ] `wm` $\rightarrow$ **Window Manager Puro** (`<Sway, Cage Labwc, River,>`)
 
 ---
 
@@ -175,6 +188,11 @@
 > [!NOTE]
 > Registro técnico das causas-raiz identificadas durante a triagem de logs e testes em FreeBSD e Linux para guiar a implementação:
 
+- **Por que o FreeBSD congela o display e o teclado (nem o Caps Lock responde), mas o áudio continua tocando (Wayland & X11):** O sintoma ocorre quando o módulo do kernel `i915kms` (que roda sob a camada _LinuxKPI_ em GPUs Intel 12th Gen Alder Lake) entra em _deadlock_ de alocação de páginas físicas ou sofre um _GPU Hang_ em transições de estados de energia (`GuC RC` / `GuC Submission`). Com `vfs.zfs.arc.max` anteriormente em 8 GB (`8589934592`) e a VM do Bhyve subindo no boot (2 GB) num sistema de 16 GB de RAM, o uso prolongado ou a abertura de uma pasta com 16 repositórios no VS Code faz o ZFS ARC e a tabela `kqueue` ocuparem e fragmentarem a RAM física. Quando o navegador ou o compositor gráfico pede memória contígua à GPU integrada, a thread DRM do servidor gráfico trava esperando a liberação do ARC ou do firmware GuC. Como o servidor gráfico (KWin, Sway ou Xorg) é o dono dos descritores `evdev`/`libinput` e da atualização de LEDs do teclado em modo gráfico, o teclado congela junto com a imagem na tela, enquanto o kernel FreeBSD e o subsistema de som (`snd_hda`/`pcm`) continuam executando o áudio do navegador normalmente em background.
+- **Por que `adlp_dmc.bin` e `GUC` aparecem no `dmesg2` mesmo com `/boot/loader.conf` configurado:**
+    1. A flag `compat.linuxkpi.i915_enable_dc="0"` **não impede o upload do arquivo `adlp_dmc.bin`**, apenas bloqueia a transição em tempo de execução para os estados DC5/DC6 (`allowed_dc_mask = 0`).
+    2. Como `compat.linuxkpi.i915_enable_guc` não estava definido no `/boot/loader.conf`, o driver Alder Lake-P (`0x46a8`) assumiu o default `-1`, ligando `GUC: submission enabled`, `SLPC enabled` e `RC enabled`. Para evitar _deadlocks_ do GuC no FreeBSD 15.1, deve-se definir explicitamente `compat.linuxkpi.i915_enable_guc="2"` (apenas HuC) ou `"0"` (GuC/HuC desativados).
+- **Correção da OID do LinuxKPI:** O uso correto no `/boot/loader.conf` para tunar o driver i915 no FreeBSD é `compat.linuxkpi.i915_enable_dc="0"` e `compat.linuxkpi.i915_enable_psr="0"` (e não `compat.kpi.*`).
 - **Por que `firefox` e `chrome` abrem encaixotados e com terminal ao fundo no `(x/w)gui`:** Quando um script lançador decide se um binário é TUI ou GUI (checando `Terminal=true` no `.desktop` ou dependências de bibliotecas), discrepâncias no nome do `.desktop` — especialmente no FreeBSD, onde o binário do Chromium chama-se `chrome` (`/usr/local/bin/chrome`), mas o arquivo de entrada pode ser `chromium-browser.desktop` — ou wrappers de shell intermediários fazem o lançador cair no _fallback_ de "aplicativo de terminal", executando equivocadamente `foot -e chrome` ou `xterm -e firefox`.
 - **Por que `Ctrl+Left` e `Ctrl+Right` emitem `^[[D` / `^[[C` (setas normais) no Raw TTY:** Por herança histórica da emulação VT100/cons25, os mapas de teclado do kernel tanto no FreeBSD (`vt(4)` em `/usr/share/vt/keymaps/`) quanto no Linux (`kbd` / `loadkeys`) não diferenciam a tecla `Left` de `Ctrl+Left` na tabela de scancodes padrão — ambas apontam para a mesma ação `lkey` (`^[[D`). Ao contrário de `Home` e `End` (que possuem slots dedicados na tabela do kernel), o Shell e o Emacs sequer recebem a informação de que o modificador `Ctrl` foi pressionado. A solução definitiva no repositório `Setup` consiste em injetar regras customizadas via `kbdcontrol` (FreeBSD) e `loadkeys` (Linux) mapeando `Ctrl+Left/Right` para as sequências CSI modificadas padrão xterm (`^[[1;5D` e `^[[1;5C`).
 - **Por que apenas o GNU Emacs trava ao redimensionar no FreeBSD (KDE):** Por padrão (`frame-resize-pixelwise nil`), o Emacs negocia o tamanho da sua janela com o Window Manager em múltiplos exatos da largura/altura da fonte (colunas $\times$ linhas via `WM_NORMAL_HINTS`). No FreeBSD sob KWin (Wayland/X11) com compositores modernos e escalas fracionárias, o loop de eventos GTK/X11 do Emacs entra em condição de corrida (_resize loop_) tentando arredondar os pixels enviados pelo compositor e redesenhar o buffer a cada frame. Ativar `(setq frame-resize-pixelwise t)` no `early-init.el` costuma eliminar o gargalo imediatamente.
@@ -203,7 +221,7 @@
     - **Ferramentas Alvo:** `agy` (Google Antigravity CLI), `claude` (Claude Code), `opencode` / `open-code-interpreter` e `openclaw`.
     - **Métodos Arquiteturais de Integração:**
         1. **Bridge / Proxy HTTP Local (Adapter `gptel` & `avante.nvim`):**
-            - Subir micro-daemon local compatível com endpoints OpenAPI/SSE (`http://127.0.0.1:PORT/v1/chat/completions`) que reaproveita a sessão autenticada.
+            - Subir micro-daemon local compatível com endpoints OpenAPI/SSE (`[http://127.0.0.1](http://127.0.0.1):PORT/v1/chat/completions`) que reaproveita a sessão autenticada.
             - Plugar diretamente no `gptel` (`gptel-make-openai`) e no ecossistema modal com zero fricção.
         2. **Runner de Subprocesso Assíncrono / Headless CLI (Elisp Nativo):**
             - Invocar o modo não interativo das ferramentas (`agy -p`, `claude -p`) via pipes UNIX e buffers efêmeros (`make-process` / `async-shell-command`).
