@@ -42,6 +42,44 @@
 
 ## 📌 Backlog & Próximos Passos
 
+### 🔥 0. Blindagem de Kernel, GPU (`i915kms` Alder Lake) & ZFS contra Congelamentos Gráficos (FreeBSD 15.1)
+
+> **Contexto do Incidente:** Congelamento total do display e do input (teclado/mouse param de responder, até o LED do Caps Lock trava, enquanto o áudio em segundo plano continua tocando normalmente). Ocorre tanto em Wayland (KDE Plasma, Sway) quanto em X11 (KDE X11, EXWM), sendo acelerado pelo tempo de uptime do sistema, abertura de múltiplas abas/aplicações pesadas e disparo de _file watchers_ sobre múltiplos repositórios (ex: abrir `~/Documents` no VS Code).
+
+- [ ] **Correção Definitiva da OID do LinuxKPI (`Setup` / `/boot/loader.conf`):**
+    - **Correção Crítica de Sintaxe de Módulo:** Auditoria revelou que as flags no `/boot/loader.conf` estavam declaradas com o prefixo obsoleto/incorreto `compat.kpi.` em vez de `compat.linuxkpi.`, fazendo com que o kernel ignorasse silenciosamente todas as proteções (`enable_dc`, `enable_psr`, `enable_fbc`). Garantir que todos os scripts do repositório `Setup` injetem estritamente com `compat.linuxkpi.`:
+        ```ini
+        compat.linuxkpi.i915_enable_psr="0"
+        compat.linuxkpi.i915_enable_psr2_sel_fetch="0"
+        compat.linuxkpi.i915_enable_fbc="0"
+        compat.linuxkpi.i915_enable_dc="0"
+        compat.linuxkpi.i915_enable_guc="3"
+        ```
+- [ ] **Mitigação de Pressão de Memória ZFS ARC vs. Alocador DRM `LinuxKPI` (`Setup` / `/boot/loader.conf`):**
+    - **Migração da Sysctl Depreciada:** Substituir definitivamente `vfs.zfs.arc_max` (com _underline_, que gera `WARNING: sysctl vfs.zfs.arc_max is deprecated. Use vfs.zfs.arc.max instead` no boot) pela nova OID `vfs.zfs.arc.max` (com ponto) nos scripts do repositório `Setup`.
+    - **Redução do Teto do ZFS ARC (8 GB $\rightarrow$ 4 GB):** Em máquinas de 16 GB de RAM com GPU integrada Intel Iris Xe (que compartilha RAM do sistema e exige alocações físicas rápidas via `LinuxKPI`), reduzir `vfs.zfs.arc.max` de `8589934592` (8 GB) para `4294967296` (4 GB) e definir `vfs.zfs.arc.min=1073741824` (1 GB). Isso impede que a varredura de repositórios Git inche o ARC a ponto de sufocar e travar o driver `i915kms` ao abrir novas janelas/abas.
+- [ ] **Aceleração de Hardware VA-API para Intel Gen 12 (`Setup`):**
+    - [x] Instalado manualmente no host (`sudo pkg install libva-intel-media-driver` + `gmmlib`), eliminando o erro `vaInitialize failed: unknown libva error` no Chromium/Electron.
+    - [ ] Automatizar a instalação de `libva-intel-media-driver` e `libva-utils` nos scripts de provisionamento de hardware Intel do repositório `Setup` e exportar `LIBVA_DRIVER_NAME=iHD` no `Profile`.
+- [ ] **Tuning de File Descriptors (`maxfiles`), IPC Shared Memory e Inotify/Kqueue (`Setup` / `/etc/sysctl.conf`):**
+    - Garantir nos scripts do `Setup` um piso superior explícito para workloads pesados de desenvolvimento + Wayland/X11, além de memória compartilhada (`shm`) generosa para Chromium/Firefox/KDE:
+        ```ini
+        kern.maxfiles=1048576
+        kern.maxfilesperproc=524288
+        vfs.zfs.arc.max=4294967296
+        kern.ipc.shmmax=2147483648
+        kern.ipc.shmall=524288
+        kern.ipc.shm_allow_removed=1
+        ```
+- [ ] **Desativação Total de File Watchers (`kqueue`) e Indexadores de Background (`Profile` & `Setup`):**
+    - **Neutralização do File Watcher no VS Code (`Profile` / `settings.json`):** No FreeBSD, cada arquivo monitorado via `libinotify`/`kqueue` consome 1 _file descriptor_ real no kernel e pressiona o cache de metadados do ZFS. Adicionar ao `settings.json` versionado no `Profile` a desativação global do _watcher_ (`"**/*": true`):
+        ```json
+        "files.watcherExclude": {
+            "**/*": true
+        }
+        ```
+    - **Desativação do Indexador `baloo` no KDE Plasma:** Incluir nos scripts de configuração do ambiente desktop a desativação do indexador de arquivos do KDE (`balooctl6 disable && balooctl6 purge`), que falhava no `way.log` e disputava I/O e descritores ao varrer diretórios com múltiplos repositórios.
+
 ### 🔴 1. Correções Críticas de Sessão Gráfica, EWM e EXWM (Baseado em Logs)
 
 - [ ] **Correções Pós-Teste no Host FreeBSD (`wewm`, `xewm` e Higiene de TTY):**
@@ -195,19 +233,23 @@ O moude é lerdo... Ele não tem a aceleração que no exwm por exemplo tem (e p
 
 - O Autocomplete dele é instantaneo... Seria legal se tivesse um mini delay antes de aparecer as opções... Ou outra maneira melhor (isso que eu falei pode ser uma ideia merda)... E o inline? Sla quero melhorar o autocomplete no Emacs como um todo mas tambem no Aweshell... Mas o que me incomoda é que eu quero escrever "el" e quando eu dei enter foi eletrical... Tipo po isso atrapalha mais do que ajuda tlg? O autocomplete do Zsh é bem menos intrusivo... E util. Enfim temos que ver as objetivopções. E o autocomplete me obriga a dar 2 enterns no ':w' para salvar vei... pqp
 
+## Colocar no Shell
+
+- Fazer o bhyve iniciar com a VM desligada e só ligar quando eu mandar
+- Ligar a vm lx com um comando para iniciar ou "de maneira inteligente" quando eu rodar lx...
+  Isso vai poupar 2gb ram o que pode amenisar o problema do travamento
+
 ## Colocar no Setup
 
 - Instalar o Cmake (cmake-core cmake-man cmake-gui)
 
+## Melhorar o Environment
+
+- [ ] Arrumas / Adicionar os .gitattributes com o do Template
+
 ## Melhorar no Way / X11, Xorg
 
 Eu iniciei o sistema via o comando way e o zsh do konsole está no tema do TTY kkkk. e isso acontece com o :terminal do vim/nvim e no term e vterm do Emacs... Temos que melhorar isso nos comandos que inicializam um sistema via TTY... Tem que resetar esse tipo de variavel
-
----
-
-## Environment
-
-- [ ] Arrumas / Adicionar os .gitattributes com o do Template
 
 ---
 

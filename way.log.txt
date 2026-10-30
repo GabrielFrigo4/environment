@@ -1,0 +1,1085 @@
+org.kde.startup: not a reply org.freedesktop.locale1 QDBusMessage(type=Error, service="", error name="org.freedesktop.DBus.Error.ServiceUnknown", error message="The name org.freedesktop.locale1 was not provided by any .service files", signature="s", contents=("The name org.freedesktop.locale1 was not provided by any .service files") )
+dbus-daemon[7349]: [session uid=1001 pid=7349] Activating service name='org.kde.KSplash' requested by ':1.0' (uid=1001 pid=7357 comm="startplasma-wayland")
+dbus-daemon[7349]: [session uid=1001 pid=7349] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.4' (uid=1001 pid=7367 comm="/usr/local/bin/kcminit_startup")
+dbus-daemon[7349]: [session uid=1001 pid=7349] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.5' (uid=1001 pid=7369 comm="/usr/local/libexec/xdg-desktop-portal")
+dbus-daemon[7349]: [session uid=1001 pid=7349] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[7349]: [session uid=1001 pid=7349] Activating service name='org.freedesktop.portal.Documents' requested by ':1.5' (uid=1001 pid=7369 comm="/usr/local/libexec/xdg-desktop-portal")
+dbus-daemon[7349]: [session uid=1001 pid=7349] Successfully activated service 'org.freedesktop.portal.Documents'
+fuse: unknown option(s): `-o auto_unmount'
+error: fuse init failed: Can't create fuse session
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:28.733: Document portal fuse mount point unknown: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name :1.7 was not provided by any .service files
+dbus-daemon[7349]: [session uid=1001 pid=7349] Activating service name='org.freedesktop.impl.portal.desktop.kde' requested by ':1.5' (uid=1001 pid=7369 comm="/usr/local/libexec/xdg-desktop-portal")
+No backend specified, automatically choosing drm
+kf.coreaddons: The operating system is unable to promise 5488744 bytes for mapped cache, abandoning the cache for crash-safety.
+kf.coreaddons: Couldn't establish file backed memory mapping, will fallback to anonymous memory
+kwin_wayland_drm: drmModeListLessees() failed: Invalid argument
+kwin_screencast: Failed to connect PipeWire context
+dbus-daemon[7349]: [session uid=1001 pid=7349] Successfully activated service 'org.kde.KSplash'
+dbus-daemon[7349]: [session uid=1001 pid=7349] Successfully activated service 'org.freedesktop.impl.portal.desktop.kde'
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:30.999: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:30.999: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:30.999: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:31.005: Failed to connect to PipeWire: Couldn't connect to PipeWire
+dbus-daemon[7349]: [session uid=1001 pid=7349] Activating service name='org.freedesktop.impl.portal.desktop.kwallet' requested by ':1.5' (uid=1001 pid=7369 comm="/usr/local/libexec/xdg-desktop-portal")
+dbus-daemon[7349]: [session uid=1001 pid=7349] Successfully activated service 'org.freedesktop.portal.Desktop'
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:31.021: Failed to get pidfd for host process 7375: Unable to pidfd from pid 7375: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:31.028: Failed to get pidfd for host process 7375: Unable to pidfd from pid 7375: No such file or directory
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: Connection already associated with an application ID")
+The XKEYBOARD keymap compiler (xkbcomp) reports:
+> Warning:          Multiple symbols for level 1/group 1 on key <FK23>
+>                   Using F23, ignoring XF86TouchpadOff
+> Warning:          Symbol map for key <FK23> redefined
+>                   Using last definition for conflicting fields
+> Warning:          Symbol map for key <FK24> redefined
+>                   Using last definition for conflicting fields
+> Warning:          Could not resolve keysym XF86ElectronicPrivacyScreenOn
+> Warning:          Could not resolve keysym XF86ElectronicPrivacyScreenOff
+> Warning:          Could not resolve keysym XF86ActionOnSelection
+> Warning:          Could not resolve keysym XF86ContextualInsert
+> Warning:          Could not resolve keysym XF86ContextualQuery
+Errors from xkbcomp are not fatal to the X server
+The XKEYBOARD keymap compiler (xkbcomp) reports:
+> Warning:          Unsupported maximum keycode 709, clipping.
+>                   X11 cannot support keycodes above 255.
+> Warning:          Virtual modifier Hyper multiply defined
+>                   Using 0, ignoring 0
+> Warning:          Virtual modifier ScrollLock multiply defined
+>                   Using 0, ignoring 0
+Errors from xkbcomp are not fatal to the X server
+dbus-daemon[7349]: [session uid=1001 pid=7349] Successfully activated service 'org.freedesktop.impl.portal.desktop.kwallet'
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:31.270: Failed to get pidfd for host process 7379: Unable to pidfd from pid 7379: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:31.271: Failed to get pidfd for host process 7379: Unable to pidfd from pid 7379: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:31.279: Failed to get pidfd for host process 7365: Unable to pidfd from pid 7365: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:31.280: Failed to get pidfd for host process 7365: Unable to pidfd from pid 7365: Inappropriate ioctl for device
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for ''")
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:31.334: Failed to get pidfd for host process 7367: Unable to pidfd from pid 7367: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:31.334: Failed to get pidfd for host process 7367: Unable to pidfd from pid 7367: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:31.335: Failed to get pidfd for host process 7367: Unable to pidfd from pid 7367: No such file or directory
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.kcminit'")
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:31.335: Failed to get pidfd for host process 7367: Unable to pidfd from pid 7367: Inappropriate ioctl for device
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.kcminit'")
+org.kde.plasma.session: process job  "kcminit_startup" finished with exit code  0
+failed to read client connection (pid 7386)
+org.kde.plasma.printmanager.kded: Unable to register service to systemBus: "com.redhat.NewPrinterNotification"
+dbus-daemon[7349]: [session uid=1001 pid=7349] Activating service name='ca.desrt.dconf' requested by ':1.16' (uid=1001 pid=7388 comm="/usr/local/bin/kded6")
+dbus-daemon[7349]: [session uid=1001 pid=7349] Successfully activated service 'ca.desrt.dconf'
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:31.781: Failed to get pidfd for host process 7391: Unable to pidfd from pid 7391: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:31.781: Failed to get pidfd for host process 7391: Unable to pidfd from pid 7391: No such file or directory
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.ksmserver'")
+W: [] caps.c: Normally all extra capabilities would be dropped now, but that's impossible because PulseAudio was built without capabilities support.
+failed to read client connection (pid 7367)
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:31.833: Failed to get pidfd for host process 7411: Unable to pidfd from pid 7411: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:31.834: Failed to get pidfd for host process 7411: Unable to pidfd from pid 7411: Inappropriate ioctl for device
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.xembedsniproxy'")
+kf.config.kconf_update: /usr/local/share/kconf_update/webenginepart.upd defined Version=5 but Version=6 was expected
+qt.dbus.integration: QDBusConnection: name 'org.freedesktop.UPower' had owner '' but we thought it was ':1.8'
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:31.879: Failed to get pidfd for host process 7388: Unable to pidfd from pid 7388: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:31.879: Failed to get pidfd for host process 7388: Unable to pidfd from pid 7388: Inappropriate ioctl for device
+org.kde.kameleon: Failed to call helper: "The name org.kde.kameleon.qmk.helper was not provided by any .service files"
+xsettingsd: Loaded 16 settings from /home/gabrielf/.config/xsettingsd/xsettingsd.conf
+xsettingsd: Created window 0xe00001 on screen 0 with timestamp 79095
+xsettingsd: Selection _XSETTINGS_S0 is owned by 0x0
+xsettingsd: Took ownership of selection _XSETTINGS_S0
+qt.core.qobject.connect: QObject::connect(Solid::OpticalDrive, SolidAutoEject): invalid nullptr parameter
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:31.940: Failed to get pidfd for host process 7418: Unable to pidfd from pid 7418: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:31.940: Failed to get pidfd for host process 7418: Unable to pidfd from pid 7418: Inappropriate ioctl for device
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.gmenudbusmenuproxy'")
+dbus-daemon[7349]: [session uid=1001 pid=7349] Activating service name='org.kde.ActivityManager' requested by ':1.28' (uid=1001 pid=7413 comm="/usr/local/lib/libexec/org_kde_powerdevil")
+New PolkitAgentListener  0x35f838abad80
+Adding new listener  PolkitQt1::Agent::Listener(0x35f839412a00) for  0x35f838abad80
+Listener online
+Authentication agent result: true
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:32.022: Failed to get pidfd for host process 7412: Unable to pidfd from pid 7412: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:32.022: Failed to get pidfd for host process 7412: Unable to pidfd from pid 7412: Inappropriate ioctl for device
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:32.053: Failed to get pidfd for host process 7413: Unable to pidfd from pid 7413: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:32.053: Failed to get pidfd for host process 7413: Unable to pidfd from pid 7413: Inappropriate ioctl for device
+failed to read client connection (pid 7431)
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:32.107: Failed to get pidfd for host process 7420: Unable to pidfd from pid 7420: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:32.107: Failed to get pidfd for host process 7420: Unable to pidfd from pid 7420: Inappropriate ioctl for device
+X server XKB extension major= 1  minor= 0
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:32.126: Failed to get pidfd for host process 7414: Unable to pidfd from pid 7414: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:32.126: Failed to get pidfd for host process 7414: Unable to pidfd from pid 7414: Inappropriate ioctl for device
+qt.bluetooth: Dummy backend running. Qt Bluetooth module is non-functional.
+Identity packet to QHostAddress("255.255.255.255") got rejected because it was too large. Retrying without including the capabilities
+Identity packet to QHostAddress("255.255.255.255") got rejected because it was too large. Retrying without including the capabilities
+kdeconnect.core: Failed to send mDNS query: Network is unreachable
+kdeconnect.core: Failed to send mDNS query: Network is unreachable
+dbus-daemon[7349]: [session uid=1001 pid=7349] Activating service name='org.freedesktop.Notifications' requested by ':1.31' (uid=1001 pid=7420 comm="/usr/local/bin/kdeconnectd")
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:32.163: Failed to get pidfd for host process 7410: Unable to pidfd from pid 7410: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:32.164: Failed to get pidfd for host process 7410: Unable to pidfd from pid 7410: Inappropriate ioctl for device
+dbus-daemon[7349]: [session uid=1001 pid=7349] Successfully activated service 'org.kde.ActivityManager'
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.org_kde_powerdevil'")
+org.kde.powerdevil: org.kde.powerdevil.chargethresholdhelper.getthreshold failed "Charge thresholds are not supported by the kernel for this hardware"
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:32.182: Failed to get pidfd for host process 7442: Unable to pidfd from pid 7442: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:32.183: Failed to get pidfd for host process 7442: Unable to pidfd from pid 7442: Inappropriate ioctl for device
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.ActivityManager'")
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:32.190: Failed to get pidfd for host process 7413: Unable to pidfd from pid 7413: No such file or directory
+failed to read client connection (pid 7428)
+Failure: Module initialization failed
+QNetworkInformation has no backend. Is NetworkManager.service running?
+failed to read client connection (pid 7434)
+org.kde.powerdevil: Handle button events action could not check for screen configuration
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:32.255: Failed to get pidfd for host process 7423: Unable to pidfd from pid 7423: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:32.255: Failed to get pidfd for host process 7423: Unable to pidfd from pid 7423: Inappropriate ioctl for device
+org.kde.powerdevil: org.kde.powerdevil.chargethresholdhelper.getthreshold failed "Charge thresholds are not supported by the kernel for this hardware"
+failed to read client connection (pid 7456)
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:32.483: Failed to get pidfd for host process 7431: Unable to pidfd from pid 7431: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:32.483: Failed to get pidfd for host process 7431: Unable to pidfd from pid 7431: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:32.484: Failed to get pidfd for host process 7431: Unable to pidfd from pid 7431: No such file or directory
+qt.qml.propertyCache.append: Member visible of the object PlasmaQuick::Dialog overrides a member of the base object. Consider renaming it or adding final or override specifier
+kf.coreaddons: The operating system is unable to promise 16875624 bytes for mapped cache, abandoning the cache for crash-safety.
+kf.coreaddons: Couldn't establish file backed memory mapping, will fallback to anonymous memory
+qt.qml.propertyCache.append: Member enabled of the object DeclarativeDropArea overrides a member of the base object. Consider renaming it or adding final or override specifier
+new capabilities for  "Android"
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:32.780: Failed to get pidfd for host process 7458: Unable to pidfd from pid 7458: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:32.780: Failed to get pidfd for host process 7458: Unable to pidfd from pid 7458: Inappropriate ioctl for device
+kdeconnect.plugin.digitizer: KDE Connect drawing tablet plugin was built without "wayland" support.
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:32.826: Failed to get pidfd for host process 7457: Unable to pidfd from pid 7457: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:32.826: Failed to get pidfd for host process 7457: Unable to pidfd from pid 7457: Inappropriate ioctl for device
+Clearing existing entries 0
+kdeconnect.plugin.clipboard: Ignoring clipboard without timestamp
+dbus-daemon[7349]: [session uid=1001 pid=7349] Activating service name='org.a11y.Bus' requested by ':1.32' (uid=1001 pid=7431 comm="/usr/local/lib/firefox/firefox --sm-client-id 10fa")
+dbus-daemon[7349]: [session uid=1001 pid=7349] Successfully activated service 'org.a11y.Bus'
+failed to read client connection (pid 7365)
+qt.qml.propertyCache.append: Final member StackingOrder is overridden in class QQmlDMAbstractItemModelData. The override won't be used.
+dbus-daemon[7349]: [session uid=1001 pid=7349] Successfully activated service 'org.freedesktop.Notifications'
+JavaScript error: undefined, line 0: Error: No such native application firefoxpwa
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:34.604: Failed to get pidfd for host process 7476: Unable to pidfd from pid 7476: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:34.605: Failed to get pidfd for host process 7476: Unable to pidfd from pid 7476: No such file or directory
+Connecting to deprecated signal QDBusConnectionInterface::serviceOwnerChanged(QString,QString,QString)
+kdeconnect.plugin.sftp: Invalid sftp packet received
+JavaScript error: moz-extension://ff54e04f-d01d-4887-abc8-33b7e378c7e7/pages/document-start.js, line 3945: Error: Could not establish connection. Receiving end does not exist.
+JavaScript error: moz-extension://ff54e04f-d01d-4887-abc8-33b7e378c7e7/pages/document-start.js, line 3945: Error: Could not establish connection. Receiving end does not exist.
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js, line 6171: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js, line 6171: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js, line 6171: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js, line 6171: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js, line 6171: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js, line 6171: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js, line 6171: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js, line 6171: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js line 2 > eval, line 6171: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js line 2 > eval, line 6171: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js line 2 > eval, line 6171: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js line 2 > eval, line 1: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js line 2 > eval line 6171 > eval, line 1: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js line 2 > eval line 6171 > eval, line 1: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js line 2 > eval line 6171 > eval line 1 > eval, line 1: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js line 2 > eval, line 6171: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js line 2 > eval, line 6171: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js line 2 > eval, line 6171: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js line 2 > eval, line 6171: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js line 2 > eval line 6171 > eval line 1 > eval, line 1: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js line 2 > eval line 6171 > eval line 1 > eval, line 1: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js line 2 > eval line 6171 > eval line 1 > eval, line 1: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js line 2 > eval line 6171 > eval line 1 > eval line 1 > eval, line 1: unreachable code after return statement
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js line 2 > eval line 6171 > eval line 1 > eval line 1 > eval, line 1: unreachable code after return statement
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+JavaScript warning: https://www.google.com/js/bg/yi5vSaJIhlEfQo3b6VPBS7XL7LsdodFXe78hm7xvT80.js line 2 > eval line 6171 > eval line 1 > eval line 1 > eval, line 1: unreachable code after return statement
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:36.863: Failed to get pidfd for host process 7553: Unable to pidfd from pid 7553: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:36.863: Failed to get pidfd for host process 7553: Unable to pidfd from pid 7553: No such file or directory
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.baloo'")
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+JavaScript error: moz-extension://ff54e04f-d01d-4887-abc8-33b7e378c7e7/pages/document-start.js, line 3945: Error: Could not establish connection. Receiving end does not exist.
+JavaScript error: moz-extension://ff54e04f-d01d-4887-abc8-33b7e378c7e7/pages/document-start.js, line 3945: Error: Could not establish connection. Receiving end does not exist.
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+failed to read client connection (pid 7553)
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:38.293: Failed to get pidfd for host process 7554: Unable to pidfd from pid 7554: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:38.293: Failed to get pidfd for host process 7554: Unable to pidfd from pid 7554: No such file or directory
+JavaScript error: , line 0: uncaught exception: Object { message }
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:39.062: Failed to get pidfd for host process 7558: Unable to pidfd from pid 7558: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:39.062: Failed to get pidfd for host process 7558: Unable to pidfd from pid 7558: Inappropriate ioctl for device
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.baloo'")
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: Connection already associated with an application ID")
+JavaScript error: , line 0: uncaught exception: Object { message }
+JavaScript error: moz-extension://ff54e04f-d01d-4887-abc8-33b7e378c7e7/pages/document-start.js, line 3945: Error: Could not establish connection. Receiving end does not exist.
+JavaScript error: moz-extension://ff54e04f-d01d-4887-abc8-33b7e378c7e7/pages/document-start.js, line 3945: Error: Could not establish connection. Receiving end does not exist.
+failed to read client connection (pid 7558)
+qt.svg: Invalid path data; path truncated.
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+]]
+JavaScript error: , line 0: uncaught exception: Object { message }
+JavaScript error: , line 0: uncaught exception: Object { message }
+JavaScript error: , line 0: uncaught exception: Object { message }
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+JavaScript error: , line 0: uncaught exception: Object { message }
+JavaScript error: , line 0: uncaught exception: Object { message }
+JavaScript error: , line 0: uncaught exception: Object { message }
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+JavaScript error: , line 0: uncaught exception: Object { message }
+failed to read client connection (pid 7554)
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+JavaScript error: , line 0: uncaught exception: Object { message }
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+JavaScript error: , line 0: uncaught exception: Object { message }
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+Extension error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIDOMWindowUtils.addSheet]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: resource://gre/modules/ExtensionCommon.sys.mjs :: runSafeSyncWithoutClone :: line 66"  data: no] undefined 66
+[[Exception stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:66:12
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+Current stack
+runSafeSyncWithoutClone@resource://gre/modules/ExtensionCommon.sys.mjs:75:57
+inject@resource://gre/modules/ExtensionContent.sys.mjs:677:32
+injectInto@resource://gre/modules/ExtensionContent.sys.mjs:550:19
+executeInWin@resource://gre/modules/ExtensionContent.sys.mjs:1501:27
+handleActorExecute@resource://gre/modules/ExtensionContent.sys.mjs:1506:40
+]]
+JavaScript error: , line 0: uncaught exception: Object { message }
+JavaScript error: , line 0: uncaught exception: Object { message }
+JavaScript error: , line 0: uncaught exception: Object { message }
+[7562:102142:1029/212755.973351:ERROR:media/gpu/vaapi/vaapi_wrapper.cc:1801] vaInitialize failed: unknown libva error
+dbus-daemon[7349]: [session uid=1001 pid=7349] Activating service name='org.kde.kwalletd6' requested by ':1.55' (uid=1001 pid=7560 comm="chrome: ")
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:56.323: Failed to get pidfd for host process 7560: Unable to pidfd from pid 7560: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:56.323: Failed to get pidfd for host process 7560: Unable to pidfd from pid 7560: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:56.347: Failed to get pidfd for host process 7560: Unable to pidfd from pid 7560: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:56.347: Failed to get pidfd for host process 7560: Unable to pidfd from pid 7560: No such file or directory
+dbus-daemon[7349]: [session uid=1001 pid=7349] Successfully activated service 'org.kde.kwalletd6'
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:56.687: Failed to get pidfd for host process 7601: Unable to pidfd from pid 7601: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:27:56.688: Failed to get pidfd for host process 7601: Unable to pidfd from pid 7601: Inappropriate ioctl for device
+Using kwallet without parent window!
+[7560:102168:1029/212759.660603:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+failed to read client connection (pid 7625)
+failed to read client connection (pid 7626)
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:28:01.034: Failed to get pidfd for host process 7625: Unable to pidfd from pid 7625: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:28:01.034: Failed to get pidfd for host process 7625: Unable to pidfd from pid 7625: Inappropriate ioctl for device
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:28:01.034: Failed to get pidfd for host process 7625: Unable to pidfd from pid 7625: No such file or directory
+JavaScript error: resource://services-settings/Database.sys.mjs, line 19: EmptyDatabaseError: "blocklists/addons-bloomfilters" has not been synced yet
+JavaScript error: , line 0: uncaught exception: Object { message }
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:28:05.942: Failed to get pidfd for host process 7637: Unable to pidfd from pid 7637: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:28:05.942: Failed to get pidfd for host process 7637: Unable to pidfd from pid 7637: Inappropriate ioctl for device
+JavaScript error: , line 0: uncaught exception: Object { message }
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:28:12.697: Failed to get pidfd for host process 7645: Unable to pidfd from pid 7645: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:28:12.697: Failed to get pidfd for host process 7645: Unable to pidfd from pid 7645: Inappropriate ioctl for device
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:28:12.922: Failed to get pidfd for host process 7661: Unable to pidfd from pid 7661: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:28:12.922: Failed to get pidfd for host process 7661: Unable to pidfd from pid 7661: Inappropriate ioctl for device
+dbus-daemon[7652]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1001 pid=7645 comm="/usr/local/bin/gimp-3.2")
+dbus-daemon[7652]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+JavaScript error: , line 0: uncaught exception: Object { message }
+Invalid profile :  "/usr/local/share/color/icc/colord/Crayons.icc"
+Invalid profile :  "/usr/local/share/color/icc/colord/x11-colors.icc"
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:28:13.227: Failed to get pidfd for host process 7714: Unable to pidfd from pid 7714: No such file or directory
+Warning: Unknown input_id: -1 for input: surfacemap_x
+Warning: Unknown input_id: -1 for input: surfacemap_x
+Warning: Unknown input_id: -1 for input: surfacemap_x
+Warning: Unknown input_id: -1 for input: surfacemap_x
+Warning: Unknown input_id: -1 for input: surfacemap_x
+Warning: Unknown input_id: -1 for input: surfacemap_x
+Warning: Unknown input_id: -1 for input: surfacemap_x
+Warning: Unknown input_id: -1 for input: surfacemap_x
+Warning: Unknown input_id: -1 for input: surfacemap_x
+Warning: Unknown input_id: -1 for input: surfacemap_x
+Warning: Unknown input_id: -1 for input: surfacemap_x
+Warning: Unknown input_id: -1 for input: surfacemap_x
+krita.db.migration: Old schema: "0.0.17" New schema: QVersionNumber(0.0.18)
+krita.db.migration: ERROR: Could not execute DB update step: Cleanup and deduplicate metadata table
+krita.db.migration:        error Failed to execute sql from file
+krita.db.migration:        file: :/0_0_18_0001_cleanup_metadata_table.sql
+krita.db.migration:        statement: 1
+krita.db.migration:        sql-error: no such column: "resources" - should this be a string literal in single-quotes? Unable to execute statement
+kf.config.core: Watching absolute paths is not supported "/usr/local/share/color-schemes/KritaDark.colors"
+JavaScript error: , line 0: uncaught exception: Object { message }
+[7560:102168:1029/212822.345396:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+krita.db.migration: Completed DB update step: "Create table version_information"
+krita.db.migration: Completed DB update step: "Create table storage_types"
+krita.db.migration: Completed DB update step: "Create table resource_types"
+krita.db.migration: Completed DB update step: "Create table storages"
+krita.db.migration: Completed DB update step: "Create table tags"
+krita.db.migration: Completed DB update step: "Create table resources"
+krita.db.migration: Completed DB update step: "Create table versioned_resources"
+krita.db.migration: Completed DB update step: "Create table resource_tags"
+krita.db.migration: Completed DB update step: "Create table metadata"
+krita.db.migration: Completed DB update step: "Create table tags_storages"
+krita.db.migration: Completed DB update step: "Create table tag_translations"
+krita.db.migration: Completed DB update step: "Update metadata table constraints"
+krita.db.migration: Completed DB update step: "Create index for storages"
+krita.db.migration: Completed DB update step: "Create index for versioned_resources"
+krita.db.migration: Completed DB update step: "Create index for tags"
+krita.db.migration: Completed DB update step: "Create index for resources"
+krita.db.migration: Completed DB update step: "Create index for tag_translations"
+krita.db.migration: Completed DB update step: "Create index for resource_tags"
+krita.db.migration: Completed DB update step: "Create index for resources_signature"
+krita.db.migration: Completed DB update step: "Create index for metadata_key"
+krita.db.migration: Completed DB update step: "Register storage type: Unknown"
+krita.db.migration: Completed DB update step: "Register storage type: Folder"
+krita.db.migration: Completed DB update step: "Register storage type: Bundle"
+krita.db.migration: Completed DB update step: "Register storage type: Adobe Brush Library"
+krita.db.migration: Completed DB update step: "Register storage type: Adobe Style Library"
+krita.db.migration: Completed DB update step: "Register storage type: Memory"
+krita.db.migration: Completed DB update step: "Register storage type: Font Storage"
+krita.db.migration: Completed DB update step: "Register resource type: brushes"
+krita.db.migration: Completed DB update step: "Register resource type: css_styles"
+krita.db.migration: Completed DB update step: "Register resource type: fontfamilies"
+krita.db.migration: Completed DB update step: "Register resource type: gamutmasks"
+krita.db.migration: Completed DB update step: "Register resource type: gradients"
+krita.db.migration: Completed DB update step: "Register resource type: layerstyles"
+krita.db.migration: Completed DB update step: "Register resource type: paintoppresets"
+krita.db.migration: Completed DB update step: "Register resource type: palettes"
+krita.db.migration: Completed DB update step: "Register resource type: patterns"
+krita.db.migration: Completed DB update step: "Register resource type: seexpr_scripts"
+krita.db.migration: Completed DB update step: "Register resource type: sessions"
+krita.db.migration: Completed DB update step: "Register resource type: symbols"
+krita.db.migration: Completed DB update step: "Register resource type: tasksets"
+krita.db.migration: Completed DB update step: "Register resource type: windowlayouts"
+krita.db.migration: Completed DB update step: "Register resource type: workspaces"
+krita.db.migration: Filled version table
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+realpath: %%JAVA_HOME%%: No such file or directory
+WARNING: package sun.security.action not in java.base
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::staticFieldOffset has been called by org.eclipse.osgi.internal.url.MultiplexingFactory (file:/usr/local/share/dbeaver/plugins/org.eclipse.osgi_3.23.100.v20250514-1759.jar)
+WARNING: Please consider reporting this to the maintainers of class org.eclipse.osgi.internal.url.MultiplexingFactory
+WARNING: sun.misc.Unsafe::staticFieldOffset will be removed in a future release
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+> Start DBeaver Application Standalone [org.jkiss.dbeaver.ui.app.standalone 25.1.3.202608181615]
+> Start Eclipse IDE UI Application [org.eclipse.ui.ide.application 1.5.700.v20250514-1719]
+> Start Eclipse Jobs Mechanism [org.eclipse.core.jobs 3.15.600.v20250513-1234]
+> Start DBeaver Command Line Model [org.jkiss.dbeaver.model.cli 1.0.4.202608181615]
+> Start Eclipse IDE UI [org.eclipse.ui.ide 3.22.600.v20250530-2221]
+> Start DBeaver Model Registry [org.jkiss.dbeaver.registry 1.0.153.202608181615]
+> Start jna [com.sun.jna 5.17.0.v20250316-1700]
+> Start DBeaver UI Editors - Base [org.jkiss.dbeaver.ui.editors.base 1.0.159.202608181615]
+> Start DBeaver UI [org.jkiss.dbeaver.ui 5.1.174.202608181615]
+> Start Expression Language [org.eclipse.core.expressions 3.9.400.v20240413-1529]
+> Start DBeaver Usage Statistics [org.jkiss.dbeaver.ui.statistics 1.0.55.202608181615]
+> Start DBeaver UI Editors - Connections [org.jkiss.dbeaver.ui.editors.connection 1.0.150.202608181615]
+> Start DBeaver Desktop Application Core [org.jkiss.dbeaver.core 25.1.3.202608181615]
+2026-10-29 21:28:32.053 - DBeaver 25.1.3.202608181615 is starting
+2026-10-29 21:28:32.054 - OS: FreeBSD 15.1-RELEASE-p6 (amd64)
+2026-10-29 21:28:32.054 - Java version: 25.0.4 by OpenJDK BSD Porting Team (64bit)
+2026-10-29 21:28:32.055 - Install path: '/usr/local/share/dbeaver'
+2026-10-29 21:28:32.055 - Instance path: 'file:/home/gabrielf/.local/share/DBeaverData/workspace6/'
+2026-10-29 21:28:32.056 - Memory available 66Mb/1024Mb
+2026-10-29 21:28:32.074 - Create display
+2026-10-29 21:28:32.213 - Initialize desktop platform...
+2026-10-29 21:28:32.379 - BounceCastle bundle found. Use JCE provider BC
+> Start Core File Systems [org.eclipse.core.filesystem 1.11.200.v20250523-2309]
+> Start Core Resource Management [org.eclipse.core.resources 3.22.200.v20250513-1234]
+> Start Team Support Core [org.eclipse.team.core 3.10.700.v20250313-0656]
+> Start DBeaver UI Navigator [org.jkiss.dbeaver.ui.navigator 1.0.159.202608181615]
+2026-10-29 21:28:32.575 - Initialize base platform...
+2026-10-29 21:28:32.602 - Platform initialized (389ms)
+2026-10-29 21:28:32.782 - Error accessing instance server: java.net.ConnectException
+2026-10-29 21:28:32.801 - Starting instance server at http://localhost:41984
+2026-10-29 21:28:32.809 - Run workbench
+> Start Eclipse e4 Workbench SWT [org.eclipse.e4.ui.workbench.swt 0.17.800.v20250422-1254]
+> Start Eclipse Application Services [org.eclipse.e4.core.services 2.5.200.v20250326-1945]
+> Start Eclipse UI Application Services [org.eclipse.e4.ui.services 1.6.500.v20250123-0754]
+> Start Eclipse e4 Progress View [org.eclipse.e4.ui.progress 0.4.800.v20250422-1254]
+> Start Eclipse Bindings Support [org.eclipse.e4.ui.bindings 0.14.600.v20250331-1050]
+> Start Eclipse e4 core commands [org.eclipse.e4.core.commands 1.1.600.v20250307-1331]
+> Start EMF XML/XMI Persistence [org.eclipse.emf.ecore.xmi 2.39.0.v20250414-1351]
+> Start Eclipse CSS SWT Theme Support [org.eclipse.e4.ui.css.swt.theme 0.14.500.v20250213-1508]
+> Start Eclipse e4 Workbench Add-ons [org.eclipse.e4.ui.workbench.addons.swt 1.5.700.v20250422-1254]
+> Start Eclipse e4 Workbench SWT Renderer [org.eclipse.e4.ui.workbench.renderers.swt 0.16.800.v20250519-1609]
+This plugin does not support grabbing the keyboard
+> Start Eclipse Dependency Injection Extensions [org.eclipse.e4.core.di.extensions 0.18.300.v20240413-1529]
+> Start Eclipse CSS SWT Support [org.eclipse.e4.ui.css.swt 0.15.600.v20250409-1135]
+> Start Default Text Editor [org.eclipse.ui.editors 3.20.0.v20250514-1719]
+> Start Text Editor Framework [org.eclipse.ui.workbench.texteditor 3.19.200.v20250530-2221]
+2026-10-29 21:28:34.670 - Configure workbench window
+> Start DBeaver SQL Model [org.jkiss.dbeaver.model.sql 1.0.149.202608181615]
+2026-10-29 21:28:34.837 - Total database drivers: 123 (123)
+> Start Help System Core [org.eclipse.help 3.10.500.v20250423-1201]
+2026-10-29 21:28:34.919 - Create actions
+2026-10-29 21:28:34.929 - Disable Eclipse action set 'org.eclipse.ui.edit.text.actionSet.annotationNavigation'
+2026-10-29 21:28:34.930 - Disable Eclipse action set 'org.eclipse.ui.WorkingSetActionSet'
+2026-10-29 21:28:34.930 - Disable Eclipse action set 'org.eclipse.ui.actionSet.openFiles'
+2026-10-29 21:28:34.930 - Create workbench actions
+2026-10-29 21:28:35.648 - Initialize workbench window
+2026-10-29 21:28:35.655 - Finish initialization
+> Start Equinox Java Authentication and Authorization Service (JAAS) [org.eclipse.equinox.security 1.4.600.v20250607-0038]
+> Start Internet Connection Management UI [org.eclipse.ui.net 1.5.400.v20240413-1529]
+> Start Internet Connection Management [org.eclipse.core.net 1.5.700.v20250523-2309]
+> Start DBeaver UI Editors - Data [org.jkiss.dbeaver.ui.editors.data 1.0.159.202608181615]
+> Start DBeaver UI Editors - SQL [org.jkiss.dbeaver.ui.editors.sql 1.0.159.202608181615]
+> Start DBeaver Sample Database [org.jkiss.dbeaver.ui.config.sample 1.0.196.202608181615]
+2026-10-29 21:28:37.030 - Open [https://dbeaver.io/product/version.xml]
+> Start DBeaver Dashboard UI [org.jkiss.dbeaver.ui.dashboard 1.0.156.202608181615]
+> Start GEF Classic Draw2d [org.eclipse.draw2d 3.20.0.202505280821]
+> Start GEF Classic GEF (MVC) [org.eclipse.gef 3.22.0.202505280821]
+> Start DBeaver ERD UI [org.jkiss.dbeaver.ui.editors.erd 3.1.0.202608181615]
+> Start DBeaver ERD Model [org.jkiss.dbeaver.model.erd 1.1.0.202608181615]
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+ERROR: failed to execute query: Failed to execute sql from file
+       file: inline://delete_orphaned_records (resources)
+       statement: 0
+       error: no such column: "resources" - should this be a string literal in single-quotes? Unable to execute statement
+JavaScript error: , line 0: uncaught exception: Object { message }
+/usr/local/lib/krita-python-libs/krita added to PYTHONPATH
+qt.qml.propertyCache.append: Member focusPolicy of the object SliderSpinBoxManipulator_QMLTYPE_76 overrides a member of the base object. Consider renaming it or adding final or override specifier
+qt.qml.propertyCache.append: Member focusPolicy of the object SliderSpinBoxContentItem_QMLTYPE_75 overrides a member of the base object. Consider renaming it or adding final or override specifier
+qrc:/FontStyle.qml:294:9: QML GroupButton: Binding loop detected for property "icon.color":
+qrc:/FontStyle.qml:302:13
+qrc:/FontStyle.qml:273:9: QML GroupButton: Binding loop detected for property "icon.color":
+qrc:/FontStyle.qml:281:13
+qrc:/TextAlign.qml:269:9: QML GroupButton: Binding loop detected for property "icon.color":
+qrc:/TextAlign.qml:275:13
+qrc:/TextAlign.qml:252:13: QML GroupButton: Binding loop detected for property "icon.color":
+qrc:/TextAlign.qml:260:17
+qrc:/TextAlign.qml:238:13: QML GroupButton: Binding loop detected for property "icon.color":
+qrc:/TextAlign.qml:245:17
+qrc:/TextAlign.qml:225:13: QML GroupButton: Binding loop detected for property "icon.color":
+qrc:/TextAlign.qml:233:17
+qrc:/FontStyle.qml:294:9: QML GroupButton: Binding loop detected for property "icon.color":
+qrc:/FontStyle.qml:302:13
+qrc:/FontStyle.qml:273:9: QML GroupButton: Binding loop detected for property "icon.color":
+qrc:/FontStyle.qml:281:13
+qrc:/TextAlign.qml:269:9: QML GroupButton: Binding loop detected for property "icon.color":
+qrc:/TextAlign.qml:275:13
+qrc:/TextAlign.qml:252:13: QML GroupButton: Binding loop detected for property "icon.color":
+qrc:/TextAlign.qml:260:17
+qrc:/TextAlign.qml:238:13: QML GroupButton: Binding loop detected for property "icon.color":
+qrc:/TextAlign.qml:245:17
+qrc:/TextAlign.qml:225:13: QML GroupButton: Binding loop detected for property "icon.color":
+qrc:/TextAlign.qml:233:17
+qrc:/TextIndent.qml:102:9: QML RowLayout: Binding loop detected for property "height"
+qrc:/TextIndent.qml:102:9: QML RowLayout: Binding loop detected for property "height"
+QObject::disconnect: wildcard call disconnects from destroyed signal of QAction::help_contents
+kf.config.core: Watching absolute paths is not supported "/usr/local/share/color-schemes/KritaDark.colors"
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+kwin_screencast: Failed to connect PipeWire context
+error creating screencast "Failed to connect PipeWire context"
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:29:08.234: Failed to get pidfd for host process 7954: Unable to pidfd from pid 7954: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:7369): xdg-desktop-portal-WARNING **: 21:29:08.234: Failed to get pidfd for host process 7954: Unable to pidfd from pid 7954: No such file or directory
+[7560:102168:1029/212912.294958:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+dbus-daemon[7349]: [session uid=1001 pid=7349] Activating service name='org.freedesktop.portal.Documents' requested by ':1.9' (uid=1001 pid=7375 comm="/usr/local/lib/libexec/xdg-desktop-portal-kde")
+dbus-daemon[7349]: [session uid=1001 pid=7349] Successfully activated service 'org.freedesktop.portal.Documents'
+fuse: unknown option(s): `-o auto_unmount'
+error: fuse init failed: Can't create fuse session
+xdp-kde-file-chooser: Failed to get documents mount point: QDBusError("org.freedesktop.DBus.Error.NoReply", "Message recipient disconnected from message bus without replying")
+dbus-daemon[7349]: [session uid=1001 pid=7349] Activating service name='org.freedesktop.portal.Documents' requested by ':1.9' (uid=1001 pid=7375 comm="/usr/local/lib/libexec/xdg-desktop-portal-kde")
+dbus-daemon[7349]: [session uid=1001 pid=7349] Successfully activated service 'org.freedesktop.portal.Documents'
+fuse: unknown option(s): `-o auto_unmount'
+error: fuse init failed: Can't create fuse session
+dbus-daemon[7349]: [session uid=1001 pid=7349] Activating service name='org.kde.KIOFuse' requested by ':1.9' (uid=1001 pid=7375 comm="/usr/local/lib/libexec/xdg-desktop-portal-kde")
+org.kde.kio.fuse: Failed to set FUSE FD to O_NONBLOCK, falling back to polling
+dbus-daemon[7349]: [session uid=1001 pid=7349] Successfully activated service 'org.kde.KIOFuse'
+xdp-kde-file-chooser: Failed to get fuse remote URL: QDBusError("org.kde.KIOFuse.VFS.Error.RemoteURLNotFound", "The given path does not have a remote URL equivalent: Message recipient disconnected from message bus without replying")
+JavaScript error: , line 0: uncaught exception: Object { message }
+/usr/local/lib/gimp/3.0/plug-ins/script-fu/script-fu terminated: Hangup
+dbus-daemon[7349]: [session uid=1001 pid=7349] Reloaded configuration
+/usr/local/bin/gimp-3.2: terminated: Hangup
+1 XSELINUXs still allocated at reset
+SCREEN: 0 objects of 720 bytes = 0 total bytes 0 private allocs
+DEVICE: 0 objects of 48 bytes = 0 total bytes 0 private allocs
+CLIENT: 0 objects of 480 bytes = 0 total bytes 0 private allocs
+WINDOW: 0 objects of 80 bytes = 0 total bytes 0 private allocs
+PIXMAP: 1 objects of 160 bytes = 160 total bytes 0 private allocs
+GC: 0 objects of 40 bytes = 0 total bytes 0 private allocs
+SYNC_FENCE: 0 objects of 24 bytes = 0 total bytes 0 private allocs
+TOTAL: 1 objects, 160 bytes, 0 allocs
+1 PIXMAPs still allocated at reset
+PIXMAP: 1 objects of 160 bytes = 160 total bytes 0 private allocs
+GC: 0 objects of 40 bytes = 0 total bytes 0 private allocs
+SYNC_FENCE: 0 objects of 24 bytes = 0 total bytes 0 private allocs
+TOTAL: 1 objects, 160 bytes, 0 allocs
+could not connect to wayland server
+(EE)
+Fatal server error:
+(EE) Couldn't add screen
+(EE)
+X connection to :0 broken (explicit kill or server shutdown).
+The X11 connection broke (error 1). Did the X11 server die?
+dbus-daemon[7652]: Reloaded configuration
+[7560:102168:1029/212950.344956:ERROR:google_apis/gcm/engine/connection_factory_impl.cc:484] ConnectionHandler failed with net error: -2
+[7560:101119:1029/212950.357964:ERROR:content/browser/network_service_instance_impl.cc:653] Network service crashed or was terminated, restarting service.
+[7560:101119:1029/212950.446774:ERROR:chrome/browser/ui/webui/ntp/new_tab_ui.cc:54] Requested load of chrome://newtab/ for incorrect profile type.
