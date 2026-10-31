@@ -49,18 +49,19 @@ O **Environment** é o **orquestrador e ponto de entrada** do ecossistema. Ele *
 8. **Padrão Universal de Emissão de UI (`_ui_*`):** Saídas interativas de status ou etapas no Shell (UNIX) e perfis de terminal do Profile (Windows) devem utilizar a biblioteca semântica `_ui_*` (`_ui_step`, `_ui_sub`, `_ui_ok`, `_ui_warn`, `_ui_err`, `_ui_info`, `_ui_banner`). Não use `echo` ad-hoc com emojis sem formatação padronizada.
 9. **Governança de Roadmap & Status:** Cada repositório mantém seu [TODO.md](TODO.md) canônico com matriz de cobertura e backlog.
 10. **Matriz de Shells Suportada:** A automação e scripts visam a matriz: `zsh`, `bash`, FreeBSD `sh` e OpenBSD `ksh`. Interpretadores restritos de recuperação (Debian `dash`, NetBSD `sh`) estão fora de escopo.
-11. **Ciclo Sagrado de Propagação (Bancada -> Git Push -> Git Pull em Produção) & Proibição Absoluta de Cópia Manual:**
+11. **Ciclo Canônico de Propagação (Bancada -> Git Push -> Git Pull em Produção) & Banimento de Cópia Manual:**
     - **Bancada Exclusiva de Edição:** Toda e qualquer alteração de código, scripts ou dotfiles DEVE ser implementada e testada exclusivamente sob a bancada `~/Documents/Environment/<Componente>`.
     - **Validação Local:** Testes sintáticos e quality gates (`make test`, `make ci`, `make audit`) rodam na bancada.
     - **Envio:** Commits e pushes ocorrem na bancada para o repositório upstream no GitHub.
     - **Atualização Canônica em Produção:** Os clones de produção (`/usr/local/share/shell`, `~/.local/share/profile`, `~/.config/profile`, `~/.local/share/vault`, `~/.emacs.d`, `~/.config/nvim`, `~/.vim`) recebem atualizações **exclusivamente via `git pull`** (ou comandos de sincronização canônicos como `upsh`, `uprc`, `uped`, `make update`).
     - **Atenção Crítica aos Links de IA (`~/.gemini/config/`):** Os caminhos `~/.gemini/config/skills` e `~/.gemini/config/rules` são **links simbólicos diretos para o clone de runtime do Profile (`~/.local/share/profile/agents/`)**. NUNCA edite ou crie arquivos nesses caminhos virtuais. Toda e qualquer edição em skills globais ou regras transversais DEVE ser realizada fisicamente na bancada de desenvolvimento (`~/Documentos/Environment/Profile/agents/skills/` e `.../rules/`).
-    - **PROIBIÇÃO ABSOLUTA DE `cp` / `rsync` / EDIÇÃO DIRETA EM PRODUÇÃO:** É TERMINANTEMENTE VEDADO ao agente de IA editar, copiar (`cp`, `rsync`) ou redirecionar arquivos avulsos para os diretórios de produção no SO hospedeiro, mesmo para testes em tempo real ou diagnósticos. Essa prática contamina o controle de versão DVCS, deixa a árvore de produção em estado sujo (_dirty working tree_) e quebra o pipeline de deploy.
+    - **Banimento de `cp` / `rsync` e Edição Direta em Produção:** O agente de IA não deve editar, copiar (`cp`, `rsync`) ou redirecionar arquivos avulsos para os diretórios de produção no SO hospedeiro, mesmo para testes em tempo real ou diagnósticos. Essa prática contamina o controle de versão DVCS, deixa a árvore de produção em estado sujo (_dirty working tree_) e quebra o pipeline de deploy.
     - **Invariante da Produção Imaculada (Zero-Dirty Invariant):** Clones de produção DEVEM manter `git status` 100% limpo a todo momento. Qualquer modificação não comitada encontrada em produção é anômala e deve ser imediatamente revertida (`git restore . && git clean -fd`).
     - **Edição em runtime:** Somente é admitida se o componente não existir no Environment e você não estiver nele.
 12. **Refatoração Sem Legado (Clean-Break / Zero-Cruft Invariant):** O ecossistema é monousuário soberano. Não mantenha shims temporários, wrappers obsoletos ou aliases de transição ao renomear variáveis, comandos ou caminhos. Toda refatoração deve ser direta, atômica e limpa (_clean break_).
 13. **Ambiente Híbrido Host/Guest (FreeBSD Workstation + Bhyve Linux Runtime):** Em estações FreeBSD, o agente de IA (`agy`) opera isolado dentro de uma máquina virtual Debian no Bhyve (`192.168.8.2`), conectada via NFSv3 à `/home/gabrielf` do host com paridade de UID/GID 1001. O agente executa comandos em ambiente Linux nativo (kernel 6.12/GNU), porém seus arquivos de trabalho residem fisicamente no ZFS do FreeBSD. Ao despachar comandos no terminal, utilize ferramentas Linux disponíveis no guest ou faça a demarcação correta ao editar scripts específicos de cada sistema operacional.
-14. **Simetria de Escopo & Não-Assimetria de Subgrupo na Documentação:** Se um comportamento, protocolo ou invariante pertence a todo um grupo de componentes (ex: loaders do Vault, shells suportados, suíte de editores), documente-o no nível do grupo (documento de arquitetura, README do módulo pai ou especificação geral). É proibido registrar uma propriedade universal na descrição de um arquivo ou sub-membro específico como se fosse uma peculiaridade exclusiva dele, sob pena de gerar falsas assimetrias. Um sub-membro só deve receber documentação específica se implementar o comportamento de forma mais especializada, detalhada ou otimizada.
+14. **Simetria de Escopo & Não-Assimetria de Subgrupo na Documentação:** Se um comportamento, protocolo ou invariante pertence a todo um grupo de componentes (ex: loaders do Vault, shells suportados, suíte de editores), documente-o no nível do grupo (documento de arquitetura, README do módulo pai ou especificação geral). É proibido registrar uma propriedade universal na descrição de um arquivo ou sub-membro específico como se fosse uma peculiaridade exclusiva dele, evitando a criação de falsas assimetrias. Um sub-membro só deve receber documentação específica se implementar o comportamento de forma mais especializada, detalhada ou otimizada.
+15. **Taxonomia Tripartite de Comentários:** O código adota estritamente três categorias: 1. Comentários de Sistema = PERMITIDOS (shebangs, pragmas, linters); 2. Comentários Estruturais de 64/32 colunas = PERMITIDOS (cabeçalhos de 64 `-`, seções de 32 caracteres `### ===`, réguas de 64 `=` em `.gitignore`, sem vazamento); 3. Comentários Explicativos/Narrativos = PROIBIDOS em código, configs E blocos de código dentro de Markdowns.
 
 ---
 
@@ -72,8 +73,8 @@ Ao identificar linhas ou artefatos fora dos padrões estabelecidos:
 
 1. **Notificar concisamente** o usuário sobre o ajuste realizado.
 2. **Corrigir a inconformidade**, aplicando o padrão correspondente:
-    - **Comentários Narrativos:** Eliminar comentários óbvios que apenas narram código executável.
-    - **Banners Estruturais:** Ajustar réguas para exatamente 64 hífens no topo ou 32 caracteres com `### ` no corpo.
+    - **Taxonomia Tripartite de Comentários:** Eliminar comentários explicativos óbvios em código, configs e blocos de código em Markdowns, preservando exclusivamente comentários de sistema e delimitadores estruturais (64/32 colunas).
+    - **Banners Estruturais:** Ajustar réguas para exatamente 64 hífens no topo ou 32 caracteres com `### ` no corpo (ou 64 `=` em `.gitignore`).
     - **Portabilidade POSIX:** Substituir bashismos (`[[ ]]`, `&>`, arrays, `source`) por sintaxe estrita POSIX `/bin/sh`.
     - **Shebang Universal:** Garantir sempre `#!/usr/bin/env sh` ou `#!/usr/bin/env python3`.
     - **Sequências ANSI & Escapes:** Não use octais (`\033`, `\001`) para caracteres ou escapes. Use `[ -t 1 ] && echo -n $'\e...'` ou notação hexadecimal (`\x01`, `\x1b`). Octal é exclusivo para permissões POSIX (`chmod 0755`, `chmod 0644`, `umask`).
@@ -87,6 +88,23 @@ Ao identificar linhas ou artefatos fora dos padrões estabelecidos:
     - **Refatoração Sem Legado:** Expurgar aliases obsoletos, variáveis mortas e shims de compatibilidade em renomeações.
     - **Elevação Antifrágil & Shift Seguro:** Usar o bloco explícito `if [ "$(id -u)" -ne 0 ]` para resolução de `ELEVATE` (evitando término fatal sob `set -e` como root) e proteger todo comando `shift` com validação prévia de parâmetros (`[ "$#" -ge N ] && shift N`).
     - **Simetria de Documentação:** Mover regras ou invariantes universais documentadas erroneamente em sub-membros específicos para o documento de arquitetura do grupo correspondente, eliminando falsas assimetrias.
+
+---
+
+## 🚀 Comandos de Verificação Rápida (Quality Gates)
+
+| Comando          | Finalidade Operacional                                                   |
+| :--------------- | :----------------------------------------------------------------------- |
+| `make help`      | Exibe o catálogo de comandos do orquestrador central                     |
+| `make status`    | Exibe o status Git unificado de todos os submódulos e repositórios       |
+| `make audit`     | Executa as suítes de auditoria estática em todos os sub-repositórios     |
+| `make pull`      | Sincroniza e atualiza todos os repositórios federados (`Setup`, `Shell`) |
+| `make sync-docs` | Propaga `ENVIRONMENT.md` e `PRINCIPLES.md` canônicos para os sub-módulos |
+| `make hooks`     | Configura e ativa os ganchos Git em todos os repositórios                |
+| `make ci`        | Executa suíte de validação e testes integrados no ecossistema            |
+| `make install`   | Instala componentes em produção a partir do clone canônico soberano      |
+
+---
 
 ## 📖 Referências Obrigatórias
 

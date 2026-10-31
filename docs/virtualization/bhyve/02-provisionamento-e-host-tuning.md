@@ -22,23 +22,20 @@ As receitas automatizadas deste processo residem em [`Setup/freebsd/container/bh
 
 ## ⚙️ 2. Calibração do Kernel e Governança do ZFS ARC
 
-O OpenZFS moderno no FreeBSD gerencia dinamicamente o ARC em coordenação com o subsistema de memória virtual (VM pager) do kernel. Para evitar contenção entre o ARC e a memória física alocada (_wired memory_) pelo hipervisor, dimensionamos a VM para 2 GB de RAM e desativamos a filtragem de pacotes nas bridges virtuais.
+O OpenZFS moderno no FreeBSD gerencia dinamicamente o ARC em coordenação com o subsistema de memória virtual (VM pager) do kernel. Para evitar contenção entre o ARC e a memória física alocada (_wired memory_) pelo hipervisor, dimensionamos a VM para 1/16 da memória RAM (1 GB em máquina de 16 GB, mantendo 4/16 para ZFS ARC [min 1 GB, max 4 GB] e 11/16 livres para o Host e DRM) e desativamos a filtragem de pacotes nas bridges virtuais.
 
 Configurações persistentes aplicadas em `/etc/rc.conf` e `/etc/sysctl.conf`:
 
 ```sh
-# 1. Habilitar encaminhamento de rede e serviços essenciais no /etc/rc.conf
 sudo sysrc gateway_enable="YES"
 sudo sysrc pf_enable="YES"
 sudo sysrc pf_rules="/etc/pf.conf"
 sudo sysrc vm_enable="YES"
 sudo sysrc vm_dir="zfs:zroot/vm"
 
-# 2. Desativar filtragem do firewall nas interfaces da bridge no /etc/sysctl.conf
 sudo sysrc -f /etc/sysctl.conf net.link.bridge.pfil_member=0
 sudo sysrc -f /etc/sysctl.conf net.link.bridge.pfil_bridge=0
 
-# 3. Aplicar parâmetros de sysctl imediatamente
 sudo sysctl net.link.bridge.pfil_member=0
 sudo sysctl net.link.bridge.pfil_bridge=0
 ```
@@ -52,11 +49,9 @@ A máquina virtual opera no segmento de rede isolado `192.168.8.0/24`. O host Fr
 Regras canônicas em `/etc/pf.conf`:
 
 ```pf
-# Tradução de endereços (NAT) para o segmento da VM Bhyve (192.168.8.0/24)
 match out on re0 inet from 192.168.8.0/24 to any nat-to (re0) round-robin
 match out on wlan0 inet from 192.168.8.0/24 to any nat-to (wlan0) round-robin
 
-# Passagem de tráfego com rastreamento de estado
 pass all flags S/SA keep state
 ```
 
@@ -83,7 +78,7 @@ O template em `/zroot/vm/.templates/debian.conf` padroniza os recursos alocados 
 ```text
 loader="uefi"
 cpu=4
-memory=2G
+memory=1G
 network0_type="virtio-net"
 network0_switch="public"
 disk0_type="virtio-blk"
@@ -91,10 +86,10 @@ disk0_name="disk0.img"
 utctime="yes"
 ```
 
-Criação do volume da VM (4 vCPUs, 2 GB RAM, 16 GB disco ZFS):
+Criação do volume da VM (4 vCPUs, 1 GB RAM, 16 GB disco ZFS):
 
 ```sh
-sudo vm create -t debian -s 16G -m 2G -c 4 debian
+sudo vm create -t debian -s 16G -m 1G -c 4 debian
 ```
 
 ### Instalação Interativa via ISO:
@@ -153,11 +148,9 @@ sudo chown -R 1001:1001 /home/gabriel
 ### Escalonamento Administrativo sem Senha:
 
 ```sh
-# Configurar sudoers
 echo "gabriel ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/gabriel
 sudo chmod 0440 /etc/sudoers.d/gabriel
 
-# Configurar doas
 echo "permit nopass gabriel as root" | sudo tee /etc/doas.conf
 sudo chmod 0400 /etc/doas.conf
 ```
@@ -179,13 +172,8 @@ A integração de diretórios de desenvolvimento utiliza NFSv3 sobre a rede virt
 ### No Host FreeBSD:
 
 ```sh
-# 1. Habilitar daemons NFS no /etc/rc.conf
 sudo sysrc rpcbind_enable="YES" nfs_server_enable="YES" mountd_enable="YES"
-
-# 2. Configurar exportação mapeada para o usuário nativo em /etc/exports
 echo "/home/gabrielf -alldirs -mapall=gabrielf 192.168.8.2" | sudo tee /etc/exports
-
-# 3. Reiniciar daemons de serviço
 sudo service rpcbind start
 sudo service mountd restart
 sudo service nfsd restart
@@ -194,14 +182,9 @@ sudo service nfsd restart
 ### No Guest Debian:
 
 ```sh
-# 1. Instalar suporte ao cliente NFS
 sudo apt update && sudo apt install -y nfs-common
-
-# 2. Criar ponto de montagem com caminhos idênticos ao FreeBSD
 sudo mkdir -p /home/gabrielf
 sudo chown 1001:1001 /home/gabrielf
-
-# 3. Persistir a montagem em /etc/fstab
 echo "192.168.8.1:/home/gabrielf /home/gabrielf nfs rw,soft,intr,nfsvers=3 0 0" | sudo tee -a /etc/fstab
 sudo mount /home/gabrielf
 ```

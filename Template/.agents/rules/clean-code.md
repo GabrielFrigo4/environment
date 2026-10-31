@@ -4,28 +4,25 @@ globs: "**/*"
 always_on: true
 ---
 
-# 🧼 Clean Code & Arquitetura de Comentários
+# 🧼 Clean Code & Taxonomia Tripartite de Comentários
 
-No ecossistema de engenharia de Gabriel Frigo, o código deve ser autoexplicativo, enxuto, determinístico e elegante por construção. Comentários narrativos que parafraseiam o óbvio mascaram complexidade acidental e devem ser evitados.
+No ecossistema de engenharia de Gabriel Frigo, o código deve ser autoexplicativo, enxuto, determinístico e elegante por construção. A política de comentários segue uma taxonomia tripartite estrita e universal.
 
-## 🚫 Diretriz contra Comentários Narrativos
+## 🏛️ A Taxonomia Tripartite de Comentários
 
-- **Evite** inserir comentários explicando "o que" o código faz ou "por que" foi feito no meio de algoritmos, funções ou blocos lógicos.
-- Violações típicas a rejeitar:
-    - `// inicializa a variável de controle`
-    - `// loop para percorrer os itens`
-    - `# verifica se o arquivo existe`
-    - `/* atualiza o estado */`
-- Se um bloco de código parece confuso a ponto de exigir explicação textual, **refatore-o imediatamente**:
-    - Extraia funções puras com nomes semânticos declarativos.
-    - Adote variáveis autoexplicativas (`isCacheValid`, `maxRetryAttempts`).
-    - Torne o fluxo linear e reduza aninhamentos profundos.
+### 1. Comentários de Sistema (PERMITIDOS)
 
-## 🏛️ A Hierarquia Canônica de Comentários em Três Camadas
+Instruções mandatórias e metadados estruturais exigidos pelo sistema operacional, compiladores, interpretadores e ferramentas de análise estática:
 
-Apenas comentários estruturais de delimitação de arquitetura são admitidos em Makefiles, infraestrutura e headers de arquivos:
+1. **Shebang na Linha 1:** `#!/usr/bin/env sh` ou `#!/usr/bin/env python3`.
+2. **Pragmas e Diretivas de Compilação:** Pragmas indispensáveis (`//go:embed`, `//go:build`, `/* @vite-ignore */`, `#pragma once`, `# shellcheck disable=...`, `;;; -*- lexical-binding: t -*-`).
+3. **Frontmatter YAML:** Metadados estruturais delimitados por `---` no topo de documentações ou regras.
 
-1. **Header Banner do Arquivo (Exatamente 64 hífens):**
+### 2. Comentários Estruturais de 64/32 Colunas (PERMITIDOS)
+
+Delimitadores geométricos de arquitetura estritamente padronizados:
+
+1. **Header Banner do Arquivo (Exatamente 64 hífens nas linhas 2-4):**
     ```text
     # ----------------------------------------------------------------
     # Makefile: <Nome do Projeto ou Módulo>
@@ -43,14 +40,28 @@ Apenas comentários estruturais de delimitação de arquitetura são admitidos e
     ### SETUP & GANCHO LOCAL
     ### --------------------------------
     ```
+4. **Seções Estruturais em `.gitignore` (Régua de 64 caracteres com igualdade):**
+    ```text
+    # ================================================================
+    # Operating System Cruft
+    # ================================================================
+    ```
+5. **Regra do Não-Vazamento:** O título da seção DEVE estar estritamente contido no limite de 32 colunas (ou 64 em `.gitignore`), sem parênteses ou caracteres soltos que vazem a régua.
 
-## ⚙️ Exceções Estritas Permitidas
+### 3. Comentários Explicativos/Narrativos (ESTRITAMENTE PROIBIDOS)
 
-Apenas instruções mandatórias para compiladores e interpretadores de sistema são permitidas:
+É expressamente proibido inserir comentários explicando o que o código faz, como faz ou parafraseando lógica algorítmica:
 
-1. **Shebang na Linha 1:** `#!/usr/bin/env sh` ou `#!/usr/bin/env bash`.
-2. **Pragmas de Ferramentas:** Pragmas explicitamente exigidos (`//go:embed`, `//go:build`, `/* @vite-ignore */`, `#pragma once`).
-3. **Frontmatter YAML:** Metadados estruturais em Markdown de documentação ou regras.
+- **Proibição Universal:** Aplica-se a código-fonte executável, scripts utilitários, dotfiles, manifestos de configuração **E TAMBÉM a blocos de código dentro de documentos Markdown**!
+- Violações típicas a rejeitar:
+    - `// inicializa a variável de controle`
+    - `// loop para percorrer os itens`
+    - `# verifica se o arquivo existe`
+    - `/* atualiza o estado */`
+- Se um bloco de código parece complexo a ponto de sugerir explicação textual, **refatore-o imediatamente**:
+    - Extraia funções puras com nomes semânticos declarativos.
+    - Adote variáveis autoexplicativas (`isCacheValid`, `maxRetryAttempts`).
+    - Torne o fluxo linear e reduza aninhamentos profundos.
 
 ## 🚫 Banimento de Notação Octal para Bytes e Escapes ANSI
 

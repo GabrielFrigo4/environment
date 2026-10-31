@@ -1,20 +1,21 @@
-# ==============================================================================
+# ----------------------------------------------------------------
 # Default Behavior & Line Ending Normalization
-# ==============================================================================
+# ----------------------------------------------------------------
 *                 text=auto
 
-# ==============================================================================
+# ================================================================
 # Shell Scripts & Unix Interpreters
-# ==============================================================================
+# ================================================================
 *.sh              text eol=lf
 *.bash            text eol=lf
 *.zsh             text eol=lf
 *.ksh             text eol=lf
 *.fish            text eol=lf
+*.nu              text eol=lf
 
-# ==============================================================================
+# ================================================================
 # Makefiles & Build Systems (GNU, BSD, NMake & Autotools)
-# ==============================================================================
+# ================================================================
 BSDmakefile       text eol=lf
 GNUmakefile       text eol=lf
 [Mm]akefile       text eol=lf
@@ -24,9 +25,9 @@ Makefile.*        text eol=lf
 CMakeLists.txt    text eol=lf
 *.cmake           text eol=lf
 
-# ==============================================================================
+# ================================================================
 # Containers, Jails & Orchestration Recipes
-# ==============================================================================
+# ================================================================
 Dockerfile        text eol=lf
 Dockerfile.*      text eol=lf
 Containerfile     text eol=lf
@@ -36,9 +37,9 @@ Bastillefile      text eol=lf
 Procfile          text eol=lf
 Vagrantfile       text eol=lf
 
-# ==============================================================================
+# ================================================================
 # Source Code & Semantic Diff Drivers
-# ==============================================================================
+# ================================================================
 *.py              text eol=lf diff=python
 *.c               text eol=lf diff=cpp
 *.cpp             text eol=lf diff=cpp
@@ -55,17 +56,31 @@ Vagrantfile       text eol=lf
 *.ts              text eol=lf
 *.jsx             text eol=lf
 *.tsx             text eol=lf
+*.svelte          text eol=lf
+*.el              text eol=lf diff=elisp
+*.lisp            text eol=lf diff=lisp
+*.lua             text eol=lf
+*.vim             text eol=lf
+vimrc             text eol=lf
+*.nix             text eol=lf
+*.typ             text eol=lf
+*.glsl            text eol=lf
+*.vert            text eol=lf
+*.frag            text eol=lf
 *.html            text eol=lf diff=html
 *.css             text eol=lf diff=css
 *.scss            text eol=lf diff=css
 *.sql             text eol=lf
 
-# ==============================================================================
+# ================================================================
 # Documentation, Data & Configuration Files
-# ==============================================================================
+# ================================================================
 *.md              text eol=lf diff=markdown
+*.org             text eol=lf
+*.texi            text eol=lf
 *.tex             text eol=lf diff=tex
 *.bib             text eol=lf
+*.kdl             text eol=lf
 *.json            text eol=lf
 *.yml             text eol=lf
 *.yaml            text eol=lf
@@ -79,18 +94,19 @@ Vagrantfile       text eol=lf
 .gitattributes    text eol=lf
 .editorconfig     text eol=lf
 
-# ==============================================================================
+# ================================================================
 # Windows Environment (Force CRLF)
-# ==============================================================================
+# ================================================================
 *.bat             text eol=crlf
 *.cmd             text eol=crlf
 *.ps1             text eol=crlf
+*.reg             text eol=crlf
 *.sln             text eol=crlf
 *.vcxproj         text eol=crlf
 
-# ==============================================================================
+# ================================================================
 # Lockfiles & Generated Assets (Collapsed in PR Diffs)
-# ==============================================================================
+# ================================================================
 package-lock.json linguist-generated=true -diff
 yarn.lock         linguist-generated=true -diff
 pnpm-lock.yaml    linguist-generated=true -diff
@@ -103,9 +119,9 @@ composer.lock     linguist-generated=true -diff
 *.min.js          linguist-generated=true -diff
 *.min.css         linguist-generated=true -diff
 
-# ==============================================================================
+# ================================================================
 # Documents, E-Books & Office Suites (Binary Protection)
-# ==============================================================================
+# ================================================================
 *.pdf             binary
 *.ps              binary
 *.eps             binary
@@ -122,9 +138,9 @@ composer.lock     linguist-generated=true -diff
 *.ods             binary
 *.odp             binary
 
-# ==============================================================================
+# ================================================================
 # Raster Images, Icons & Design Assets
-# ==============================================================================
+# ================================================================
 *.png             binary
 *.jpg             binary
 *.jpeg            binary
@@ -137,9 +153,9 @@ composer.lock     linguist-generated=true -diff
 *.psd             binary
 *.xcf             binary
 
-# ==============================================================================
+# ================================================================
 # Audio, Video & Typography
-# ==============================================================================
+# ================================================================
 *.mp3             binary
 *.wav             binary
 *.ogg             binary
@@ -155,9 +171,9 @@ composer.lock     linguist-generated=true -diff
 *.woff2           binary
 *.eot             binary
 
-# ==============================================================================
+# ================================================================
 # Archives, Binaries, Databases & Cryptographic Keys
-# ==============================================================================
+# ================================================================
 *.zip             binary
 *.tar             binary
 *.gz              binary
@@ -175,6 +191,8 @@ composer.lock     linguist-generated=true -diff
 *.o               binary
 *.a               binary
 *.pyc             binary
+*.elc             binary
+*.eln             binary
 *.wasm            binary
 *.sqlite          binary
 *.sqlite3         binary
@@ -183,12 +201,17 @@ composer.lock     linguist-generated=true -diff
 *.crt             binary
 *.key             binary
 *.p12             binary
+*.age             binary
+*.gpg             binary
+*.ppk             binary
 
-# ==============================================================================
+# ================================================================
 # Release & Archive Exclusions (git archive)
-# ==============================================================================
+# ================================================================
 .gitattributes    export-ignore
 .gitignore        export-ignore
 .editorconfig     export-ignore
 .github/          export-ignore
 .scripts/         export-ignore
+.agents/          export-ignore
+.githooks/        export-ignore

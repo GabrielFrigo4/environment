@@ -1,0 +1,133 @@
+================================================================================
+🏛️ GUIA DEFINITIVO DE ATUALIZAÇÃO, TUNING E BLINDAGEM DO FREEBSD 15.1
+================================================================================
+Hardware: Intel Core 12ª Geração (Alder Lake-P / Iris Xe Graphics), 16 GB RAM
+Ambiente: KDE Plasma 6 Wayland, OpenZFS, Bhyve Hipervisor, Submódulos Soberanos
+================================================================================
+
+Execute os blocos abaixo no terminal do host FreeBSD como usuário operador (com
+privilégios de elevação doas/sudo configurados).
+
+--------------------------------------------------------------------------------
+PASSO 1: SINCRONIZAÇÃO DE TODOS OS REPOSITÓRIOS (BANCADA E PRODUÇÃO)
+--------------------------------------------------------------------------------
+
+1.1. Atualizar e sincronizar todos os componentes do ecossistema:
+upall
+
+Caso o alias 'upall' não esteja no PATH nesta sessão, execute manualmente:
+cd ~/Documents/Environment
+git pull --recurse-submodules
+git submodule update --init --recursive
+upsh && uprc && uped
+
+1.2. Recarregar o shell canônico interativo:
+resh
+
+--------------------------------------------------------------------------------
+PASSO 2: PROPORÇÃO DE MEMÓRIA 16 PARTES E TUNINGS DE KERNEL SYSCTL
+--------------------------------------------------------------------------------
+Fórmula Proporcional (16 GB RAM):
+- 1/16 VM Bhyve  = 1 GB (min 1 GB, max 2 GB)
+- 4/16 ZFS ARC   = 4 GB (min 1 GB, max 4 GB; max: 4294967296, min: 1073741824)
+- 11/16 Host DRM = 11 GB (livres para KDE Plasma 6, Browsers, Compilações e GPU)
+
+2.1. Executar as receitas canônicas de dimensionamento de ARC e parâmetros de kernel:
+sh ~/Documents/Environment/Setup/freebsd/desktop/system/zfs-arc.sh
+sh ~/Documents/Environment/Setup/freebsd/common/system/sysctl.sh
+
+2.2. Verificar parâmetros ativos em runtime:
+sysctl vfs.zfs.arc.max vfs.zfs.arc.min kern.maxfiles kern.maxfilesperproc kern.ipc.shmmax kern.ipc.shmall
+
+--------------------------------------------------------------------------------
+PASSO 3: BLINDAGEM DE GPU (INTEL GEN 12), VA-API, ISOLAMENTO WI-FI E TTYS
+--------------------------------------------------------------------------------
+Mitigações aplicadas:
+- HuC firmware ativado (compat.linuxkpi.i915_enable_guc="2") para aceleração de vídeo
+- Estados profundos de display e economia desativados (PSR=0, PSR2=0, FBC=0, DC=0)
+- Isolamento automático devd entre cabo Ethernet (re0) e Wi-Fi (wlan0)
+- Teclas Ctrl+Left / Ctrl+Right mapeadas para saltos de palavras no console vt(4)
+
+3.1. Executar as receitas de sistema e console:
+sh ~/Documents/Environment/Setup/freebsd/desktop/system/system.sh
+sh ~/Documents/Environment/Setup/freebsd/desktop/system/ttys.sh
+
+3.2. Instalar bibliotecas de aceleração VA-API (Intel Media Driver iHD):
+sudo pkg install -y multimedia/libva-intel-media-driver multimedia/libva-utils
+
+3.3. Testar a aceleração de hardware VA-API:
+vainfo
+
+--------------------------------------------------------------------------------
+PASSO 4: VIRTUALIZAÇÃO BHYVE SOB DEMANDA (SEM AUTOSTART) E VM DEBIAN 1G
+--------------------------------------------------------------------------------
+Para preservar 11 GB de RAM para o host gráfico, o autostart da VM no boot
+é desativado (vm_list=""), economizando 1 GB de RAM cabeada (wired memory).
+
+4.1. Aplicar a receita de configuração do hipervisor Bhyve:
+sh ~/Documents/Environment/Setup/freebsd/container/bhyve.sh
+
+4.2. Garantir autostart desativado e limite de 1 GB no template e na VM:
+sudo sysrc vm_list=""
+sudo sed -i '' 's/^memory=.*/memory=1G/' /zroot/vm/.templates/debian.conf 2>/dev/null || true
+[ -f /zroot/vm/debian/debian.conf ] && sudo sed -i '' 's/^memory=.*/memory=1G/' /zroot/vm/debian/debian.conf 2>/dev/null || true
+
+4.3. Ciclo de vida da VM sob demanda:
+lx -s       # Iniciar a VM Debian quando for trabalhar com IA ou containers
+lx          # Conectar na VM via SSH (UID/GID 1001 sincronizados)
+lx -c       # Desligar a VM e devolver 1 GB de RAM ao host FreeBSD
+
+--------------------------------------------------------------------------------
+PASSO 5: KDE PLASMA 6, COMPOSITORES, CMAKE, BROWSERS E EWM
+--------------------------------------------------------------------------------
+
+5.1. Otimizações de disco e cache do KDE Plasma 6:
+balooctl6 disable 2>/dev/null || true
+balooctl6 purge 2>/dev/null || true
+
+sudo mkdir -p /usr/local/etc/xdg/plasma-workspace/env
+cat << 'EOF' | sudo tee /usr/local/etc/xdg/plasma-workspace/env/kdevartmp.sh > /dev/null
+#!/usr/bin/env sh
+export KDEVARTMP="/tmp"
+EOF
+sudo chmod 0755 /usr/local/etc/xdg/plasma-workspace/env/kdevartmp.sh
+
+5.2. Instalar a suíte completa de compositores Wayland e gerenciadores X11 leves:
+sudo pkg install -y \
+    x11-wm/openbox \
+    x11-wm/cwm \
+    x11-wm/matchbox-window-manager \
+    x11-wm/sway \
+    x11-wm/labwc \
+    x11-wm/river \
+    x11-wm/cage
+
+5.3. Instalar a suíte de ferramentas CMake completas:
+sudo pkg install -y devel/cmake-core devel/cmake-man devel/cmake-gui
+
+5.4. Instalar navegadores e cliente de correio eletrônico:
+sudo pkg install -y www/firefox www/chromium mail/thunderbird
+
+5.5. Compilar o compositor EWM (Emacs Wayland Manager):
+sh ~/Documents/Environment/Setup/common/editors/ewm.sh
+
+--------------------------------------------------------------------------------
+PASSO 6: SINCRONIZAÇÃO DE DOTFILES E AUDITORIA PÓS-REBOOT
+--------------------------------------------------------------------------------
+
+6.1. Sincronizar dotfiles do Profile com os caminhos canônicos do usuário:
+~/.config/profile/profile.sh sync
+
+6.2. Reiniciar o sistema para aplicar todos os tunables de bootloader e kernel:
+sudo reboot
+
+6.3. Comandos de auditoria imediata após o reinício:
+sysctl vfs.zfs.arc.max vfs.zfs.arc.min kern.maxfiles kern.ipc.shmmax
+sysctl compat.linuxkpi.i915_enable_psr compat.linuxkpi.i915_enable_psr2_sel_fetch compat.linuxkpi.i915_enable_fbc compat.linuxkpi.i915_enable_dc compat.linuxkpi.i915_enable_guc
+dmesg | grep -iE "drmn0|guc|huc"
+sudo vm list
+vainfo
+
+================================================================================
+FIM DO GUIA CANÔNICO FREEBSD 15.1
+================================================================================

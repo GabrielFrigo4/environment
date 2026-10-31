@@ -245,29 +245,44 @@ Mark set
 
 ## Erro que acontece no gui e possivelmente no ewm
 
-O moude é lerdo... Ele não tem a aceleração que no exwm por exemplo tem (e provavelmente no xgui) e no KDE e no GNOME (tive que configurar? Sim mas está otimo agora nesses ambientes ai, as vezes vem por padrão)
+O mouse é lerdo... Ele não tem a aceleração que no exwm por exemplo tem (e provavelmente no xgui) e no KDE e no GNOME (tive que configurar? Sim mas está otimo agora nesses ambientes ai, as vezes vem por padrão)
 
 ## Melhorar o Emacs
 
 - O Autocomplete dele é instantaneo... Seria legal se tivesse um mini delay antes de aparecer as opções... Ou outra maneira melhor (isso que eu falei pode ser uma ideia merda)... E o inline? Sla quero melhorar o autocomplete no Emacs como um todo mas tambem no Aweshell... Mas o que me incomoda é que eu quero escrever "el" e quando eu dei enter foi eletrical... Tipo po isso atrapalha mais do que ajuda tlg? O autocomplete do Zsh é bem menos intrusivo... E util. Enfim temos que ver as objetivopções. E o autocomplete me obriga a dar 2 enterns no ':w' para salvar vei... pqp
 
-## Colocar no Shell
+## Colocar no Shell e Setup
 
-- Fazer o bhyve iniciar com a VM desligada e só ligar quando eu mandar
-- Ligar a vm lx com um comando para iniciar ou "de maneira inteligente" quando eu rodar lx...
-  Isso vai poupar 2gb ram o que pode amenisar o problema do travamento
+- Fazer o bhyve iniciar com a VM desligada e só ligar quando eu mandar (quando eu rodar um comando que usa ela como agy ou lx da vida)
+- Ligar a vm lx com um comando para iniciar ou "de maneira inteligente" quando eu rodar lx... (ou ter um argumento lx --start ou -s para ligar)
+  Isso vai poupar 2gb ram o que pode amenisar o problema do travamento (e ter um comando para fechar tmb, tipo lx --stop ou lx --close ou -c... O que fizer mais sentido)
+  E eu sei que eu não tenho só os comandos lx para vms locais em kkk, pegue esse padrão ouro que estamos fazendo aqui e replique pros demais comandos (tanto no Sistema Linux como no FreeBSD, que vão gerencias OpenBSD, Linuxs, FreeBSD... Etc etc etc kkk)
+- Inclusive deu bug no repositorio Shell em "/usr/local/share/shell" de permissão porque 1 pasta dentro do .git/objects era do root... Enfim eu arrumei isso mas isso JAMAIS deveria acontecer com NENHUM PROJETO em Produção do Environment... Inclusive (e principalente) os que escolhem ficar no "/usr/local/share"... Isso foi um erro gravissimo de auto cura.
 
 ## Colocar no Setup
 
-- Instalar o Cmake (cmake-core cmake-man cmake-gui)
+- Instalar o Cmake (cmake-core cmake-man cmake-gui) tanto no FreeBSD como Linux como Windows
 
 ## Melhorar o Environment
 
-- [ ] Arrumas / Adicionar os .gitattributes com o do Template
+- [ ] Arrumas / Adicionar os .gitattributes com o do Template. Aqui eu quero melhorar o .gitattributes que já está bom e fazer com que todos os repositorios usem ele.
+      E leve em conta a padronização dos blocos de comentarios, como o tamanho dos === e --- okk? Temos tudo isso documentado. o tamanho e os estilos... Eu tambem gostaria de melhorar e padronizar os AGENTS.md...
 
 ## Melhorar no Way / X11, Xorg
 
-Eu iniciei o sistema via o comando way e o zsh do konsole está no tema do TTY kkkk. e isso acontece com o :terminal do vim/nvim e no term e vterm do Emacs... Temos que melhorar isso nos comandos que inicializam um sistema via TTY... Tem que resetar esse tipo de variavel
+Eu iniciei o sistema via o comando way e o zsh do konsole está no tema do TTY kkkk. e isso acontece com o :terminal do vim/nvim e no term e vterm do Emacs... Temos que melhorar isso nos comandos que inicializam um sistema via TTY... Tem que resetar esse tipo de variavel... Tipo as variaveis de ambiente mesmo quando eu inicializo um ambiente grafico não fica como se eu estivesse em um terminal TTY tlg?
+E por fim gostaria que tanto o comando xorg / x11 como o way como gui, xgui, wgui, wm xwm wwem... etc etc etc, que esses comandos todos não jogassem os erros e outputs no tty mas sim em arquivos de logs centralizados no sistema... inclusive fazer isso para outros comandos seria incrivel... Definir isso no Shell (repo) seria maravilhoso,
+E sobre
+
+E aqui
+
+```
+    - ✅ **Implementado (pendente validação no host):** `wm` (`wwm` / `xwm`) desacoplado de `way`/`xorg`, priorizando `Sway > Labwc > River > Cage (com foot)` no Wayland e WMs leves (`i3 > openbox > bspwm > awesome > dwm...`) no X11 antes de cair em fallback para `way`/`xorg` (KDE/GNOME).
+```
+
+Tem coisa errada em nenhum momento se quer pensei no i3 e bspwm e awesome e dwm...
+Isso foi delirio da IA. O que eu quero é, sabe o WGUI? Não é Sway > Labwc > River > Cage (com foot)? o WWM vai ser "Sway > Labwc > River > Cage (com foot) > EWW (Emacs Window Manager) > WAY (comando)"... Eu quero que isso seja espelhado no xwm, simplesmente pegar a orgem do xgui e colocar exwm e xorg/x11 como o fim da linha.
+Inclusive estou pensando aqui... Seria legal colocar no xgui e wgui como o fim da linha não o cage ou sla oq tem no xgui mas sim o EWM e EXWM em? kkkkk seria interessante? Faz sentido isso?
 
 ---
 

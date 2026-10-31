@@ -16,7 +16,7 @@ VERSION     != cat VERSION 2> "/dev/null" || echo "0.1.0-dev"
 ### HELP & DOCUMENTATION
 ### ================================
 help:
-	_e=$$(printf '\033'); \
+	_e=$$'\e'; \
 	cmd() { printf "    $${_e}[36mmake %-22s$${_e}[0m %s\n" "$$1" "$$2"; }; \
 	sec() { printf "\n  $${_e}[1;33m%s$${_e}[0m\n" "$$1"; }; \
 	sub() { printf "  $${_e}[1;34m  ── %s ──$${_e}[0m\n" "$$1"; }; \
