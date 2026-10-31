@@ -70,7 +70,13 @@ Essas diretrizes são de aplicação obrigatória para qualquer modificação ou
     Isso previne o colapso fatal do script por retorno status 1 da substituição de comando `$( [ 0 -ne 0 ] ... )` quando executado nativamente como root.
 - Todo comando `shift` em scripts sob `set -e` deve ser precedido por validação de parâmetros (`[ "$#" -ge N ] && shift N`), prevenindo o término fatal do shell exigido pelo padrão POSIX para utilitários especiais (_special built-ins_) quando `$# < N`.
 
-## 10. Checklist de Validação
+## 10. Taxonomia Tripartite de Comentários & Banners Estruturais
+
+- Comentários Estruturais: cabeçalhos de 64 hífens nas linhas 2-4 (`# ----------------------------------------------------------------`), seções e subseções internas de 32 colunas (`### ================================` e `### --------------------------------`) com títulos estritamente em MAIÚSCULO (sem parênteses ou colchetes e contidos em até 32 caracteres), réguas de 64 sinais de igualdade em `.gitignore` com títulos em MAIÚSCULO.
+- Comentários de Sistema: permitidos exclusivamente para shebangs, pragmas e diretivas essenciais.
+- Comentários Explicativos: não utilize em código, receitas, configs e blocos de código em arquivos Markdown.
+
+## 11. Checklist de Validação
 
 Antes de concluir qualquer modificação no Environment:
 

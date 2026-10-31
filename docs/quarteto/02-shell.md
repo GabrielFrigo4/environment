@@ -73,9 +73,25 @@ A ferramenta avalia:
 
 ## 🪟 Lançadores Gráficos Efêmeros & Sessões Multi-TTY (`gui`)
 
-Uma das inovações mais antifrágeis do Universal Shell é o conceito de **processos gráficos efêmeros por TTY**, eliminando a dependência de Display Managers monolíticos (GDM, SDDM):
+Uma das inovações de resiliência do Universal Shell é o modelo de **processos gráficos efêmeros por TTY**, eliminando a dependência de Display Managers monolíticos (GDM, SDDM):
 
-- **Isolamento por Terminal Virtual:** Permite subir uma sessão gráfica isolada atrelada a um TTY específico via `gui [app]` (Wayland nativo) ou `xgui [app]` (Xorg). Ao fechar a aplicação, o compositor é finalizado e o terminal retorna imediatamente ao prompt de texto limpo.
+### Separação Arquitetural: Quiosque (`gui` / `xgui`) vs Gestão de Janelas (`wm` / `xwm` / `exwm` / `ewm`)
+
+- **Quiosque Mono-Aplicação (`(x/w)gui`):** Focado no ciclo de vida de uma única aplicação principal (`gui firefox`, `xgui gimp`), mantendo suporte transparente a caixas de diálogo modais e subjanelas efêmeras. Ao encerrar o aplicativo, o compositor é descarregado e o terminal virtual retorna imediatamente ao prompt de texto.
+- **Window Management Completo (`(x/w)wm`, `exwm`, `ewm`):** Sessão gráfica persistente por terminal virtual com gerenciador de janelas completo, barra de status modular, menus com tema escuro (Dark Mode Adwaita/Kanagawa) e barramentos D-Bus com isolamento estrito entre diferentes terminais TTY.
+
+### Resolução Antifrágil de Aplicativos
+
+Ao despachar aplicativos gráficos ou utilitários via linha de comando, o lançador percorre uma cascata determinística de resolução:
+`Binário Nativo no PATH` $\rightarrow$ `Flatpak (flatpak run)` $\rightarrow$ `Snap` $\rightarrow$ `AppImage` $\rightarrow$ `/opt/app` $\rightarrow$ `Camadas de Compatibilidade (FreeBSD Linuxulator / VM Bhyve / macOS / MSYS2)`.
+
+### Pipeline Determinístico de Cursores
+
+Para garantir uniformidade visual entre compositores Wayland e servidores X11 sem artefatos gráficos ou cursores invisíveis, o Shell adota uma sequência estrita de resolução de temas de cursor:
+`KDE Plasma (Breeze)` $\rightarrow$ `GNOME (Adwaita)` $\rightarrow$ `MATE` $\rightarrow$ `Cinnamon` $\rightarrow$ `XFCE` $\rightarrow$ `LXQt` $\rightarrow$ `Fallback Padrão do Sistema`.
+
+### Concorrência Multi-Ambiente & Modos de Quiosque
+
 - **Concorrência Multi-Ambiente:** O usuário pode rodar `gui -k firefox` no TTY2 (KDE Plasma), `gui foot` no TTY3 (GNOME Adwaita) e alternar entre eles instantaneamente via `Ctrl+Alt+F*`.
 - **Modo Quiosque Soberano na Tétrade Wayland:**
     - **Sway:** Opera com regras efêmeras de tela cheia automática (`fullscreen enable`), garantindo que novas janelas ocupem o display inteiro sem fatiar o espaço visual em 50/50, com suporte a troca de TTY (`Ctrl+Alt+F*`).

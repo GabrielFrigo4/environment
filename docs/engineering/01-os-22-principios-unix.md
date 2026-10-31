@@ -46,9 +46,14 @@ Executar um script uma vez ou cem vezes consecutivas deve produzir exatamente o 
 
 No terminal interativo, atrasos acima de 100ms são percebidos pelo cérebro humano como lentidão perceptível. O Universal Shell impõe um teto estrito de **64 milissegundos** para inicialização a frio e menos de **16 milissegundos** para renderização de prompt.
 
-### 8. Resiliência e Tolerância a Falhas
+### 8. Resiliência e Tolerância a Falhas (Antifragilidade & Descoberta Multinível)
 
-Scripts devem falhar rápido e de forma inteligível quando pré-requisitos essenciais não forem atendidos, mas devem degradar graciosamente com mensagens claras quando recursos secundários estiverem ausentes.
+Scripts devem falhar de forma inteligível quando pré-requisitos essenciais não forem atendidos, degradando com previsibilidade na ausência de recursos secundários. O ecossistema implementa padrões estruturais de resiliência:
+
+- **Resolução Antifrágil de Aplicativos:** Descoberta em cascata multinível: `Binário Nativo` $\rightarrow$ `Flatpak` $\rightarrow$ `Snap` $\rightarrow$ `AppImage` $\rightarrow$ `/opt` $\rightarrow$ `Camadas de Compatibilidade (Linuxulator no FreeBSD, Bhyve, macOS, MSYS2)`.
+- **Pipeline Determinístico de Cursores:** Resolução determinística para ambientes gráficos Wayland e X11: `KDE Plasma` $\rightarrow$ `GNOME Adwaita` $\rightarrow$ `MATE` $\rightarrow$ `Cinnamon` $\rightarrow$ `XFCE` $\rightarrow$ `LXQt` $\rightarrow$ `Fallback Padrão`.
+- **Separação Arquitetural entre Quiosque e Gestão de Janelas:** Distinção estrita entre `(x/w)gui` (quiosque descartável focado em aplicativo único com suporte a caixas de diálogo e subjanelas) e `(x/w)wm` / `exwm` / `ewm` (window manager completo com barra de status, menu dark mode e barramentos D-Bus isolados por TTY).
+- **Filosofia Dual-Realm em Gestores Modais (EXWM / EWM):** Detecção contextual que preserva comandos de terminal em buffers de shell (`aweshell`, `vterm`) e mapeia atalhos globais em aplicações gráficas X11/Wayland, integrando Clipboard e Primary Selection.
 
 ### 9. Composição em Vez de Acoplamento
 
@@ -104,7 +109,7 @@ Falhas de sistema ou corrupções devem ser contornáveis de imediato via snapsh
 
 ### 20. Coerência Estética e Convenções
 
-Banners superiores padronizados com 64 hífens, seções internas delimitadas a 32 caracteres com `### `, identação de 4 espaços para shell scripts e indentação estrita de Markdown.
+Banners superiores padronizados com 64 hífens (`# ----------------------------------------------------------------`), seções internas delimitadas a 32 caracteres com `### ================================` e `### --------------------------------` com títulos em MAIÚSCULO, réguas de 64 `=` em `.gitignore` com títulos em MAIÚSCULO, identação de 4 espaços para shell scripts e indentação estrita de Markdown.
 
 ### 21. Paridade de Identidade e Permissões
 

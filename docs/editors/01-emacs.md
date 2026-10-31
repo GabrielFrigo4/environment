@@ -1,6 +1,6 @@
 # 🦣 GNU Emacs: Arquitetura Elisp & Carregamento Assíncrono Elpaca
 
-> Governança do GNU Emacs no ecossistema: otimização pré-frame no `early-init.el`, gerenciamento de pacotes assíncrono com Elpaca e testes de integridade headless.
+> Governança do GNU Emacs no ecossistema: otimização pré-frame no `early-init.el`, gerenciamento de pacotes assíncrono com Elpaca, motor de terminal Aweshell e gestão de janelas Dual-Realm.
 
 ---
 
@@ -17,24 +17,16 @@ Para garantir confiabilidade industrial, a configuração rejeita gerenciadores 
 O arquivo `early-init.el` é executado antes da criação da primeira janela gráfica do Emacs. É o local canônico para desativar ruídos visuais e otimizar o coletor de lixo (Garbage Collector):
 
 ```elisp
-;; ================================================================
-;; early-init.el: Otimizações Críticas Pré-Inicialização
-;; ================================================================
-
-;; 1. Elevar o limiar do Garbage Collector durante o boot (128 MB)
 (setq gc-cons-threshold (* 128 1024 1024)
       gc-cons-percentage 0.6)
 
-;; 2. Restaurar limiar sustentável após o boot
 (add-hook 'emacs-startup-hook
           (lambda ()
             (setq gc-cons-threshold (* 16 1024 1024)
                   gc-cons-percentage 0.1)))
 
-;; 3. Desativar package.el legado para priorizar o Elpaca
 (setq package-enable-at-startup nil)
 
-;; 4. Suprimir elementos visuais antes da renderização do frame
 (push '(menu-bar-lines . 1) default-frame-alist)
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars . nil) default-frame-alist)
@@ -47,14 +39,12 @@ O arquivo `early-init.el` é executado antes da criação da primeira janela gr�
 No `init.el`, o bootstrapping do Elpaca garante que dependências sejam resolvidas via Git de forma determinística:
 
 ```elisp
-;; Instalação declarativa via Elpaca + use-package
 (elpaca elpaca-use-package
   (elpaca-use-package-mode)
   (setq elpaca-use-package-by-default t))
 
-;; Exemplo: Configuração do Org-mode
 (use-package org
-  :ensure nil ; Pacote embutido no Emacs
+  :ensure nil
   :config
   (setq org-ellipsis " ▾"
         org-hide-emphasis-markers t
@@ -63,13 +53,34 @@ No `init.el`, o bootstrapping do Elpaca garante que dependências sejam resolvid
 
 ---
 
+## 🐚 Aweshell: Terminal Soberano & Ghost Completion Estilo Zsh
+
+O **Aweshell** (`usr/local/aweshell`) é a extensão de terminal integrado desenvolvida para oferecer paridade 1:1 com a experiência interativa do Universal Shell:
+
+- **Ghost Completion Preditivo:** Motor de predição inline baseado na ordem histórica mais recente, com parada estrita em correspondência exata.
+- **Navegação Híbrida Unificada:** Tecla `<right>` aceita instantaneamente o texto fantasma previsto; tecla `TAB` abre e cicla pelo popup de completação do `company-mode`.
+- **Sincronização de Sessão:** Histórico de comandos persistente e unificado entre sessões de terminal externo e buffers internos do editor.
+
+---
+
+## 🪟 Gestão de Janelas: Filosofia Dual-Realm no EXWM & EWM
+
+O Emacs atua como gerenciador de janelas soberano no X11 (**EXWM**) e no Wayland (**EWM**), implementando a arquitetura **Dual-Realm**:
+
+- **Detecção Contextual Inteligente:** O gerenciador identifica ativamente se o buffer em foco é um emulador de terminal (`aweshell`, `vterm`) ou uma aplicação gráfica externa (X11 / Wayland).
+- **Preservação de Atalhos em Terminal:** Em buffers de terminal, sequências de controle nativas (`Ctrl+C`, `Ctrl+Z`, `Ctrl+R`) são repassadas diretamente ao shell subjacente sem interceptação indesejada pelo window manager.
+- **Ergonomia Global em Apps Gráficos:** Em aplicativos gráficos externos, as teclas de comando global do Emacs assumem controle para manipulação de janelas, splits e chaveamento de workspaces.
+- **Sincronização Bidirecional de Clipboard:** Integração fluida entre o Clipboard X11/Wayland e a Seleção Primária (Primary Selection), garantindo cópia e colagem sem descompasso entre aplicações nativas e o Emacs Kill-Ring.
+- **Isolamento D-Bus Multi-TTY:** Cada instância do EXWM/EWM opera com barramento D-Bus independente atrelado ao terminal virtual correspondente, sem conflitos entre diferentes sessões gráficas simultâneas.
+
+---
+
 ## 🧪 Testes Automatizados Headless (`make test`)
 
 Todo commit no repositório `Editor/Emacs` é submetido ao teste de inicialização não-interativo via Makefile:
 
 ```sh
-# Executar teste de sanidade batch
 emacs --batch -l tests/test-startup.el
 ```
 
-Esse quality gate impede que erros de sintaxe em Elisp ou pacotes quebrados entrem na branch principal do ecossistema.
+Esse quality gate assegura a integridade estrutural e impede regressões sintáticas no ecossistema.
