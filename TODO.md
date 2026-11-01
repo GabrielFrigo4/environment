@@ -45,6 +45,14 @@
 
 ## 📌 Backlog & Próximos Passos
 
+## Xorg/X11 no FreeBSD/Linux e no OpenBSD
+
+Em varios sistemas tipo no Emacs o pipeline de fallback depende do Sistema Operacional...
+E fiquei pensando. No caso do X Window Manager (xwm e o xgui) não seria a mesma logica tipo
+No FreeBSD/Linux já está definido... Mas no OpenBSD ele vem com 3 eu acho baixado por padrão...
+Não é dhr tipo no FreeBSD/Linux termos um pipeline e no OpenBSD termos outro? Tipo o do OpenBSD ser um pipeline mais rico pela naturesa do X11 (Xenocara) nele e no FreeBSD e Linux ser +/- o que temos agora menos o cwm... (ao menos que de para baixar cwm no Linux/FreeBSD... Mas acho que voce entendeu a ideia...)
+A ideia seria semelhante ao pipeline dos browsers no Emacs... Que muda entre Linux, FreeBSD, MacOS, Windows e deveria ter o OpenBSD eu acho... Ou é o mesmo que o FreeBSD nn lembro kkk.
+
 ## Menu no Xorg/X11
 
 Nos submenus com bordar arredondadas fica nessas bordar tipo um resto de retangulo preto... Em todas e quaisquer bordas arredondadas... É como se fosse um fundo retangular preto que fica atras desses submenus que só ficou vizivel porque a borda das quinas são arredondadas (se fossem retangulares retas ficaria escondido)... Tipo os menus dos emacs, do wireshark e etc...
