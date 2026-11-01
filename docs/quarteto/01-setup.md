@@ -23,7 +23,12 @@ O repositório **Setup** é o **braço executor de privilégios** do ecossistema
 
 ```text
 Setup/
-├── common/             # Receitas universais multi-SO (ai/ollama.sh, etc.)
+├── common/             # Receitas universais multi-SO
+│   ├── ai/             # Ollama e aceleração de IA
+│   ├── editors/        # Editores de código (Emacs, Neovim, Vim, Helix, Micro)
+│   ├── graphics/       # Slang, shaders e Vulkan
+│   ├── office/         # Suítes de produtividade (LibreOffice, Collabora)
+│   └── workspace/      # Organização de repositórios e projetos
 ├── freebsd/            # Provisionamento FreeBSD
 │   ├── container/      # Bhyve, Jails, Bastille
 │   ├── desktop/        # DRM, áudio, KDE Plasma 6, ttys.sh, Ly
@@ -41,13 +46,12 @@ Setup/
 
 ## 🔒 O Padrão Canônico de Elevação (`ELEVATE`)
 
-Em conformidade com a evolução antifrágil do ecossistema, o Setup rejeita qualquer emulação de ternário em subshell (`ELEVATE="$(...)"`) sob `set -e`. O bloco explícito canônico garante imunidade contra encerramentos fatais:
+O Setup adota a resolução explícita de `ELEVATE` via condicional POSIX sob `set -eu`, evitando falhas causadas por subshells de teste de comando:
 
 ```sh
 #!/usr/bin/env sh
 set -eu
 
-# Resolução canônica antifrágil de privilégios
 ELEVATE=""
 if [ "$(id -u)" -ne 0 ]; then
     if command -v sudo > "/dev/null" 2>&1; then
@@ -55,22 +59,43 @@ if [ "$(id -u)" -ne 0 ]; then
     elif command -v doas > "/dev/null" 2>&1; then
         ELEVATE="doas"
     else
-        echo "❌ Este script requer privilégios de superusuário (sudo ou doas)." >&2
+        echo "Erro: Privilegios de superusuario necessarios (sudo ou doas)." >&2
         exit 1
     fi
 fi
 
-# Invocação limpa e segura
 $ELEVATE pkg install -y git
 ```
 
 ---
 
+## 📦 Provisão Modular de Escritório e Editores
+
+### Suíte LibreOffice Completa (`common/office/office.sh`)
+
+A receita universal de escritório automatiza a instalação e integração de todos os 6 componentes da suíte LibreOffice:
+
+- **Componentes:** `Writer` (texto), `Calc` (planilhas), `Impress` (apresentações), `Draw` (vetores/diagramas), `Math` (fórmulas) e `Base` (banco de dados).
+- **Plugins VCL e Dark Mode:** Instala os módulos `libreoffice-gtk3` e `libreoffice-gtk4`.
+- **Injeção de Ambiente nos `.desktop`:** Modifica os lançadores em `~/.local/share/applications/` injetando prefixos `env SAL_USE_VCLPLUGIN=gtk3 GTK_THEME=adw-gtk3-dark GTK_APPLICATION_PREFER_DARK_THEME=1`, preservando o tema escuro em qualquer ambiente desktop.
+- **Configuração de Sessão (`environment.d`):** Gera `~/.config/environment.d/gtk-dark.conf` e propaga as variáveis via `systemctl --user set-environment` e `dbus-update-activation-environment`.
+- **Overrides Flatpak:** Aplica `flatpak override --user --env=GTK_THEME=Adwaita:dark` para paridade com aplicações empacotadas.
+
+### Consolidação de Lançador do Emacs (`common/editors/editors.sh`)
+
+A receita de editores padroniza a integração desktop do GNU Emacs:
+
+- **Lançador Único (`emacs.desktop`):** Aponta para `emacsclient --create-frame --alternate-editor="" %F` sob as variáveis de tema escuro `GTK_THEME=adw-gtk3-dark` e `GTK_APPLICATION_PREFER_DARK_THEME=1`.
+- **Ocultação de Entradas Redundantes:** Cria arquivos com `NoDisplay=true` para `emacsclient.desktop`, `emacs-mail.desktop` e `emacsclient-mail.desktop`, prevenindo poluição visual no catálogo de aplicativos.
+- **Editores Adicionais:** Clona e sincroniza repositórios soberanos para Neovim (`~/.config/nvim`), Vim (`~/.vim` e `.vimrc`), Helix (`~/.config/helix`) e Micro com tema Dracula (`~/.config/micro`).
+
+---
+
 ## 🛡️ Auditoria Estática Contínua (`all.py`)
 
-O Setup mantém uma bateria rigorosa de auditorias locais executadas via Python antes de cada commit:
+O Setup mantém uma bateria de auditorias locais executadas via Python antes de cada commit:
 
-- Validação estrita de modo de permissão POSIX (`0755` para scripts).
-- Inspeção de banners visuais com exatamente 64 caracteres.
+- Validação estrita de modo de permissão POSIX (`0755` para scripts executáveis, `0644` para arquivos de configuração e documentação).
+- Inspeção de banners visuais com exatamente 64 caracteres de largura no topo e 32 caracteres em seções.
 - Detecção e eliminação de comandos `shift` sem proteção de contagem `$#`.
 - Verificação de sintaxe de shell através de interpretadores estritos.

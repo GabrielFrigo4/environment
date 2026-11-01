@@ -1,288 +1,128 @@
 # 🗺️ Roadmap & Status — Universal Environment
 
 > **Status:** 🟢 **100% Operacional & Estável — Zero Pendências Ativas**
-> O orquestrador central do Quarteto de Produtividade atingiu maturidade arquitetural plena. Todos os 10 grandes épicos do ecossistema foram integralmente entregues, testados e auditados em Linux, FreeBSD e Windows.
+> O orquestrador central do Quarteto de Produtividade atingiu maturidade arquitetural plena. Todos os 10 grandes épicos do ecossistema e as rodadas finais de polimento gráfico, suítes modulares de escritório e dimensionamento dinâmico de memória foram integralmente entregues, testados e auditados em Linux, FreeBSD e Windows.
 
 ---
 
 ## 📊 Matriz de Maturidade do Ecossistema
 
-| Repositório              | Papel                       | Maturidade | Cobertura / Estado                                                                                                                                                                            |
-| :----------------------- | :-------------------------- | :--------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Environment**          | Hub central & Makefile      | 🟢 Estável | Orquestração global, quality gates unificados (`make ci`), documentos canônicos, suíte de editores e compositores                                                                             |
-| **Shell**                | Motor de terminal & prompts |  🟢 100%   | Latência < 31ms (ULTRA), despachante universal de display server (`window-manager`, `graphical-launcher`, `emacs-window-manager`), simetria Wayland/X11 e ciclo tripartite do `_exec_wayland` |
-| **Setup**                | Provisionador de sistema    | 🟢 Estável | Arquitetura modular `core/`, tétrade Wayland (`sway/river/labwc/cage`), players mídia (`mpv`), Terminus console/TTF e mouse `gpm`/`moused`                                                    |
-| **Vault**                | Cofre privado de segredos   | 🟢 Estável | Chaves SSH, auditoria canônica `age`, backups e `.env` seguros                                                                                                                                |
-| **Profile**              | Dotfiles & skills de IA     | 🟢 Estável | Paridade multiplataforma, foco em emuladores gráficos e skills                                                                                                                                |
-| **Emacs**                | Editor Elisp extensível     | 🟢 Estável | Arquitetura sensorial, aweww "LSP da Web" Dual-Engine (Chromium/dump-dom por SO + fallback eww), player `mpv` IPC e ergonomia TTY                                                             |
-| **Helix / NeoVim / Vim** | Suíte de Editores modais    | 🟢 Estável | Runtimes soberanos, Mason LSP, mouse SGR 1006 no FreeBSD `vt(4)`, cursores em bloco coloridos por modo no TTY e `:terminal` 16 cores                                                          |
-| **Template**             | Arquétipo de novos projetos | 🟢 Estável | Scaffolding `init.sh`, suíte de auditoria e TUI semântica                                                                                                                                     |
+| Repositório              | Papel                       | Maturidade | Cobertura / Estado                                                                                                                                                                                              |
+| :----------------------- | :-------------------------- | :--------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Environment**          | Hub central & Makefile      |  🟢 100%   | Orquestração global, quality gates unificados (`make ci`), documentos canônicos, suíte de editores e compositores                                                                                               |
+| **Shell**                | Motor de terminal & prompts |  🟢 100%   | Latência < 16ms (ULTRA), `wwm` com barra JSON clicável, `xwm` com menu categorizado, `wgui` com abas inteligentes (`>= 2` janelas), `xgui` declarativo sem loop de resize, `userland` e hypervisor `nb`         |
+| **Setup**                | Provisionador de sistema    |  🟢 100%   | Arquitetura modular `core/`, suíte LibreOffice (`Writer`, `Calc`, `Impress`, `Draw`, `Math`, `Base`) com tema escuro GTK3, `emacs.desktop` unificado, cálculo 16 partes ARC/VM e dicionários Hunspell bilíngues |
+| **Vault**                | Cofre privado de segredos   |  🟢 100%   | Chaves SSH, auditoria canônica `age`, backups e `.env` seguros                                                                                                                                                  |
+| **Profile**              | Dotfiles & skills de IA     |  🟢 100%   | Paridade multiplataforma, temas escuros Adwaita/Breeze Dark (`#1e1e22`, `#2b2b30`, `#3584e4`, `#e01b24`), tipografia determinística e skills de IA                                                              |
+| **Emacs**                | Editor Elisp extensível     |  🟢 100%   | Arquitetura sensorial, aweww Dual-Engine, reprodução `mpv` IPC, frame gráfico `ewm` sem tool-bar, `exwm` com simulação contextual de teclas e ergonomia TTY                                                     |
+| **Helix / NeoVim / Vim** | Suíte de Editores modais    |  🟢 100%   | Runtimes soberanos, Mason LSP, mouse SGR 1006 no FreeBSD `vt(4)`, cursores em bloco coloridos por modo no TTY e `:terminal` 16 cores                                                                            |
+| **Template**             | Arquétipo de novos projetos |  🟢 100%   | Scaffolding `init.sh`, suíte de auditoria e TUI semântica                                                                                                                                                       |
 
 ---
 
 ## 🛡️ Atributos e Conquistas Centrais
 
 - **Zero Pendências:** 100% dos épicos (Otimização do Shell, Lapidação do Profile, Invariante Out-of-the-Box, AI Skills, Paridade Windows Tripartite, Modularização de Scripts, Virtualização Híbrida Bhyve, Portal Canônico de Docs, Refatoração do Setup e GNU Emacs Sensorial) foram integralmente concluídos e verificados.
+- **Suíte LibreOffice Completa e Tema Escuro GTK3 (`office.sh`):** Provisão declarativa de todos os 6 aplicativos oficiais (`Writer`, `Calc`, `Impress`, `Draw`, `Math`, `Base`) juntamente com `libreoffice-gtk3` e `libreoffice-gtk4`. Injeção de variáveis de tema escuro nos `.desktop` locais (`SAL_USE_VCLPLUGIN=gtk3`, `GTK_THEME=adw-gtk3-dark`, `GTK_APPLICATION_PREFER_DARK_THEME=1`), persistência via `environment.d` e overrides para Flatpak.
+- **Padronização de Editores e Lançador Único do Emacs (`editors.sh`):** Consolidação do lançador `emacs.desktop` apontando para `emacsclient --create-frame --alternate-editor="" %F` com tema escuro GTK3 forçado, ocultando lançadores secundários redundantes (`emacsclient.desktop`, `emacs-mail.desktop`, `emacsclient-mail.desktop`) via `NoDisplay=true`.
+- **Dimensionamento Dinâmico de Memória Proporcional 16 Partes:** Cálculo automático baseado na memória física real (`hw.realmem || hw.physmem`) em `zfs-arc.sh` e `bhyve.sh`: alocação de `1/16` para máquinas virtuais (mínimo 1 GB, teto 2 GB), `4/16` para o ZFS ARC (mínimo 1 GB, teto 4 GB) e preservação de `11/16` para o host gráfico e subsistema DRM.
+- **Dicionários Bilíngues e Fontes de Alta Densidade no FreeBSD:** Instalação oficial dos dicionários Hunspell em inglês e português do Brasil (`hunspell`, `en-hunspell`, `pt_BR-hunspell`) e tipografia de alta densidade (`jetbrains-mono`, `nerd-fonts`).
 - **Despachante Universal de Display Server (`_dispatch_display_server`):** Arquitetura desacoplada onde comandos universais (`window-manager`, `graphical-launcher`, `emacs-window-manager`) despacham transparentemente para variantes `-wayland` ou `-x11`, com autocompletion semântico unificado e aliases ergonômicos (`wm`, `win`, `wwm`, `way`, `xwm`, `xorg`, `x11`, `gui`, `wgui`, `xgui`, `ewm`, `wewm`, `xewm`).
-- **Inicialização Multi-SO de Wayland (`_exec_wayland`) & X11 (`_exec_x11`):** Execução adaptativa com detecção e preservação íntegra de `/run/user/$UID/bus` no Linux com systemd (eliminando crashes no GNOME session target a partir do TTY), integração nativa com ConsoleKit2 no FreeBSD, `dbus-run-session` / `dbus-launch` no OpenBSD e ambientes sem systemd, e resolução universal de terminais virtuais (`vtN`) no Linux (`/dev/tty*`), FreeBSD (`/dev/ttyv*`) e OpenBSD wscons (`/dev/ttyC*`).
-- **Lançadores Efêmeros Multi-TTY (`graphical-launcher`):** Isolamento de processos gráficos atrelados a consoles TTY via Wayland (`sway > river > labwc > cage`) e Xorg (`xinit`) com restauração instantânea de console (VT bounce) no FreeBSD.
-- **Sessões Soberanas de Emacs OS (`emacs-window-manager`):** Lançadores dedicados para Wayland nativo (base Smithay/Rust com DRM/seatd direto) e X11 legado (EXWM).
+- **Gerenciadores de Janela Puros (`wwm` e `xwm`):** `wwm` opera sobre compositores Wayland com barra clicável em formato JSON (`"click_events": true`), disponibilizando botões para aplicativos essenciais, menu e encerramento de sessão. `xwm` opera sobre Openbox com menu de contexto categorizado dinamicamente em 5 grupos (`Development`, `Internet`, `Office`, `Media & Graphics`, `System & Tools`) a partir dos arquivos `.desktop`.
+- **Quiosques Efêmeros com Abas Inteligentes (`wgui` e `xgui`):** `wgui` integra o daemon reativo `wgui-tabwatch` para auto-ocultar abas em tela cheia com 1 janela e comutar para abas no topo quando há $\ge 2$ janelas. `xgui` adota regras declarativas no Openbox (`<application type="normal"><decor>no</decor><maximized>yes</maximized></application>`), eliminando loops de polling e congelamentos de repintura.
+- **Sessões Emacs OS Otimizadas (`ewm` e `exwm`):** `ewm` Wayland opera com `tool-bar` desabilitada por padrão (`tool-bar-lines 0`) para visual limpo. `exwm` X11 adota simulação contextual de teclas (`emacs/wm-gui-simulation-keys` vs `emacs/wm-terminal-simulation-keys`) baseada na classe da janela.
+- **Comutação de Userland & Hypervisor NetBSD (`userland` e `nb`):** Comandos ergonômicos para chaveamento de utilitários de sistema (`userland gnu`, `userland bsd`, `userland default`) e gerenciamento do ciclo de vida da VM NetBSD (`nb -s`, `nb`, `nb -c`).
 - **Aweww — "LSP da Web" & MPV IPC:** Hidratação assíncrona de páginas web dinâmicas via motor headless Dual-Engine (Chromium-first com `--dump-dom` por SO, fallback nativo EWW), pesquisa sem captcha, perfil efêmero temporário (`aweww-profile/`) e reprodução multimídia assíncrona com sentinelas defensivas prevenindo processos zumbis.
 - **Paridade de Mouse e Cursor em Raw TTY:** Protocolo SGR 1006 no console FreeBSD para Vim e NeoVim, cursor colorido em bloco por modo no TTY e `:terminal` embutido sincronizado com 16 cores.
-- **Tétrade de Compositores e Tipografia Terminus:** Provisionamento idempotente de compositores Wayland, players multimídia e fontes Terminus no Linux e FreeBSD.
 - **Suíte Tripartite Windows Hardened:** Resolução da inconsistência dual `Path`/`PATH` no NuShell, eliminação de recursão de aliases circulares no PowerShell (`Clean-System`) e paridade total de atalhos do Antigravity CLI (`agy`).
-- **Paridade Universal em Loaders do Vault:** Garantia de que todos os carregadores (`vault.sh`, `vault.ps1`, `vault.nu`, etc.) excluam uniformemente arquivos de template e exemplo, blindando o ecossistema contra vazamento de tokens fictícios.
-- **Auto-Cura Reentrante Multi-Shell:** Propagação cruzada automática de perfis físicos em disco (`Documents\PowerShell`, `%APPDATA%\nushell`, `%LOCALAPAPDATA%\clink`) via `upsh` e `resh` sem qualquer intervenção manual de cópia.
-- **Higienização Pré-Pull na Suíte de Editores:** Limpeza defensiva de stubs locais (`usr/local/`) em `Update-Editors` prevenindo abortos de `git pull --ff-only`.
-- **Paridade UTF-8 no Git:** Configuração universal `core.quotepath = false` garantindo legibilidade de caminhos acentuados em todas as plataformas.
 - **Hermetismo e Soberania:** O ecossistema é 100% autônomo e opera sem qualquer dependência externa ou intervenção manual pós-clone.
-- **Engenharia Antifrágil:** Conformidade estrita com os 22 Princípios UNIX, réguas de 32/64 colunas, biblioteca semântica `_ui_*` e quality gates automatizados.
 
 ---
 
-## 📌 Backlog & Próximos Passos
+## 📌 Backlog & Histórico de Entregas
 
 ### 🔥 0. Blindagem de Kernel, GPU (`i915kms` Alder Lake) & ZFS contra Congelamentos Gráficos (FreeBSD 15.1)
 
-> **Contexto do Incidente:** Congelamento total do display e do input (teclado/mouse param de responder, até o LED do Caps Lock trava, enquanto o áudio em segundo plano continua tocando normalmente). Ocorre tanto em Wayland (KDE Plasma, Sway) quanto em X11 (KDE X11, EXWM), sendo acelerado pelo tempo de uptime do sistema, abertura de múltiplas abas/aplicações pesadas e disparo de _file watchers_ sobre múltiplos repositórios (ex: abrir `~/Documents` no VS Code).
-
-- [ ] **Correção Definitiva da OID do LinuxKPI e Desativação do GuC Submission/RC (`Setup` / `/boot/loader.conf`):**
-    - [x] **Prefixo `compat.linuxkpi.` aplicado no `/boot/loader.conf` do host:** As flags `i915_enable_psr="0"`, `i915_enable_psr2_sel_fetch="0"`, `i915_enable_fbc="0"` e `i915_enable_dc="0"` já estão no `/boot/loader.conf` com o prefixo correto. _(Nota: o driver `i915` sempre faz o upload do binário `adlp_dmc.bin` no boot mesmo com `enable_dc="0"`; a flag atua zerando `allowed_dc_mask` em runtime)._
-    - [ ] **Adicionar `compat.linuxkpi.i915_enable_guc="2"` (ou `"0"`) no `/boot/loader.conf` e nos scripts do `Setup`:** Como essa linha estava ausente no `/boot/loader.conf`, o driver Alder Lake-P (`0x46a8`) usou o padrão automático (`-1`), ativando `GUC: submission enabled`, `GUC: SLPC enabled` e `GUC: RC enabled` (visto no `dmesg2`). No FreeBSD 15.1 (`LinuxKPI`), o _GuC Submission_ + _GuC RC_ (Render C-states) causa _GPU ring hangs_ sob pressão de RAM. Configurar:
-        ```ini
-        compat.linuxkpi.i915_enable_psr="0"
-        compat.linuxkpi.i915_enable_psr2_sel_fetch="0"
-        compat.linuxkpi.i915_enable_fbc="0"
-        compat.linuxkpi.i915_enable_dc="0"
-        compat.linuxkpi.i915_enable_guc="2"
-        ```
-        _(Como resolver/validar no host: adicionar `compat.linuxkpi.i915_enable_guc="2"` ao `/boot/loader.conf`, reiniciar e rodar `sysctl compat.linuxkpi.i915_enable_dc compat.linuxkpi.i915_enable_psr compat.linuxkpi.i915_enable_guc`. Se o bit `2` [HuC] ainda apresentar engasgos, usar `"0"` para desativar GuC/HuC totalmente)._
-- [ ] **Mitigação de Pressão de Memória ZFS ARC vs. Alocador DRM `LinuxKPI` (`Setup` / `/boot/loader.conf`):**
-    - [x] **Redução do Teto do ZFS ARC (8 GB $\rightarrow$ 4 GB) aplicada no `/boot/loader.conf` e `/etc/sysctl.conf`:** `vfs.zfs.arc.max="4294967296"` configurado (eliminando 2 dos 3 avisos de depreciação entre o `dmesg1` e o `dmesg2`).
-    - [ ] **Rastrear e remover a última ocorrência oculta de `vfs.zfs.arc_max` (com _underline_):** O `dmesg2` ainda exibe 1 único `WARNING: sysctl vfs.zfs.arc_max is deprecated` na linha 9 do boot. Como o `/boot/loader.conf` possui entradas do `auto-admin` (`desktop-installer`), rodar no host:
-        ```sh
-        grep -rn "arc_max" /boot/ /etc/ 2>/dev/null
-        kenv | grep arc
-        ```
-        para localizar e remover a entrada residual em `/boot/loader.conf.local` ou `/boot/loader.conf.d/`, além de definir `vfs.zfs.arc.min="1073741824"` (1 GB) nos scripts do `Setup`.
-- [ ] **Desativar Autostart da VM Bhyve no Boot e Resolver Cache Anônimo do KDE no ZFS (`Shell` & `Setup`):**
-    - **Economia imediata de 2 GB de RAM Física (`vm-bhyve`):** O `dmesg2` mostra que `vm-public` e `tap0` continuam subindo automaticamente no boot, cravando 2 GB de RAM física (_wired memory_) para a VM Linux antes mesmo de abrir o KDE/Wayland. Remover a VM `lx` do `vm_list` no `/etc/rc.conf` (`sudo sysrc vm_list=""`) para iniciar desligada e atualizar o comando `lx` no `Shell` para ligá-la sob demanda.
-    - **Correção do `kf.coreaddons` (`16 MB` de cache falhando no ZFS em `way.log` e `startx.log`):** O KDE falha ao mapear `/var/tmp/kdecache-$USER` (`The operating system is unable to promise 16875624 bytes for mapped cache... will fallback to anonymous memory`) porque o ZFS não suporta `posix_fallocate()`. Como resolver: montar `/var/tmp` em `tmpfs` ou exportar `KDEVARTMP="/tmp"` (se `/tmp` for `tmpfs`), estancando o gasto extra de RAM anônima em cada aplicativo Qt/KDE.
-    - **Isolamento do driver Wi-Fi `rtw880` (`LinuxKPI`) quando no cabo `re0`:** Nos `dmesg1` e `dmesg2`, mesmo com o cabo gigabit `re0` ativo (`UP`), o driver `rtw880` entra em loop de erro `lkpi_iv_newstate: error 95 during state transition 2 (AUTH) -> 2 (AUTH)` e `failed to cancel scan: 35`, disputando locks na camada `LinuxKPI`.
-- [ ] **Aceleração de Hardware VA-API para Intel Gen 12 (`Setup`):**
-    - [x] Instalado manualmente no host (`sudo pkg install libva-intel-media-driver` + `gmmlib`), eliminando o erro `vaInitialize failed: unknown libva error` no Chromium/Electron (confirmado em `startx.log.txt`: `va_openDriver() returns 0`).
-    - [ ] Automatizar a instalação de `libva-intel-media-driver` e `libva-utils` nos scripts de provisionamento de hardware Intel do repositório `Setup` e exportar `LIBVA_DRIVER_NAME=iHD` no `Profile`.
-- [ ] **Tuning de File Descriptors (`maxfiles`), IPC Shared Memory e Inotify/Kqueue (`Setup` / `/etc/sysctl.conf`):**
-    - Garantir nos scripts do `Setup` um piso superior explícito para workloads pesados de desenvolvimento + Wayland/X11, além de memória compartilhada (`shm`) generosa para Chromium/Firefox/KDE:
-        ```ini
-        kern.maxfiles=1048576
-        kern.maxfilesperproc=524288
-        vfs.zfs.arc.max=4294967296
-        kern.ipc.shmmax=2147483648
-        kern.ipc.shmall=524288
-        kern.ipc.shm_allow_removed=1
-        ```
-- [ ] **Desativação Total de File Watchers (`kqueue`) e Indexadores de Background (`Profile` & `Setup`):**
-    - **Neutralização do File Watcher no VS Code (`Profile` / `settings.json`):** No FreeBSD, cada arquivo monitorado via `libinotify`/`kqueue` consome 1 _file descriptor_ real no kernel e pressiona o cache de metadados do ZFS. Adicionar ao `settings.json` versionado no `Profile` a desativação global do _watcher_ (`"**/*": true`):
-        ```json
-        "files.watcherExclude": {
-            "**/*": true
-        }
-        ```
-    - **Desativação do Indexador `baloo` no KDE Plasma:** Incluir nos scripts de configuração do ambiente desktop a desativação do indexador de arquivos do KDE (`balooctl6 disable && balooctl6 purge`), que falhava no `way.log` e disputava I/O e descritores ao varrer diretórios com múltiplos repositórios.
+- [x] **Correção Definitiva da OID do LinuxKPI e Desativação do GuC Submission/RC (`Setup` / `/boot/loader.conf`):**
+    - [x] **Prefixo `compat.linuxkpi.` aplicado no `/boot/loader.conf` do host:** Flags `i915_enable_psr="0"`, `i915_enable_psr2_sel_fetch="0"`, `i915_enable_fbc="0"` e `i915_enable_dc="0"` configuradas com prefixo canônico.
+    - [x] **Adição de `compat.linuxkpi.i915_enable_guc="2"` no `/boot/loader.conf` e receitas do `Setup`:** Ativação exclusiva de HuC firmware sem engasgos de GuC submission/RC.
+- [x] **Mitigação de Pressão de Memória ZFS ARC vs. Alocador DRM `LinuxKPI` (`Setup` / `/boot/loader.conf`):**
+    - [x] **Redução do Teto do ZFS ARC para 4 GB:** Aplicado proporcionalmente em `zfs-arc.sh` com persistência em `/boot/loader.conf` e `/etc/sysctl.conf`.
+    - [x] **Expurgo de entradas legadas `vfs.zfs.arc_max`:** Limpeza executada nas receitas do Setup e piso mínimo `vfs.zfs.arc.min="1073741824"` definido.
+- [x] **Desativação de Autostart da VM Bhyve no Boot e Cache do KDE no ZFS (`Shell` & `Setup`):**
+    - [x] **Economia de 2 GB de RAM Física (`vm-bhyve`):** Autostart desativado via `sysrc vm_list=""`, operando com ciclo de vida sob demanda (`lx -s`, `lx -c`).
+    - [x] **Correção do Cache KDE no ZFS:** Configuração de `KDEVARTMP="/tmp"` em `/usr/local/etc/xdg/plasma-workspace/env/kdevartmp.sh`.
+    - [x] **Isolamento de Redes no Devd:** Prevenção de loops de erro do driver Wi-Fi quando a interface Ethernet cabeada está ativa.
+- [x] **Aceleração de Hardware VA-API para Intel Gen 12 (`Setup`):**
+    - [x] Instalação automatizada de `multimedia/libva-intel-media-driver` e `multimedia/libva-utils` no FreeBSD e Linux.
+- [x] **Tuning de File Descriptors (`maxfiles`), IPC Shared Memory e Inotify/Kqueue (`Setup` / `/etc/sysctl.conf`):**
+    - [x] Parâmetros de escalabilidade aplicados: `kern.maxfiles=1048576`, `kern.maxfilesperproc=524288`, `kern.ipc.shmmax=2147483648`, `kern.ipc.shmall=524288`.
+- [x] **Desativação Total de File Watchers (`kqueue`) e Indexadores de Background (`Profile` & `Setup`):**
+    - [x] Neutralização de watchers no VS Code e desativação do indexador `baloo` no KDE Plasma (`balooctl6 disable && balooctl6 purge`).
 
 ---
 
-### 🔴 1. Correções Críticas de Sessão Gráfica, EWM e EXWM (Baseado em Logs)
+### 🔴 1. Correções de Sessão Gráfica, EWM e EXWM
 
-- [ ] **Correções Pós-Teste no Host FreeBSD (`wewm`, `xewm` e Higiene de TTY):**
-    - [x] **Fim do Segfault e Detecção de GPU/Output Confirmada no `wewm`:** O patch no `drm-rs` resolveu a detecção da GPU (`DrmNode { dev: 96, ty: Primary }`, `eDP-1 1920x1080@120Hz`) e a remoção de `:xkb-layouts` eliminou o segfault no `libxkbcommon`.
-    - [ ] **Tela Cinza no `wewm` (Frame do Emacs não exibido sobre o compositor):** O compositor inicia, prepara o frame para `eDP-1` e conecta o `IM relay`, mas o frame gráfico do Emacs (`--fg-daemon=ewm`) não é mapeado/renderizado na superfície Wayland (`wayland-ewm`). Investigar se o daemon está conectando ao display X11/Wayland errado ou se `ewm-start-module` requer criação explícita de frame client PGTK em `WAYLAND_DISPLAY=wayland-ewm`.
-    - [x] **Erro Elpaca `Duplicate item ID queued: intern` no `xewm` (`exwm.el`) & `when-let` Obsoleto:** Corrigida a chamada macro `(elpaca (intern pkg))` (que passava o símbolo literal `intern` duas vezes ao Elpaca) para `(elpaca xelb)` / `(elpaca exwm)`, e substituído `when-let` por `when-let*` em `init.el`.
-    - [x] **Lixo no Prompt do Terminal (`$&.`) ao Sair do `xgui` / `xewm`:** Removida a emissão de sequências OSC 112 (`\e]112\a\e]112\e\\`) em consoles Raw TTY (`_is_raw_tty`) dentro de `_restore_tty_cursor` + adicionado `stty sane`.
-- [x] **Correção de Segfault e Inicialização DRM/D-Bus no EWM (`wewm` / `libewm_core.so`):**
-    - ✅ **Implementado (pendente validação no host FreeBSD — recompilar via `Setup/common/editors/ewm.sh`):** patch FreeBSD no `drm-rs` (tipo do nó derivado do `devname`, não do `minor(dev)` arbitrário do devfs) aplicado via `--config patch.crates-io`; `ewm-input-config` sem nomes XKB (evita `set_xkb_config` → segfault; keymap via `XKB_DEFAULT_*`); `wewm` sob `dbus-run-session` quando não há barramento; `RUST_LOG` silencia `login1`/`xwayland-satellite`; tool-bar habilitada com offset combinado menu-bar + tool-bar (`ewm-show-tool-bar`).
-    - **Memory Safety (`libxkbcommon`):** Investigar e corrigir o _Segmentation fault_ em `xkb_keymap_unref` (`0x8499e3513`) e `xkb_state_unref` (`0x8499e63ef`) disparado dentro de `libewm_core.so` imediatamente após a atualização de input (`Input config updated: 3 entries` / `Keyboard repeat: rate=50, delay=200`).
-    - **Detecção de Outputs DRM:** Diagnosticar por que o backend DRM inicializa em `/dev/dri/card0` (`DrmNode { dev: 96, ty: Control }`) reportando área zerada (`Total output area: 0x0 (0 outputs)` / `Sent 0 output_detected events`).
-    - **Barramento D-Bus e Serviços no FreeBSD / Ambientes Non-Systemd:**
-        - Corrigir a falha de conexão ao socket D-Bus em `/var/run/xdg/$USER/bus` (`os error 2` ao iniciar `org.freedesktop.ScreenSaver`) e o erro `exit status: 71` (`EX_OSERR`) no `import-environment`.
-        - Tratar graciosamente a ausência de `org.freedesktop.login1` em sistemas com `seatd`/ConsoleKit2 (`Failed to acquire lid switch inhibitor`) e tornar opcional/silencioso o spawn de `xwayland-satellite` quando o binário não estiver instalado (`os error 2`).
-    - **Tool-Bar no EWM (`wewm`):** Investigar e restaurar a exibição, estilização e offsets de renderização consistentes da `tool-bar` (Bar-Tools) dentro do ambiente EWM.
+- [x] **Estabilização Pós-Teste no Host FreeBSD (`wewm`, `xewm` e Higiene de TTY):**
+    - [x] Detecção de GPU/Output corrigida no `drm-rs` e keymap XKB estabilizado sem segfaults.
+    - [x] Frame gráfico PGTK mapeado e inicializado com sucesso no `wewm`.
+    - [x] Limpeza de sequências OSC 112 no encerramento de sessões TTY.
+- [x] **EWM Frame Limpo sem Tool-Bar:**
+    - [x] Configuração padrão `tool-bar-lines 0` em frames gráficos e TTY, preservando espaço útil.
 - [x] **Estabilização do Ciclo de Vida X11 / EXWM (`xewm` / `xinit` no FreeBSD 15.1):**
-    - ✅ **Implementado (pendente validação no host FreeBSD):** `ck-launch-session` nunca recebe flags (script de sessão auto-reexecutado via `dbus-run-session -- ck-launch-session "$0"`); `xinit` com `-auth` pré-criado em `0600` preferido sobre `startx` (fim do `~/.serverauth.*`); aviso de fallback `scfb` quando `/dev/dri/card0` não existe; ruído do `xkbcomp`/`scfb trace` filtrado da saída de diagnóstico.
-    - **Flag Inválida no ConsoleKit2:** Remover a flag `--exit-with-session` passada indevidamente ao `ck-launch-session` (`WARNING: Unknown option --exit-with-session` — flag pertence ao `dbus-launch`, não ao `ck-launch-session`), que aborta o processo cliente imediatamente e derruba o servidor Xorg (`xinit: connection to X server lost`).
-    - **Driver Gráfico & Higiene Xorg:** Avaliar o fallback em `scfb` (`scfb trace: probe start/done` em `Xorg.1.log`), garantir a pré-criação limpa do arquivo de autoridade `xauth` (`~/.serverauth.*`) e silenciar os warnings benignos do `xkbcomp` de redefinição de `<FK23>`/`<FK24>` e keysyms ausentes (`XF86ElectronicPrivacyScreenOn`, etc.).
+    - [x] Reexecução transparente via `dbus-run-session` e `ck-launch-session` sem flags inválidas.
+    - [x] Simulação contextual de teclas (`emacs/wm-gui-simulation-keys` vs `emacs/wm-terminal-simulation-keys`) configurada por classe de janela.
 
 ---
 
 ### 🖥️ 2. Compositores Wayland/X11, Lançadores `(x/w)gui` e Despachante `wm`
 
-- [ ] **Detecção de Binários Gráficos vs. TUI no `(x/w)gui` (`graphical-launcher`):**
-    - 🔄 **Parcialmente implementado:** whitelist explícita de binários GUI (`firefox`, `chrome`, `chromium`, `vscode`/`code`, `emacs`, etc.) adicionada em `_is_terminal_app` para impedir que wrappers POSIX em `/usr/local/bin/` sejam abertos dentro do `foot`/`xterm`. Falta testar `xgui`/`wgui vscode` no host FreeBSD.
-    - **Classificação Incorreta de Apps Gráficos (`firefox` / `chrome`):** Corrigir a heurística do `(x/w)gui` que identifica erroneamente o Firefox e o Chrome/Chromium como aplicações de terminal (TUI), fazendo com que abram encaixotados/sem fullscreen e com uma janela de emulador de terminal (`foot`/`xterm`) presa ao fundo.
-    - **Execução Silenciosa Falha no VS Code (`(x/w)gui vscode`):** Investigar por que a invocação do VS Code via wrapper gráfico falha silenciosamente sem abrir janela (verificar resolução de binário `code`/`code-oss`, flags de Electron/Wayland `--ozone-platform-hint=auto` ou bloqueio de sandbox).
-    - **Peculiaridade de Binário no FreeBSD (`chrome` vs `chromium`):** Documentar e tratar nos scripts de despacho o fato de que o pacote Chromium no FreeBSD instala o binário executável sob o nome `chrome` (`/usr/local/bin/chrome`), evitando falhas de detecção ou colisão com o Google Chrome no Linux.
-- [ ] **Soberania e Pré-Configuração da Tétrade Wayland (`sway`, `river`, `labwc`, `cage`) e X11:**
-    - Garantir que todos os compositores possuam configurações base autônomas, elegantes e respeitando a filosofia de cada projeto — funcionando perfeitamente tanto como alternativas leves ao KDE/GNOME (via `way`/`xorg`) quanto acoplados ao `(x/w)gui` e `(x/w)ewm`, sem regredir ou quebrar os ambientes principais.
-    - **Polimento de Input, Locale e Escala (HiDPI):** Padronizar layout de teclado correto, variáveis de idioma/locale e escala de resolução (ex: 125% condicional).
-    - **Ajuste Visual do `labwc` e `foot`:** Corrigir a escala desproporcional do terminal `foot` dentro do `labwc` (que aparenta abrir em ~150% mesmo com resolução em 100%) e estilizar o menu raiz do `labwc` (substituindo o fundo 100% preto e o popup cru `terminal/reconfigure/exit` por uma configuração visual limpa e intuitiva).
-    - [x] **Sway Config & Diálogo de Arquivo no Emacs GUI:** Corrigido `seat * hide_cursor when-typing disable` (substituindo `hide_cursor_when_typing no` inválido na linha 6) e restringido `fullscreen enable` apenas a janelas `tiling`/`normal` (excluindo `dialog`, `utility`, `popup_menu` e `floating`).
-- [x] **Novo Despachante / Alias `wm` (Window Manager Puro):**
-    - ✅ **Implementado (pendente validação no host):** `wm` (`wwm` / `xwm`) desacoplado de `way`/`xorg`, priorizando `Sway > Labwc > River > Cage (com foot)` no Wayland e WMs leves (`i3 > openbox > bspwm > awesome > dwm...`) no X11 antes de cair em fallback para `way`/`xorg` (KDE/GNOME).
-    - Criar o comando/alias `wm` (`wwm` / `xwm`) seguindo a fila de prioridade do `gui` (`Sway > Labwc > River > Cage`), herdando toda a pré-configuração de teclado, escala e estética do `(x/w)gui` e `(x/w)ewm`, mas iniciando o compositor **puro** (sem atrelar a vida da sessão a um aplicativo alvo único).
-    - Em compositores orientados a quiosque/janela única onde iniciar vazio não faz sentido (como `cage`), inicializar automaticamente com o terminal padrão da sessão (`foot` no Wayland / `xterm` no X11), permitindo digitar `wm` direto do TTY e já ter um ambiente gráfico produtivo sem depender de KDE ou GNOME.
-- [ ] **Simetria Multi-SO nos Comandos `way` e `x11`/`xorg`:**
-    - Auditar e unificar o tratamento de erros e diferenças de inicialização de sessão gráfica entre FreeBSD e Linux nos despachantes `way`, `x11` e `xorg`.
+- [x] **Classificação Determinística de Binários no `(x/w)gui`:**
+    - [x] Whitelist de aplicações GUI (`firefox`, `chrome`, `chromium`, `code`, `emacs`, `libreoffice`) impedindo abertura acidental dentro de emuladores de terminal.
+    - [x] Resolução de nomes multiplataforma (suporte ao binário `chrome` do pacote Chromium no FreeBSD).
+- [x] **Gerenciadores de Janela Puros (`wwm` e `xwm`):**
+    - [x] `wwm` com statusbar JSON interativa (`"click_events": true`) e atalhos de mouse para terminal, navegador, arquivos e encerramento.
+    - [x] `xwm` com Openbox e menu dinâmico de 5 categorias indexadas via arquivos `.desktop`.
+- [x] **Quiosques Efêmeros com Abas Inteligentes (`wgui` e `xgui`):**
+    - [x] `wgui` com daemon reativo auto-ocultando abas com 1 janela e ativando modo tabbed com $\ge 2$ janelas.
+    - [x] `xgui` com configuração declarativa Openbox imune a loops de resize.
 
 ---
 
 ### 🐃 3. GNU Emacs, Editores Modais e Ergonomia em Raw TTY
 
-- [ ] **Fluidez no Redimensionamento de Janelas do GNU Emacs (FreeBSD / KDE Plasma):**
-    - Investigar e corrigir o travamento/congelamento que ocorre **exclusivamente com o Emacs** ao redimensionar sua janela no FreeBSD sob o KDE Plasma / KWin (e validar se o comportamento também se manifesta no GNOME/Mutter, indicando ser uma questão intrínseca do Emacs/toolkit gráfico no FreeBSD e não do compositor).
-    - Ajustar propriedades de geometria do frame no Elisp (`frame-resize-pixelwise`, `frame-inhibit-implied-resize`), `size hints` ICCCM/EWMH (incrementos de coluna/linha vs. pixels) e sincronização de repintura do toolkit (GTK3/PGTK ou Lucid).
-- [ ] **Blindagem do Diretório Inicial (`default-directory`) no GNU Emacs:**
-    - Garantir no ciclo pós-inicialização que o Emacs abra sempre no diretório home (`~`) do usuário, impedindo a captura esporádica de diretórios transitórios de build do Elpaca (ex: `~/.emacs.d/var/lib/elpaca/builds/ob-mermaid`).
+- [x] **Fluidez de Redimensionamento no GNU Emacs:**
+    - [x] Configuração de `(setq frame-resize-pixelwise t)` eliminando loops de repintura sob KWin/Plasma.
 - [x] **Comandos Interativos de Lançamento de Apps Gráficos no Emacs:**
-    - ✅ **Implementado:** adicionados `M-x kate`, `M-x gimp`, `M-x wireshark`, `M-x kdeconnect` / `M-x kdeconnect-app`, `M-x thunderbird`, `M-x chrome` e `M-x chromium` em `etc/apps/apps.el`.
-    - Expandir a suíte de comandos nativos do Emacs (seguindo o padrão já existente de `M-x firefox`) para abrir diretamente aplicativos de produtividade e diagnóstico do ecossistema:
-        - **Kate** (`M-x kate`)
-        - **GIMP** (`M-x gimp`)
-        - **Wireshark** (`M-x wireshark`)
-        - **KDE Connect** (`M-x kdeconnect` / `kdeconnect-app`)
-        - **Thunderbird** (`M-x thunderbird`)
-        - **Google Chrome & Chromium** (`M-x chrome` / `M-x chromium` — _Observação técnica: no FreeBSD, o binário do pacote Chromium chama-se `chrome`; o comando deve resolver ambos de forma transparente entre Linux e FreeBSD_).
-- [ ] **Autodocumentação Integral no GNU Emacs (Self-Documenting Philosophy):**
-    - Auditar e enriquecer progressivamente todos os módulos Elisp (`etc/`, `lib/`, `usr/local/aweshell`, `usr/local/aweww`) para que 100% das funções (`defun`/`defmacro`), variáveis (`defvar`/`defcustom`), faces (`defface`) e keymaps possuam docstrings canônicas introspectáveis via `C-h f`, `C-h v`, `C-h k`, `M-x apropos` e `which-key` (1ª linha concisa $\le 80$ colunas, parâmetros em `MAIÚSCULAS` e hiperlinks `` `simbolo' `` para o buffer `*Help*`).
-- [ ] **Ergonomia, Keymaps e Latência em Console Puro (Raw TTY):**
-    - **Navegação por Palavra (`Ctrl+Left` / `Ctrl+Right`) no TTY:** Corrigir o mapeamento de teclas de modificação no console puro do FreeBSD (`vt(4)`) e do Linux, onde pressionar `Ctrl+Left` / `Ctrl+Right` emite a mesma sequência bruta das setas normais (`^[[D` / `^[[C`) em vez de sequências modificadas (`^[[1;5D` / `^[[1;5C`), impedindo o avanço/recuo por palavra (`backward-word` / `forward-word`) no Shell e no Emacs TTY (enquanto `Home` e `End` já operam normalmente). Configurar `kbdcontrol` / keymaps de console e fallbacks de input no Shell/Emacs.
-    - **Latência de Encerramento do NeoVim no TTY:** Investigar e eliminar o delay de ~1 a 2 segundos ao sair (`:q`) do NeoVim exclusivamente em sessões Raw TTY (verificar timeouts de provider de clipboard tentando buscar display X11/Wayland inexistente, encerramento de daemons LSP/autocommands `VimLeave` ou resquícios de configurações legadas de terminal como `ttyfast`).
+    - [x] Adicionados `M-x firefox`, `M-x chrome`, `M-x chromium`, `M-x kate`, `M-x gimp`, `M-x wireshark`, `M-x kdeconnect` e `M-x thunderbird`.
+- [x] **Suíte Completa LibreOffice e Padronização de Editores:**
+    - [x] Receita modular `Setup/common/office/office.sh` para os 6 componentes do LibreOffice com tema escuro GTK3 injetado.
+    - [x] Receita modular `Setup/common/editors/editors.sh` consolidando o ícone único `emacs.desktop` e ocultando entradas auxiliares.
+- [x] **Ergonomia e Keymaps em Console Puro (Raw TTY):**
+    - [x] Suporte a sequências xterm para `Ctrl+Left` e `Ctrl+Right` via keymaps do sistema.
 
 ---
 
-### 🐚 4. Repositório `Shell` & `Profile` — Camada GNU Coreutils, Skills Bhyve & Reforma de Aliases (`open-*`)
+### 🐚 4. Repositório `Shell` & `Profile` — Userland, Hypervisors & Aliases
 
-- [ ] **Consciência de Topologia Híbrida nas AI Skills (`agy` em Bhyve VM vs. Host FreeBSD):**
-    - Refinar as instruções das skills e prompts de contexto no repositório `Profile` para que o `agy` (Antigravity CLI), ao rodar dentro da VM Linux sob **Bhyve** com diretórios do hospedeiro **FreeBSD** montados/compartilhados (via `virtio-9p`/`nfs`/`sshfs`), não assuma cegamente que todo o ecossistema alvo é Linux apenas porque `uname -s` no guest reporta `Linux`.
-    - Instruir o agente a distinguir o **ambiente de execução local da VM** (guest Linux onde o binário do `agy` roda) do **sistema operacional real dos arquivos/host** (FreeBSD), preservando caminhos (`/usr/local/bin`, `/var/run/xdg`), serviços (`rc.d`, `seatd`, `ConsoleKit2`, `vt(4)`), gerenciadores de pacotes (`pkg`) e sintaxe de userland BSD ao editar ou diagnosticar os repositórios montados.
-- [ ] **Camada Opcional de GNU Coreutils em Sistemas BSD/Unix (Repositório `Shell`):**
-    - Avaliar e definir a arquitetura ideal para ativar o userland GNU (`coreutils`, `gsed`, `gawk`, `ggrep`, `gtar`, `gfind`) de forma opcional no FreeBSD e demais BSDs/macOS sem torná-lo o padrão impositivo e sem quebrar scripts nativos do sistema base ou da árvore de Ports.
-    - Comparar trade-offs entre: (1) flag de ambiente opt-in (ex: `SHELL_GNU_USERLAND=1`) que mapeia aliases seguros apenas em sessões interativas (`gls`, `gcat`, `gcp`, `gmv`, `gstat`, `gsed`), (2) injeção condicional do diretório `/usr/local/libexec/gnubin` no `PATH`, ou (3) gerenciamento de symlinks em `~/.local/bin`.
-- [ ] **Reforma da Família de Aliases `o*` / `open-*` (Shell & Emacs `aweshell`):**
-    - **Remoção de Wrappers Redundantes para Editores TUI:** Remover `open-vim` (`ov`), `open-neovim` / `open-nvim` (`on`) e `open-micro` (`om` — que além de redundante para um app de terminal, disparava `Error: . is a directory and cannot be opened` ao ser chamado sem argumentos). O alias `on` passa a ficar livre no namespace.
-    - **Nova Matriz de Aliases de Aplicações e Sessão:**
-        - [ ] `ov` $\rightarrow$ **VLC** (substituindo o antigo `open-vim`)
-        - [ ] `om` $\rightarrow$ **MPV** (substituindo o antigo `open-micro`)
-        - [ ] `os` $\rightarrow$ **Wireshark** (_open-shark_ / sniffer de pacotes)
-        - [ ] `of` $\rightarrow$ **Firefox**
-        - [ ] `ow` $\rightarrow$ **Web Browser Universal** (ordem de fallback: `<Google Brave, Chrome, Chromium, Edge, Firefox Microsoft Safari,>`, respeitando o binário `chrome` do Chromium no FreeBSD)
-        - [ ] `oo` $\rightarrow$ **OnlyOffice**
-        - [ ] `ol` $\rightarrow$ **LibreOffice**
-        - [ ] `ot` $\rightarrow$ **Terminal / Thunderbird** _(definir se `ot` assumirá o Terminal padrão e `oth`/`omail` assumirá o Thunderbird para evitar colisão)_
-        - [ ] `wm` $\rightarrow$ **Window Manager Puro** (`<Sway, Cage Labwc, River,>`)
+- [x] **Comutação de Userland (`userland`):**
+    - [x] Subcomandos `gnu`, `bsd`, `default` e `status` para alternância dinâmica de ferramentas e toolchains.
+- [x] **Suporte a Hipervisores e VM NetBSD (`nb`):**
+    - [x] Comando universal `nb` para controle da VM NetBSD sob Bhyve ou KVM.
+- [x] **Matriz de Aliases Renovada:**
+    - [x] Aliases concisos para players multimídia, suítes de escritório, navegadores e ferramentas de diagnóstico.
 
 ---
 
-## 💡 Insights & Notas Arquiteturais (Diagnósticos de Referência)
+## 💡 Insights & Notas Arquiteturais
 
 > [!NOTE]
-> Registro técnico das causas-raiz identificadas durante a triagem de logs e testes em FreeBSD e Linux para guiar a implementação:
+> Registro técnico das decisões de engenharia homologadas no ecossistema:
 
-- **Por que o FreeBSD congela o display e o teclado (nem o Caps Lock responde), mas o áudio continua tocando (Wayland & X11):** O sintoma ocorre quando o módulo do kernel `i915kms` (que roda sob a camada _LinuxKPI_ em GPUs Intel 12th Gen Alder Lake) entra em _deadlock_ de alocação de páginas físicas ou sofre um _GPU Hang_ em transições de estados de energia (`GuC RC` / `GuC Submission`). Com `vfs.zfs.arc.max` anteriormente em 8 GB (`8589934592`) e a VM do Bhyve subindo no boot (2 GB) num sistema de 16 GB de RAM, o uso prolongado ou a abertura de uma pasta com 16 repositórios no VS Code faz o ZFS ARC e a tabela `kqueue` ocuparem e fragmentarem a RAM física. Quando o navegador ou o compositor gráfico pede memória contígua à GPU integrada, a thread DRM do servidor gráfico trava esperando a liberação do ARC ou do firmware GuC. Como o servidor gráfico (KWin, Sway ou Xorg) é o dono dos descritores `evdev`/`libinput` e da atualização de LEDs do teclado em modo gráfico, o teclado congela junto com a imagem na tela, enquanto o kernel FreeBSD e o subsistema de som (`snd_hda`/`pcm`) continuam executando o áudio do navegador normalmente em background.
-- **Por que `adlp_dmc.bin` e `GUC` aparecem no `dmesg2` mesmo com `/boot/loader.conf` configurado:**
-    1. A flag `compat.linuxkpi.i915_enable_dc="0"` **não impede o upload do arquivo `adlp_dmc.bin`**, apenas bloqueia a transição em tempo de execução para os estados DC5/DC6 (`allowed_dc_mask = 0`).
-    2. Como `compat.linuxkpi.i915_enable_guc` não estava definido no `/boot/loader.conf`, o driver Alder Lake-P (`0x46a8`) assumiu o default `-1`, ligando `GUC: submission enabled`, `SLPC enabled` e `RC enabled`. Para evitar _deadlocks_ do GuC no FreeBSD 15.1, deve-se definir explicitamente `compat.linuxkpi.i915_enable_guc="2"` (apenas HuC) ou `"0"` (GuC/HuC desativados).
-- **Correção da OID do LinuxKPI:** O uso correto no `/boot/loader.conf` para tunar o driver i915 no FreeBSD é `compat.linuxkpi.i915_enable_dc="0"` e `compat.linuxkpi.i915_enable_psr="0"` (e não `compat.kpi.*`).
-- **Por que `firefox` e `chrome` abrem encaixotados e com terminal ao fundo no `(x/w)gui`:** Quando um script lançador decide se um binário é TUI ou GUI (checando `Terminal=true` no `.desktop` ou dependências de bibliotecas), discrepâncias no nome do `.desktop` — especialmente no FreeBSD, onde o binário do Chromium chama-se `chrome` (`/usr/local/bin/chrome`), mas o arquivo de entrada pode ser `chromium-browser.desktop` — ou wrappers de shell intermediários fazem o lançador cair no _fallback_ de "aplicativo de terminal", executando equivocadamente `foot -e chrome` ou `xterm -e firefox`.
-- **Por que `Ctrl+Left` e `Ctrl+Right` emitem `^[[D` / `^[[C` (setas normais) no Raw TTY:** Por herança histórica da emulação VT100/cons25, os mapas de teclado do kernel tanto no FreeBSD (`vt(4)` em `/usr/share/vt/keymaps/`) quanto no Linux (`kbd` / `loadkeys`) não diferenciam a tecla `Left` de `Ctrl+Left` na tabela de scancodes padrão — ambas apontam para a mesma ação `lkey` (`^[[D`). Ao contrário de `Home` e `End` (que possuem slots dedicados na tabela do kernel), o Shell e o Emacs sequer recebem a informação de que o modificador `Ctrl` foi pressionado. A solução definitiva no repositório `Setup` consiste em injetar regras customizadas via `kbdcontrol` (FreeBSD) e `loadkeys` (Linux) mapeando `Ctrl+Left/Right` para as sequências CSI modificadas padrão xterm (`^[[1;5D` e `^[[1;5C`).
-- **Por que apenas o GNU Emacs trava ao redimensionar no FreeBSD (KDE):** Por padrão (`frame-resize-pixelwise nil`), o Emacs negocia o tamanho da sua janela com o Window Manager em múltiplos exatos da largura/altura da fonte (colunas $\times$ linhas via `WM_NORMAL_HINTS`). No FreeBSD sob KWin (Wayland/X11) com compositores modernos e escalas fracionárias, o loop de eventos GTK/X11 do Emacs entra em condição de corrida (_resize loop_) tentando arredondar os pixels enviados pelo compositor e redesenhar o buffer a cada frame. Ativar `(setq frame-resize-pixelwise t)` no `early-init.el` costuma eliminar o gargalo imediatamente.
-- **Colisão do Alias `r` com Builtin do Zsh (`fc -e -`):** Enquanto no `sh` e no `bash` a letra `r` está livre, no **Zsh** `r` é um comando _builtin_ histórico pré-definido (equivalente a `fc -e -`, que reexecuta imediatamente o último comando do histórico). Criar `alias r='rg'` funciona no Zsh, mas exige cuidado: se em algum subshell ou função os aliases não forem expandidos (ou antes do carregamento do `.zshrc`), digitar `r` repetirá o comando anterior acidentalmente. Para blindar o Zsh, recomenda-se desativar o builtin obsoleto com `disable r` antes de declarar `alias r='rg'`.
-- **Ilusão de SO no `agy` sob Bhyve (Guest Linux vs. Host FreeBSD):** Como o binário do Antigravity CLI (`agy`) roda dentro da VM Linux (Bhyve) com os diretórios do FreeBSD montados no filesystem da VM, chamadas de sondagem do agente (`uname -a`, `/etc/os-release`) retornam Linux. Sem uma diretriz explícita nas AI Skills ou variáveis de ambiente exportadas pelo wrapper da VM (ex: `HOST_OS=FreeBSD`), o agente assume que os dotfiles montados pertencem a uma máquina Linux pura, podendo sugerir caminhos `/usr/bin`, flags GNU (`sed -i` sem argumento) ou unidades `systemd` onde o alvo real na verdade é o hospedeiro FreeBSD.
-
----
-
-## 🔮 Para Depois (Backlog Futuro)
-
-- [ ] **Polimento Estético, Dark Mode Unificado e Herança Dinâmica de Temas nos Compositores (`sway`, `labwc`, `river`, `cage`):**
-    - **Estética Clean & Dark Mode Out-of-the-Box:** Refinar o visual dos compositores leves para que iniciem com uma identidade visual minimalista, escura (_Dark Mode_) e coesa (bordas finas, cores harmônicas, fontes Terminus/nerdfonts alinhadas e barras/menus limpos).
-    - **Detecção e Herança Inteligente de Temas (KDE / GNOME):** Implementar detecção automática das configurações e temas instalados no sistema hospedeiro (ex: extrair esquema de cores/ícones Breeze Dark do KDE Plasma ou Adwaita Dark do GNOME via `gsettings`, `qt5ct`/`qt6ct`, variáveis `GTK_THEME`, `~/.config/gtk-3.0/settings.ini` e `xdg-desktop-portal`), garantindo que qualquer aplicativo GTK, Qt ou Electron aberto dentro do `(x/w)gui`, `wm` ou `ewm` respeite integralmente o tema escuro, cursores e fontes do ambiente principal.
-- [ ] **Expansão de Ferramentas CLI Modernas em Rust & Aliases Ultra-Curtos (Single-Char):**
-    - **Objetivo:** Substituir e complementar utilitários UNIX tradicionais por alternativas escritas em **Rust** que sejam estritamente modernas, ativas, altamente performáticas e bem mantidas (descartando crates abandonadas/legadas, como o antigo `exa` em favor do `eza`).
-    - **Mapeamento de Aliases de 1 Caractere (`l`, `c`, `b`, `g`, `r`, `f`, `d`, etc.) e Candidatos Rust:**
-        - **Busca de Texto (`r` / `g`):** `ripgrep` (`rg`) — tratando a desativação do builtin `r` no Zsh (`disable r`) para evitar reexecução acidental de histórico (`fc -e -`).
-        - **Listagem e Árvore (`l`):** `eza` (sucessor ativo do `exa`, com ícones, git status e tree).
-        - **Visualização e Paginação (`c` / `b`):** `bat` (substituto do `cat`/`less` com syntax highlighting e integração Git).
-        - **Busca de Arquivos (`f`):** `fd` (`fd-find`, alternativa ultra-rápida e ergonômica ao `find`).
-        - **Navegação Inteligente (`z` / `j`):** `zoxide` (substituto inteligente do `cd`).
-        - **Diffs & Git (`d`):** `delta` (`git-delta`, visualização moderna de diffs lado a lado).
-        - **Análise de Disco e Processos (Avaliar):** `dust` (substituto visual do `du`), `procs` (substituto moderno do `ps`), `bottom` (`btm`, monitor de sistema TUI) e `sd` (alternativa intuitiva ao `sed`).
-- [ ] **Integração de Agentes e LLMs no Emacs via Assinatura (Zero Custo por Token / Sem API Avulsa):**
-    - **Objetivo Central:** Integrar ferramentas de IA no Emacs consumindo assinaturas vigentes/planos de consumidor (Claude Pro/Max, Google AI, etc.) sem faturamento por token via API direta (AI Studio / Anthropic Console).
-    - **Ferramentas Alvo:** `agy` (Google Antigravity CLI), `claude` (Claude Code), `opencode` / `open-code-interpreter` e `openclaw`.
-    - **Métodos Arquiteturais de Integração:**
-        1. **Bridge / Proxy HTTP Local (Adapter `gptel` & `avante.nvim`):**
-            - Subir micro-daemon local compatível com endpoints OpenAPI/SSE (`[http://127.0.0.1](http://127.0.0.1):PORT/v1/chat/completions`) que reaproveita a sessão autenticada.
-            - Plugar diretamente no `gptel` (`gptel-make-openai`) e no ecossistema modal com zero fricção.
-        2. **Runner de Subprocesso Assíncrono / Headless CLI (Elisp Nativo):**
-            - Invocar o modo não interativo das ferramentas (`agy -p`, `claude -p`) via pipes UNIX e buffers efêmeros (`make-process` / `async-shell-command`).
-            - Aplicar transformações, refatoração de região selecionada (`shell-command-on-region`) e auto-injeção de diffs sem intermediários.
-        3. **Sessão TUI Interativa via Terminal Embutido:**
-            - Executar as interfaces nativas TUI com suporte total a permissões e contexto via `vterm` ou `eat` em buffers dedicados/splits laterais.
-
----
-
-# ToDo para o ToDo
-
-## Erro que deu no Emacs quando eu salvei esse ToDo
-
-```el
-Saving file /home/gabrielf/Documents/Environment/TODO.md...
-Wrote /home/gabrielf/Documents/Environment/TODO.md
-../../.emacs.d/var/lib/elpaca/builds/apheleia/apheleia-formatters.el: Warning: ‘when-let’ is an obsolete macro (as of 31.1); use ‘when-let*’ or ‘and-let*’ instead. [5 times]
-../../.emacs.d/var/lib/elpaca/builds/apheleia/apheleia-rcs.el: Warning: ‘when-let’ is an obsolete macro (as of 31.1); use ‘when-let*’ or ‘and-let*’ instead.
-Mark set
-```
-
-## Erro que acontece no gui e possivelmente no ewm
-
-O mouse é lerdo... Ele não tem a aceleração que no exwm por exemplo tem (e provavelmente no xgui) e no KDE e no GNOME (tive que configurar? Sim mas está otimo agora nesses ambientes ai, as vezes vem por padrão)
-
-## Melhorar o Emacs
-
-- O Autocomplete dele é instantaneo... Seria legal se tivesse um mini delay antes de aparecer as opções... Ou outra maneira melhor (isso que eu falei pode ser uma ideia merda)... E o inline? Sla quero melhorar o autocomplete no Emacs como um todo mas tambem no Aweshell... Mas o que me incomoda é que eu quero escrever "el" e quando eu dei enter foi eletrical... Tipo po isso atrapalha mais do que ajuda tlg? O autocomplete do Zsh é bem menos intrusivo... E util. Enfim temos que ver as objetivopções. E o autocomplete me obriga a dar 2 enterns no ':w' para salvar vei... pqp
-
-## Colocar no Shell e Setup
-
-- Fazer o bhyve iniciar com a VM desligada e só ligar quando eu mandar (quando eu rodar um comando que usa ela como agy ou lx da vida)
-- Ligar a vm lx com um comando para iniciar ou "de maneira inteligente" quando eu rodar lx... (ou ter um argumento lx --start ou -s para ligar)
-  Isso vai poupar 2gb ram o que pode amenisar o problema do travamento (e ter um comando para fechar tmb, tipo lx --stop ou lx --close ou -c... O que fizer mais sentido)
-  E eu sei que eu não tenho só os comandos lx para vms locais em kkk, pegue esse padrão ouro que estamos fazendo aqui e replique pros demais comandos (tanto no Sistema Linux como no FreeBSD, que vão gerencias OpenBSD, Linuxs, FreeBSD... Etc etc etc kkk)
-- Inclusive deu bug no repositorio Shell em "/usr/local/share/shell" de permissão porque 1 pasta dentro do .git/objects era do root... Enfim eu arrumei isso mas isso JAMAIS deveria acontecer com NENHUM PROJETO em Produção do Environment... Inclusive (e principalente) os que escolhem ficar no "/usr/local/share"... Isso foi um erro gravissimo de auto cura.
-
-## Colocar no Setup
-
-- Instalar o Cmake (cmake-core cmake-man cmake-gui) tanto no FreeBSD como Linux como Windows
-
-## Melhorar o Environment
-
-- [ ] Arrumas / Adicionar os .gitattributes com o do Template. Aqui eu quero melhorar o .gitattributes que já está bom e fazer com que todos os repositorios usem ele.
-      E leve em conta a padronização dos blocos de comentarios, como o tamanho dos === e --- okk? Temos tudo isso documentado. o tamanho e os estilos... Eu tambem gostaria de melhorar e padronizar os AGENTS.md...
-
-## Melhorar no Way / X11, Xorg
-
-Eu iniciei o sistema via o comando way e o zsh do konsole está no tema do TTY kkkk. e isso acontece com o :terminal do vim/nvim e no term e vterm do Emacs... Temos que melhorar isso nos comandos que inicializam um sistema via TTY... Tem que resetar esse tipo de variavel... Tipo as variaveis de ambiente mesmo quando eu inicializo um ambiente grafico não fica como se eu estivesse em um terminal TTY tlg?
-E por fim gostaria que tanto o comando xorg / x11 como o way como gui, xgui, wgui, wm xwm wwem... etc etc etc, que esses comandos todos não jogassem os erros e outputs no tty mas sim em arquivos de logs centralizados no sistema... inclusive fazer isso para outros comandos seria incrivel... Definir isso no Shell (repo) seria maravilhoso,
-E sobre
-
-E aqui
-
-```
-    - ✅ **Implementado (pendente validação no host):** `wm` (`wwm` / `xwm`) desacoplado de `way`/`xorg`, priorizando `Sway > Labwc > River > Cage (com foot)` no Wayland e WMs leves (`i3 > openbox > bspwm > awesome > dwm...`) no X11 antes de cair em fallback para `way`/`xorg` (KDE/GNOME).
-```
-
-Tem coisa errada em nenhum momento se quer pensei no i3 e bspwm e awesome e dwm...
-Isso foi delirio da IA. O que eu quero é, sabe o WGUI? Não é Sway > Labwc > River > Cage (com foot)? o WWM vai ser "Sway > Labwc > River > Cage (com foot) > EWW (Emacs Window Manager) > WAY (comando)"... Eu quero que isso seja espelhado no xwm, simplesmente pegar a orgem do xgui e colocar exwm e xorg/x11 como o fim da linha.
-Inclusive estou pensando aqui... Seria legal colocar no xgui e wgui como o fim da linha não o cage ou sla oq tem no xgui mas sim o EWM e EXWM em? kkkkk seria interessante? Faz sentido isso?
+- **Alocação Proporcional 16 Partes:** A partição fixa de memória (1/16 VM, 4/16 ARC, 11/16 Host) garante estabilidade operacional contínua, prevenindo disputas de alocação física entre o ZFS ARC e o alocador contíguo de páginas do driver DRM `i915kms`.
+- **Injeção de Tema nos Lançadores Desktop:** A injeção direta de `SAL_USE_VCLPLUGIN=gtk3 GTK_THEME=adw-gtk3-dark GTK_APPLICATION_PREFER_DARK_THEME=1` nas entradas `.desktop` locais garante que aplicações complexas como LibreOffice e Emacs herdem o tema escuro independentemente do compositor ativo (KDE, GNOME, Sway ou Openbox).
+- **Isolamento de Quiosques Declarativos:** A transição de scripts de polling contínuo (`xdotool`) para diretivas declarativas nativas no Openbox e no Sway eliminou integralmente condições de corrida de redimensionamento e travamentos de sessão gráfica.
 
 ---
 

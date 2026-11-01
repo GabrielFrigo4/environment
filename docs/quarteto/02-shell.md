@@ -59,7 +59,6 @@ Quando o usuário dispara comandos remotos a partir de um console TTY puro (via 
 O Shell mantém sua própria ferramenta de medição estatística de latência, executada automaticamente antes de novos commits:
 
 ```sh
-# Executar medição completa de latência de inicialização e navegação
 sh Shell/benchmark.sh
 ```
 
@@ -73,30 +72,62 @@ A ferramenta avalia:
 
 ## 🪟 Lançadores Gráficos Efêmeros & Sessões Multi-TTY (`gui`)
 
-Uma das inovações de resiliência do Universal Shell é o modelo de **processos gráficos efêmeros por TTY**, eliminando a dependência de Display Managers monolíticos (GDM, SDDM):
+Uma das inovações de resiliência do Universal Shell é o modelo de **processos gráficos efêmeros por TTY**, eliminando a dependência de Display Managers monolíticos:
 
 ### Separação Arquitetural: Quiosque (`gui` / `xgui`) vs Gestão de Janelas (`wm` / `xwm` / `exwm` / `ewm`)
 
 - **Quiosque Mono-Aplicação (`(x/w)gui`):** Focado no ciclo de vida de uma única aplicação principal (`gui firefox`, `xgui gimp`), mantendo suporte transparente a caixas de diálogo modais e subjanelas efêmeras. Ao encerrar o aplicativo, o compositor é descarregado e o terminal virtual retorna imediatamente ao prompt de texto.
-- **Window Management Completo (`(x/w)wm`, `exwm`, `ewm`):** Sessão gráfica persistente por terminal virtual com gerenciador de janelas completo, barra de status modular, menus com tema escuro (Dark Mode Adwaita/Kanagawa) e barramentos D-Bus com isolamento estrito entre diferentes terminais TTY.
+- **Window Management Completo (`(x/w)wm`, `exwm`, `ewm`):** Sessão gráfica persistente por terminal virtual com gerenciador de janelas completo, barra de status modular, menus com tema escuro e barramentos D-Bus com isolamento estrito entre diferentes terminais TTY.
+
+### Identidade Visual GTK4/Qt6 & Pipeline de Fontes
+
+O ambiente gráfico adota uma paleta inspirada no **Adwaita Dark (GTK4)** e **Breeze Dark (Qt6)**:
+
+- Fundo inativo / base: `#1e1e22`
+- Superfície ativa / barras: `#2b2b30`
+- Borda e seleção ativa (azul): `#3584e4`
+- Borda e destaques de saída (vermelho): `#e01b24`
+- Texto secundário: `#9a9996`
+
+A função interna `_resolve_desktop_font` resolve tipografias através de um pipeline determinístico:
+
+1. `JetBrainsMono Nerd Font` (preferência primária universal se detectada via `fc-list`).
+2. Resolução por ambiente desktop configurado:
+    - **KDE / Plasma:** `Noto Sans`
+    - **GNOME:** `Adwaita Sans` $\rightarrow$ `Cantarell`
+    - **MATE / Cinnamon / XFCE:** `Ubuntu` $\rightarrow$ `DejaVu Sans`
+3. Fallback universal: `Sans`.
+
+### Gerenciamento de Janelas: `wwm` (Wayland) e `xwm` (X11)
+
+- **`wwm` (Wayland Window Manager):** Despacha sessões Wayland puras (`sway`, `labwc`, `river` ou `cage` com terminal `foot`). No Sway, acopla o script `wwm-status` que gera uma barra de status interativa em formato JSON (`"click_events": true`), com botões clicáveis: `[Web Browser]`, `[Terminal]`, `[Files]`, `[Emacs]`, `[Menu]`, `[Close]`, `[Exit]` e indicador de data/hora.
+- **`xwm` (X11 Window Manager):** Inicia sessão gráfica sobre Openbox sem depender de painéis pesados. Gera dinamicamente um menu raiz contextual com:
+    - Aplicações fixas de acesso rápido: `Web Browser`, `Terminal`, `Files`, `Emacs`.
+    - 5 categorias indexadas dinamicamente via varredura de arquivos `.desktop`: `Development`, `Internet`, `Office`, `Media & Graphics`, `System & Tools`.
+    - Comandos operacionais: `Reconfigure` e `Exit`.
+
+### Quiosques Efêmeros: `wgui` e `xgui`
+
+- **`wgui` (Wayland Kiosk com Abas Inteligentes):** Opera sobre o Sway executando o daemon sentinela `wgui-tabwatch`. Quando há apenas uma aplicação em tela, aplica `layout splith, border none` para visual limpo em tela cheia. Quando uma janela secundária é disparada (total $\ge 2$), comuta automaticamente para `layout tabbed, border normal 1`, apresentando abas auto-ocultáveis na borda superior.
+- **`xgui` (X11 Kiosk Declarativo):** Opera sobre Openbox com tema de alto contraste. Configura regras estáticas em XML (`<application type="normal"><decor>no</decor><maximized>yes</maximized></application>`), eliminando completamente loops em background de redimensionamento (`xdotool`), prevenindo condições de corrida e congelamento de renderização.
+
+### Emacs OS: `ewm` (Wayland) e `exwm` (X11)
+
+- **`ewm` (Emacs Wayland Manager):** Executa o GNU Emacs compilado com backend Wayland nativo (PGTK) sob thread Smithay/Rust. Opera com `tool-bar` desabilitada por padrão (`tool-bar-lines 0`), garantindo visual limpo e preservando a área de trabalho para buffers e janelas de clientes Wayland.
+- **`exwm` (Emacs X Window Manager):** Opera sob X11 puro com comutação contextual de simulação de teclas:
+    - `emacs/wm-gui-simulation-keys`: mapeia atalhos usuais de Emacs para eventos padrão de desktop (ex: `C-y` para colar, `M-w` para copiar, `C-f`/`C-b` para setas).
+    - `emacs/wm-terminal-simulation-keys`: preserva teclas de controle do terminal (`C-c`, `C-z`, `C-d`, `C-l`), alternando dinamicamente com base na classe da janela (`exwm-class-name`).
 
 ### Resolução Antifrágil de Aplicativos
 
 Ao despachar aplicativos gráficos ou utilitários via linha de comando, o lançador percorre uma cascata determinística de resolução:
 `Binário Nativo no PATH` $\rightarrow$ `Flatpak (flatpak run)` $\rightarrow$ `Snap` $\rightarrow$ `AppImage` $\rightarrow$ `/opt/app` $\rightarrow$ `Camadas de Compatibilidade (FreeBSD Linuxulator / VM Bhyve / macOS / MSYS2)`.
 
-### Pipeline Determinístico de Cursores
+### Comutação de Userland & Hypervisor NetBSD
 
-Para garantir uniformidade visual entre compositores Wayland e servidores X11 sem artefatos gráficos ou cursores invisíveis, o Shell adota uma sequência estrita de resolução de temas de cursor:
-`KDE Plasma (Breeze)` $\rightarrow$ `GNOME (Adwaita)` $\rightarrow$ `MATE` $\rightarrow$ `Cinnamon` $\rightarrow$ `XFCE` $\rightarrow$ `LXQt` $\rightarrow$ `Fallback Padrão do Sistema`.
-
-### Concorrência Multi-Ambiente & Modos de Quiosque
-
-- **Concorrência Multi-Ambiente:** O usuário pode rodar `gui -k firefox` no TTY2 (KDE Plasma), `gui foot` no TTY3 (GNOME Adwaita) e alternar entre eles instantaneamente via `Ctrl+Alt+F*`.
-- **Modo Quiosque Soberano na Tétrade Wayland:**
-    - **Sway:** Opera com regras efêmeras de tela cheia automática (`fullscreen enable`), garantindo que novas janelas ocupem o display inteiro sem fatiar o espaço visual em 50/50, com suporte a troca de TTY (`Ctrl+Alt+F*`).
-    - **Labwc:** Gera `rc.xml` efêmero com `<windowRule identifier="*" serverDecoration="no"><action name="Maximize"/></windowRule>`, maximizando janelas sem bordas nem decorações.
-    - **River:** Opera sem o gerador de tiling (`rivertile`), impedindo o fatiamento da tela, abrindo views no topo com tecla rápida `Super+F` para fullscreen.
-    - **Cage:** Mantido como último fallback defensivo de quiosque puro mono-aplicação.
-- **Paridade Estrita no X11 (`xgui` com `xterm`, `xrdb` e Cascata de Quiosque):** O XTerm herda idêntica paleta Adwaita Dark, fontes `JetBrainsMono Nerd Font` e padding de 16px via injeção efêmera de `Xresources` no `xinit`, abrindo com `-maximized`. Qualquer aplicativo adicional (Firefox, VLC, GIMP) é gerenciado por uma cascata de micro-WMs de quiosque (`matchbox-window-manager` > `openbox` efêmero com maximização total > `cwm` nativo do OpenBSD > `ratpoison` > micro-daemon de `xdotool`).
-- **Suporte Soberano a Emacs Wayland Manager (`ewm` / `wewm`):** O Shell reconhece o `ewm` como compositor nativo via `_has_wayland` (`_emacs="ewm"` e presença de `libewm_core.so`), suportando thread nativa Rust Smithay e degradação graciosa para quiosque Wayland caso o binário não esteja presente.
+- **Comando `userland`:** Permite alternar os binários e bibliotecas da sessão interativa entre toolchains:
+    - `userland gnu` (ou `gnu`): Prioriza utilitários GNU (`gnubin`, binários com prefixo `g*`).
+    - `userland bsd` (ou `bsd`): Restaura o ambiente BSD padrão (`bmake`, `bsdtar`, `mandoc`).
+    - `userland default` (ou `default`): Retorna à ordem nativa do sistema hospedeiro.
+    - `userland status`: Exibe a configuração ativa.
+- **Comando `nb` (NetBSD VM):** Wrapper para gerenciamento da máquina virtual NetBSD sob o hipervisor Bhyve (no FreeBSD) ou KVM (no Linux), oferecendo controle de ciclo de vida (`nb -s`, `nb`, `nb -c`) e conexão remota transparente.

@@ -27,10 +27,10 @@ resh
 --------------------------------------------------------------------------------
 PASSO 2: PROPORÇÃO DE MEMÓRIA 16 PARTES E TUNINGS DE KERNEL SYSCTL
 --------------------------------------------------------------------------------
-Fórmula Proporcional (16 GB RAM):
-- 1/16 VM Bhyve  = 1 GB (min 1 GB, max 2 GB)
-- 4/16 ZFS ARC   = 4 GB (min 1 GB, max 4 GB; max: 4294967296, min: 1073741824)
-- 11/16 Host DRM = 11 GB (livres para KDE Plasma 6, Browsers, Compilações e GPU)
+Fórmula Proporcional (cálculo dinâmico sobre hw.realmem || hw.physmem):
+- 1/16 VM Bhyve / NetBSD (1 GB para 16 GB RAM; mínimo 1 GB, teto 2 GB)
+- 4/16 ZFS ARC           (4 GB para 16 GB RAM; mínimo 1 GB, teto 4 GB)
+- 11/16 Host DRM         (11 GB livres para KDE Plasma 6, Browsers, Compilações e GPU)
 
 2.1. Executar as receitas canônicas de dimensionamento de ARC e parâmetros de kernel:
 sh ~/Documents/Environment/Setup/freebsd/desktop/system/zfs-arc.sh
@@ -59,29 +59,52 @@ sudo pkg install -y multimedia/libva-intel-media-driver multimedia/libva-utils
 vainfo
 
 --------------------------------------------------------------------------------
-PASSO 4: VIRTUALIZAÇÃO BHYVE SOB DEMANDA (SEM AUTOSTART) E VM DEBIAN 1G
+PASSO 4: VIRTUALIZAÇÃO BHYVE E HYPERVISORS SOB DEMANDA (SEM AUTOSTART)
 --------------------------------------------------------------------------------
-Para preservar 11 GB de RAM para o host gráfico, o autostart da VM no boot
-é desativado (vm_list=""), economizando 1 GB de RAM cabeada (wired memory).
+Para preservar 11 GB de RAM para o host gráfico, o autostart das VMs no boot
+é desativado (vm_list=""), economizando memória cabeada (wired memory). A receita
+calcula automaticamente o limite de 1/16 da RAM física total:
 
 4.1. Aplicar a receita de configuração do hipervisor Bhyve:
 sh ~/Documents/Environment/Setup/freebsd/container/bhyve.sh
 
-4.2. Garantir autostart desativado e limite de 1 GB no template e na VM:
+4.2. Garantir autostart desativado no rc.conf:
 sudo sysrc vm_list=""
-sudo sed -i '' 's/^memory=.*/memory=1G/' /zroot/vm/.templates/debian.conf 2>/dev/null || true
-[ -f /zroot/vm/debian/debian.conf ] && sudo sed -i '' 's/^memory=.*/memory=1G/' /zroot/vm/debian/debian.conf 2>/dev/null || true
 
-4.3. Ciclo de vida da VM sob demanda:
-lx -s       # Iniciar a VM Debian quando for trabalhar com IA ou containers
-lx          # Conectar na VM via SSH (UID/GID 1001 sincronizados)
-lx -c       # Desligar a VM e devolver 1 GB de RAM ao host FreeBSD
+4.3. Ciclo de vida da VM Debian (lx) sob demanda:
+lx -s
+lx
+lx -c
+
+4.4. Ciclo de vida da VM NetBSD (nb) sob demanda:
+nb -s
+nb
+nb -c
 
 --------------------------------------------------------------------------------
-PASSO 5: KDE PLASMA 6, COMPOSITORES, CMAKE, BROWSERS E EWM
+PASSO 5: FONTES, DICIONÁRIOS, ESCRITÓRIO E EDITORES MODULARES
 --------------------------------------------------------------------------------
 
-5.1. Otimizações de disco e cache do KDE Plasma 6:
+5.1. Instalar dicionários Hunspell bilíngues (inglês e português brasileiro):
+sudo pkg install -y textproc/hunspell textproc/en-hunspell textproc/pt_BR-hunspell
+
+5.2. Instalar tipografia de alta densidade e símbolos Nerd Fonts:
+sudo pkg install -y x11-fonts/jetbrains-mono x11-fonts/nerd-fonts
+
+5.3. Instalar a suíte completa LibreOffice:
+sudo pkg install -y editors/libreoffice
+
+5.4. Executar a receita de integração do LibreOffice com tema escuro GTK3:
+sh ~/Documents/Environment/Setup/common/office/office.sh
+
+5.5. Executar a receita modular de editores (Emacs, Neovim, Vim, Helix, Micro):
+sh ~/Documents/Environment/Setup/common/editors/editors.sh
+
+--------------------------------------------------------------------------------
+PASSO 6: KDE PLASMA 6, COMPOSITORES WAYLAND, GERENCIADORES X11 E EWM
+--------------------------------------------------------------------------------
+
+6.1. Otimizações de disco e cache do KDE Plasma 6:
 balooctl6 disable 2>/dev/null || true
 balooctl6 purge 2>/dev/null || true
 
@@ -92,7 +115,7 @@ export KDEVARTMP="/tmp"
 EOF
 sudo chmod 0755 /usr/local/etc/xdg/plasma-workspace/env/kdevartmp.sh
 
-5.2. Instalar a suíte completa de compositores Wayland e gerenciadores X11 leves:
+6.2. Instalar a suíte completa de compositores Wayland e gerenciadores X11 leves:
 sudo pkg install -y \
     x11-wm/openbox \
     x11-wm/cwm \
@@ -100,28 +123,52 @@ sudo pkg install -y \
     x11-wm/sway \
     x11-wm/labwc \
     x11-wm/river \
-    x11-wm/cage
+    x11-wm/cage \
+    sysutils/seatd \
+    x11/foot
 
-5.3. Instalar a suíte de ferramentas CMake completas:
+6.3. Instalar a suíte de ferramentas CMake completas:
 sudo pkg install -y devel/cmake-core devel/cmake-man devel/cmake-gui
 
-5.4. Instalar navegadores e cliente de correio eletrônico:
+6.4. Instalar navegadores e cliente de correio eletrônico:
 sudo pkg install -y www/firefox www/chromium mail/thunderbird
 
-5.5. Compilar o compositor EWM (Emacs Wayland Manager):
+6.5. Compilar o compositor EWM (Emacs Wayland Manager):
 sh ~/Documents/Environment/Setup/common/editors/ewm.sh
 
 --------------------------------------------------------------------------------
-PASSO 6: SINCRONIZAÇÃO DE DOTFILES E AUDITORIA PÓS-REBOOT
+PASSO 7: NOVIDADES DE SESSÃO GRÁFICA E COMUTAÇÃO DE USERLAND
+--------------------------------------------------------------------------------
+Recursos de sessão gráfica disponibilizados no repositório Shell:
+- wwm: Wayland Window Manager com barra clicável interativa em formato JSON
+  (controles diretos: Web Browser, Terminal, Files, Emacs, Menu, Close, Exit).
+- xwm: X11 Window Manager (Openbox) com menu dinâmico categorizado
+  (aplicações fixas [Web Browser, Terminal, Files, Emacs] e 5 categorias
+  dinâmicas: Development, Internet, Office, Media & Graphics, System & Tools).
+- wgui / xgui: Lançadores de quiosque com abas inteligentes auto-ocultáveis no
+  Wayland (visíveis apenas com 2 ou mais janelas abertas) e gerenciamento
+  declarativo no Openbox X11 (eliminando loops de resize).
+- ewm / exwm: Emacs Wayland Manager com frame limpo (tool-bar desabilitada) e
+  EXWM com simulação contextual de teclas (emacs/wm-gui-simulation-keys vs
+  emacs/wm-terminal-simulation-keys) conforme a classe da janela.
+
+Comutação de userland:
+- userland gnu     (ou gnu): Ativa utilitários GNU (gnubin / g-prefixed).
+- userland bsd     (ou bsd): Ativa userland BSD nativo (bmake, bsdtar, mandoc).
+- userland default (ou default): Restaura o userland padrão do sistema.
+- userland status: Exibe o modo configurado em runtime.
+
+--------------------------------------------------------------------------------
+PASSO 8: SINCRONIZAÇÃO DE DOTFILES E AUDITORIA PÓS-REBOOT
 --------------------------------------------------------------------------------
 
-6.1. Sincronizar dotfiles do Profile com os caminhos canônicos do usuário:
+8.1. Sincronizar dotfiles do Profile com os caminhos canônicos do usuário:
 ~/.config/profile/profile.sh sync
 
-6.2. Reiniciar o sistema para aplicar todos os tunables de bootloader e kernel:
+8.2. Reiniciar o sistema para aplicar todos os tunables de bootloader e kernel:
 sudo reboot
 
-6.3. Comandos de auditoria imediata após o reinício:
+8.3. Comandos de auditoria imediata após o reinício:
 sysctl vfs.zfs.arc.max vfs.zfs.arc.min kern.maxfiles kern.ipc.shmmax
 sysctl compat.linuxkpi.i915_enable_psr compat.linuxkpi.i915_enable_psr2_sel_fetch compat.linuxkpi.i915_enable_fbc compat.linuxkpi.i915_enable_dc compat.linuxkpi.i915_enable_guc
 dmesg | grep -iE "drmn0|guc|huc"

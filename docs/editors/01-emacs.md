@@ -53,10 +53,30 @@ No `init.el`, o bootstrapping do Elpaca garante que dependências sejam resolvid
 
 ---
 
-## 🐚 Aweshell: Terminal Soberano & Ghost Completion Estilo Zsh
+## 🖥️ Arquitetura de Interface & Renderização PGTK Cairo
+
+A arquitetura visual implementa proteções para consistência de frames e responsividade da interface:
+
+- **Supressão Incondicional da Tool-Bar:** A rotina `interface/apply-tool-bar` força `tool-bar-lines 0` e `tool-bar-mode -1` em todos os contextos de inicialização — interfaces gráficas (GUI), gerenciador de janelas Emacs (EWM) e consoles TTY. A barra de menu (`menu-bar`) é preservada exclusivamente em ambientes gráficos (`menu-bar-mode 1`) e suprimida em consoles de texto puro.
+- **Flush Imediato de Hover Cairo em Wayland PGTK:** Sob o backend PGTK nativo, o Emacs ativa `track-mouse t` e intercepta eventos `[mouse-movement]` via `interface/pgtk-flush-mouse-hover`. Ao detectar sobreposição do ponteiro sobre elementos com propriedade `mouse-face` ou `button` (como botões do Dashboard), o handler dispara `redisplay t` imediato na superfície Cairo, eliminando a latência de 500ms atrelada ao ciclo de piscar do cursor.
+
+---
+
+## 🔤 Correção Ortográfica Bilíngue Sem Bloqueio (`/usr/bin/look`)
+
+O subsistema de texto e escrita do Emacs descarta rotinas síncronas legadas em favor de verificação de dicionário de alta performance:
+
+- **Eliminação de Subprocessos `/usr/bin/look`:** As variáveis `text-mode-ispell-word-completion` e `ispell-look-p` são desativadas (`nil`), impedindo chamadas síncronas ao binário de sistema que congelavam a interface durante buscas e completações em buffers de texto.
+- **Dicionário Bilíngue Simultâneo (`hunspell`):** Integração automática com o motor Hunspell configurando caminhos canônicos (`DICPATH`) e carregamento simultâneo dos dicionários de inglês e português (`en_US,pt_BR`) via `ispell-hunspell-add-multi-dic`.
+
+---
+
+## 🐚 Aweshell: Terminal Soberano, Ghost Completion & Biblioteca Semântica UI
 
 O **Aweshell** (`usr/local/aweshell`) é a extensão de terminal integrado desenvolvida para oferecer paridade 1:1 com a experiência interativa do Universal Shell:
 
+- **Biblioteca Semântica Nativa `_ui_*`:** Funções integradas do Eshell (`_ui_banner`, `_ui_step`, `_ui_sub`, `_ui_ok`, `_ui_warn`, `_ui_err`, `_ui_info`) garantem total paridade visual com `Shell/library/ui.sh`, com cores ricas em GUI/PTY e representação ASCII limpa em terminais básicos.
+- **Isolamento de Completação do `eshell-mode`:** O modo global `completion-preview-mode` é desativado dentro do Aweshell (`(completion-preview-mode -1)`), evitando conflitos entre o completador de Lisp e os comandos do shell. Nos buffers convencionais de código e texto, o `completion-preview-mode` atua com delay de `0.2s` (`completion-preview-idle-delay 0.2`) e comprimento mínimo de símbolo de `2` caracteres (`completion-preview-minimum-symbol-length 2`).
 - **Ghost Completion Preditivo:** Motor de predição inline baseado na ordem histórica mais recente, com parada estrita em correspondência exata.
 - **Navegação Híbrida Unificada:** Tecla `<right>` aceita instantaneamente o texto fantasma previsto; tecla `TAB` abre e cicla pelo popup de completação do `company-mode`.
 - **Sincronização de Sessão:** Histórico de comandos persistente e unificado entre sessões de terminal externo e buffers internos do editor.
