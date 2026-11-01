@@ -71,6 +71,12 @@ Em todo "botão/link" que muda de cor quando o mouse passa por cima (tipo no Das
 
 - [ ] Além disso temos que baixar o libtool no FreeBSD / Fedora e etc... para poder compilar o vterm
 
+## Shell (MSYS2/Windows/uped)
+
+- [ ] Ele não atualiza o emacs que fica na posição ~/.emacs.d e nem o vim que fica ~/vimfiles... (tem que adicionar esses caminhos na lista dos caminhos validos)
+- [ ] Ele falhou na atualização do nvim... Tipo só falhou... Eu fui no diretorio e dei um git pull e foi kkkk... Lembrando que essas ferramentas as configurações estão fora do MSYS2...
+- [ ] No Windows o nvim muda o formato do cursor corretamente mas o vim não... E o emacs-no-windows (en / enw) simplesmente abrem o emacs client (com window) kkkk
+
 ---
 
 > [!TIP]
