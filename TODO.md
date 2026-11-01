@@ -43,107 +43,15 @@
 
 ---
 
-## 📌 Backlog & Histórico de Entregas
+## 📌 Backlog & Próximos Passos
 
-### 🔥 0. Blindagem de Kernel, GPU (`i915kms` Alder Lake) & ZFS contra Congelamentos Gráficos (FreeBSD 15.1)
+## Menu no Xorg/X11
 
-- [x] **Correção Definitiva da OID do LinuxKPI e Desativação do GuC Submission/RC (`Setup` / `/boot/loader.conf`):**
-    - [x] **Prefixo `compat.linuxkpi.` aplicado no `/boot/loader.conf` do host:** Flags `i915_enable_psr="0"`, `i915_enable_psr2_sel_fetch="0"`, `i915_enable_fbc="0"` e `i915_enable_dc="0"` configuradas com prefixo canônico.
-    - [x] **Adição de `compat.linuxkpi.i915_enable_guc="2"` no `/boot/loader.conf` e receitas do `Setup`:** Ativação exclusiva de HuC firmware sem engasgos de GuC submission/RC.
-- [x] **Mitigação de Pressão de Memória ZFS ARC vs. Alocador DRM `LinuxKPI` (`Setup` / `/boot/loader.conf`):**
-    - [x] **Redução do Teto do ZFS ARC para 4 GB:** Aplicado proporcionalmente em `zfs-arc.sh` com persistência em `/boot/loader.conf` e `/etc/sysctl.conf`.
-    - [x] **Expurgo de entradas legadas `vfs.zfs.arc_max`:** Limpeza executada nas receitas do Setup e piso mínimo `vfs.zfs.arc.min="1073741824"` definido.
-- [x] **Desativação de Autostart da VM Bhyve no Boot e Cache do KDE no ZFS (`Shell` & `Setup`):**
-    - [x] **Economia de 2 GB de RAM Física (`vm-bhyve`):** Autostart desativado via `sysrc vm_list=""`, operando com ciclo de vida sob demanda (`lx -s`, `lx -c`).
-    - [x] **Correção do Cache KDE no ZFS:** Configuração de `KDEVARTMP="/tmp"` em `/usr/local/etc/xdg/plasma-workspace/env/kdevartmp.sh`.
-    - [x] **Isolamento de Redes no Devd:** Prevenção de loops de erro do driver Wi-Fi quando a interface Ethernet cabeada está ativa.
-- [x] **Aceleração de Hardware VA-API para Intel Gen 12 (`Setup`):**
-    - [x] Instalação automatizada de `multimedia/libva-intel-media-driver` e `multimedia/libva-utils` no FreeBSD e Linux.
-- [x] **Tuning de File Descriptors (`maxfiles`), IPC Shared Memory e Inotify/Kqueue (`Setup` / `/etc/sysctl.conf`):**
-    - [x] Parâmetros de escalabilidade aplicados: `kern.maxfiles=1048576`, `kern.maxfilesperproc=524288`, `kern.ipc.shmmax=2147483648`, `kern.ipc.shmall=524288`.
-- [x] **Desativação Total de File Watchers (`kqueue`) e Indexadores de Background (`Profile` & `Setup`):**
-    - [x] Neutralização de watchers no VS Code e desativação do indexador `baloo` no KDE Plasma (`balooctl6 disable && balooctl6 purge`).
+Nos submenus com bordar arredondadas fica nessas bordar tipo um resto de retangulo preto... Em todas e quaisquer bordas arredondadas... É como se fosse um fundo retangular preto que fica atras desses submenus que só ficou vizivel porque a borda das quinas são arredondadas (se fossem retangulares retas ficaria escondido)... Tipo os menus dos emacs, do wireshark e etc...
 
----
+## Emacs no Wayland
 
-### 🔴 1. Correções de Sessão Gráfica, EWM e EXWM
-
-- [x] **Estabilização Pós-Teste no Host FreeBSD (`wewm`, `xewm` e Higiene de TTY):**
-    - [x] Detecção de GPU/Output corrigida no `drm-rs` e keymap XKB estabilizado sem segfaults.
-    - [x] Frame gráfico PGTK mapeado e inicializado com sucesso no `wewm`.
-    - [x] Limpeza de sequências OSC 112 no encerramento de sessões TTY.
-- [x] **EWM Frame Limpo sem Tool-Bar:**
-    - [x] Configuração padrão `tool-bar-lines 0` em frames gráficos e TTY, preservando espaço útil.
-- [x] **Estabilização do Ciclo de Vida X11 / EXWM (`xewm` / `xinit` no FreeBSD 15.1):**
-    - [x] Reexecução transparente via `dbus-run-session` e `ck-launch-session` sem flags inválidas.
-    - [x] Simulação contextual de teclas (`emacs/wm-gui-simulation-keys` vs `emacs/wm-terminal-simulation-keys`) configurada por classe de janela.
-
----
-
-### 🖥️ 2. Compositores Wayland/X11, Lançadores `(x/w)gui` e Despachante `wm`
-
-- [x] **Classificação Determinística de Binários no `(x/w)gui`:**
-    - [x] Whitelist de aplicações GUI (`firefox`, `chrome`, `chromium`, `code`, `emacs`, `libreoffice`) impedindo abertura acidental dentro de emuladores de terminal.
-    - [x] Resolução de nomes multiplataforma (suporte ao binário `chrome` do pacote Chromium no FreeBSD).
-- [x] **Gerenciadores de Janela Puros (`wwm` e `xwm`):**
-    - [x] `wwm` com barra interativa GTK3 (`wwm-bar`) com botões em formato pílula GTK4/Qt6 sem colchetes (`Web Browser`, `Terminal`, `Files`, `Emacs`, `Menu`, `Close`, `Exit`), isolamento de processos via `swaymsg exec`, botão `Close` seguro (`[con_id=...] kill`), gerenciamento dinâmico de workspaces com botões de criação (`+`) e destruição (`−`), e fallback para `swaybar` JSON.
-    - [x] `xwm` com Openbox, suporte completo a redimensionamento em 8 direções e `Alt+RightClick` para janelas SSD (Terminal, Emacs, etc.), e menu dinâmico de 8 categorias indexadas via arquivos `.desktop` sem `&` (`Editors`, `Development`, `Internet`, `Office`, `Graphics`, `Media Player`, `Tools`, `System`).
-- [x] **Quiosques Efêmeros com Abas Dinâmicas (`wgui` e `xgui`):**
-    - [x] `wgui` com daemon reativo auto-ocultando abas com 1 janela e ativando modo tabbed com $\ge 2$ janelas.
-    - [x] `xgui` com barra superior dinâmica em Python 3 + GTK3 + X11 (`xgui-tabbar` dock de 26px sem sobreposição) ativada apenas sob $\ge 2$ janelas normais, com 100% de paridade estética, dimensional (26px) e tipográfica com `wgui` (Sway `titlebar_padding 10 4` em `10pt Bold`).
-- [x] **Pipeline Universal de 11 DEs & 10 Compositores (`Shell`):**
-    - [x] Detecção em cascata (`KDE > GNOME > MATE > Cinnamon > XFCE > LXQt > LXDE > Budgie > Pantheon > Deepin > COSMIC`) e compositores independentes.
-    - [x] Unificação estética automática de GTK, Qt, fontes e temas de cursor (`XCURSOR_THEME`, `XCURSOR_SIZE=24`).
-
----
-
-### 🐃 3. GNU Emacs, Editores Modais e Ergonomia em Raw TTY
-
-- [x] **Suíte Soberana de Leitores de Documentos & Despachante `o` / `open`:**
-    - [x] Leitor nativo acelerado para PDF via `pdf-tools` (servidor `epdfinfo` nativo, cores naturais nítidas, Midnight mode `i`/`m`, auto `fit-page`, cursor oculto `cursor-type nil`, atalhos unificados) e retaguarda contínua a 192 DPI para PDF e DjVu (`doc-view-mode` com MuPDF, Poppler e `graphics/djvulibre` acelerado via `ddjvu`, com dark mode invertido `i`).
-    - [x] Leitor de e-books EPUB com reflow tipográfico dinâmico (`nov-mode`).
-    - [x] Despachante inteligente `open-smart` (`o` / `open`) integrando buffers do Emacs para documentos, SQLite, compactados e código.
-- [x] **Suíte de Substitutos Nativos de Aplicações no Emacs:**
-    - [x] Navegador de banco de dados SQLite nativo (`sqlite-mode` via `$ o db.sqlite3` / `$ sql`).
-    - [x] Visualizador e extrator de arquivos compactados (`arc-mode` e `tar-mode` via `$ o archive.zip`).
-    - [x] Monitor de processos do sistema interativo (`proced` via `$ procs` / `$ htop`).
-    - [x] Comparador visual e mesclador interativo de diferenças lado a lado (`ediff` via `$ ediff`).
-    - [x] Calculadora científica, algébrica e simbólica RPN (`calc` via `$ calc`).
-    - [x] Editor e inspetor binário hexadecimal (`hexl-mode` via `$ hex`).
-    - [x] Gerenciador dual-pane com edição em lote de diretórios (`dired` + `wdired` via `C-x C-q` / `r`).
-- [x] **Ciclo Unificado de Piscar de Cursor (1200ms):**
-    - [x] Sincronização estrita de 1200ms (`600ms` aceso, `600ms` apagado) no GNU Emacs (`blink-cursor-interval 0.6`, `blink-cursor-delay 0.6`, `blink-cursor-blinks 0`), NeoVim e Vim (`blinkwait600-blinkoff600-blinkon600`), GTK3 e GTK4 (`gtk-cursor-blink-time=1200`) e XTerm (`*cursorBlink: always`).
-- [x] **Fluidez de Redimensionamento no GNU Emacs:**
-    - [x] Configuração de `(setq frame-resize-pixelwise t)` eliminando loops de repintura sob KWin/Plasma.
-- [x] **Comandos Interativos de Lançamento de Apps Gráficos no Emacs:**
-    - [x] Adicionados `M-x firefox`, `M-x chrome`, `M-x chromium`, `M-x kate`, `M-x gimp`, `M-x wireshark`, `M-x kdeconnect` e `M-x thunderbird`.
-- [x] **Suíte Completa LibreOffice e Padronização de Editores:**
-    - [x] Receita modular `Setup/common/office/office.sh` para os 6 componentes do LibreOffice com tema escuro GTK3 injetado.
-    - [x] Receita modular `Setup/common/editors/editors.sh` consolidando o ícone único `emacs.desktop` e ocultando entradas auxiliares.
-- [x] **Ergonomia e Keymaps em Console Puro (Raw TTY):**
-    - [x] Suporte a sequências xterm para `Ctrl+Left` e `Ctrl+Right` via keymaps do sistema.
-
----
-
-### 🐚 4. Repositório `Shell` & `Profile` — Userland, Hypervisors & Aliases
-
-- [x] **Comutação de Userland (`userland`):**
-    - [x] Subcomandos `gnu`, `bsd`, `default` e `status` para alternância dinâmica de ferramentas e toolchains.
-- [x] **Suporte a Hipervisores e VM NetBSD (`nb`):**
-    - [x] Comando universal `nb` para controle da VM NetBSD sob Bhyve ou KVM.
-- [x] **Matriz de Aliases Renovada:**
-    - [x] Aliases concisos para players multimídia, suítes de escritório, navegadores e ferramentas de diagnóstico.
-
----
-
-## 💡 Insights & Notas Arquiteturais
-
-> [!NOTE]
-> Registro técnico das decisões de engenharia homologadas no ecossistema:
-
-- **Alocação Proporcional 16 Partes:** A partição fixa de memória (1/16 VM, 4/16 ARC, 11/16 Host) garante estabilidade operacional contínua, prevenindo disputas de alocação física entre o ZFS ARC e o alocador contíguo de páginas do driver DRM `i915kms`.
-- **Injeção de Tema nos Lançadores Desktop:** A injeção direta de `SAL_USE_VCLPLUGIN=gtk3 GTK_THEME=adw-gtk3-dark GTK_APPLICATION_PREFER_DARK_THEME=1` nas entradas `.desktop` locais garante que aplicações complexas como LibreOffice e Emacs herdem o tema escuro independentemente do compositor ativo (KDE, GNOME, Sway ou Openbox).
-- **Isolamento de Quiosques Declarativos:** A transição de scripts de polling contínuo (`xdotool`) para diretivas declarativas nativas no Openbox e no Sway eliminou integralmente condições de corrida de redimensionamento e travamentos de sessão gráfica.
+Em todo "botão/link" que muda de cor quando o mouse passa por cima (tipo no Dashboard, mas não só no dashboard) ele está meio travado e coicidentemente ele trava no ritimo da piscada do cursor kkk. Eu não quero mudar o comportamento do cursor e do mouse... Só quero fazer ficar "liso" que nem o emacs no xorg/x11 está... Esse travamento só acontece no wayland... E eu, repedindo de novo, não quero alterar o comportamento do mouse nem nada... Só quero que esse travamento não aconteça mais.
 
 ---
 
