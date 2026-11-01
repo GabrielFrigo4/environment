@@ -100,6 +100,10 @@ sh ~/Documents/Environment/Setup/common/office/office.sh
 5.5. Executar a receita modular de editores (Emacs, Neovim, Vim, Helix, Micro):
 sh ~/Documents/Environment/Setup/common/editors/editors.sh
 
+5.6. Instalar ferramentas de leitura nativa de documentos, Poppler e DjVu:
+sudo pkg install -y graphics/djvulibre graphics/poppler-utils print/pdftk textproc/hs-pandoc
+sh ~/Documents/Environment/Setup/common/docs/typesetting.sh
+
 --------------------------------------------------------------------------------
 PASSO 6: KDE PLASMA 6, COMPOSITORES WAYLAND, GERENCIADORES X11 E EWM
 --------------------------------------------------------------------------------
@@ -141,15 +145,22 @@ PASSO 7: NOVIDADES DE SESSÃO GRÁFICA E COMUTAÇÃO DE USERLAND
 --------------------------------------------------------------------------------
 Recursos de sessão gráfica disponibilizados no repositório Shell:
 - wwm: Wayland Window Manager (Sway) com barra superior interativa GTK3
-  (wwm-bar) com transições reais de CSS :hover nos workspaces (1..5) e botões
-  de ação ([ Web Browser ], [ Terminal ], [ Files ], [ Emacs ], [ Menu ],
-  [ Close ], [ Exit ]), com fallback automático para swaybar JSON.
+  (wwm-bar) com botões em formato pílula GTK4/Qt6 sem colchetes (Web Browser,
+  Terminal, Files, Emacs, Menu, Close, Exit), gerenciamento dinâmico de
+  workspaces com botões de criação (+) e destruição (−), e fallback para swaybar.
 - xwm: X11 Window Manager (Openbox) com suporte a redimensionamento em 8
   direções (bordas, cantos, grips) e atalho Alt+RightClick para janelas SSD
   (Terminal, Emacs, etc.), além do menu dinâmico categorizado (5 categorias).
 - wgui / xgui: Lançadores de quiosque com abas dinâmicas auto-ocultáveis no
   Wayland (wgui-tabwatch) e barra superior dinâmica em Python 3 + GTK3 + X11
-  (xgui-tabbar dock de 28px exibido sob >= 2 janelas) no Openbox X11.
+  (xgui-tabbar dock de 28px exibido sob >= 2 janelas) no Openbox X11 com 100%
+  de paridade estética e tipográfica (#2b2b30 ativo, #1e1e22 inativo, 10pt Bold).
+- Emacs Native Readers & Smart Open: Despachante inteligente 'o' / 'open' abrindo
+  PDFs e DjVu ('o slide.pdf', 'o doc.djvu' a 192 DPI contínuo com modo escuro 'i'),
+  e-books EPUB ('o book.epub'), bancos SQLite ('o db.sqlite3'), arquivos
+  compactados ('o archive.zip') e processos ('procs' / 'htop') nativamente no Emacs.
+- Ciclo Unificado de Cursor (1200ms): Sincronização temporal de 1200ms
+  (600ms aceso / 600ms apagado) entre GTK3/GTK4, XTerm, Emacs, NeoVim e Vim.
 - Pipeline 11-DE / 10-compositor: Detecção automática da cascata (KDE > GNOME >
   MATE > Cinnamon > XFCE > LXQt > LXDE > Budgie > Pantheon > Deepin > COSMIC)
   e harmonização determinística de temas GTK/Qt, cursores e fontes.

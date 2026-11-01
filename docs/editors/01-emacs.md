@@ -59,6 +59,29 @@ A arquitetura visual implementa proteções para consistência de frames e respo
 
 - **Supressão Incondicional da Tool-Bar:** A rotina `interface/apply-tool-bar` força `tool-bar-lines 0` e `tool-bar-mode -1` em todos os contextos de inicialização — interfaces gráficas (GUI), gerenciador de janelas Emacs (EWM) e consoles TTY. A barra de menu (`menu-bar`) é preservada exclusivamente em ambientes gráficos (`menu-bar-mode 1`) e suprimida em consoles de texto puro.
 - **Flush Imediato de Hover Cairo em Wayland PGTK:** Sob o backend PGTK nativo, o Emacs ativa `track-mouse t` e intercepta eventos `[mouse-movement]` via `interface/pgtk-flush-mouse-hover`. Ao detectar sobreposição do ponteiro sobre elementos com propriedade `mouse-face` ou `button` (como botões do Dashboard), o handler dispara `redisplay t` imediato na superfície Cairo, eliminando a latência de 500ms atrelada ao ciclo de piscar do cursor.
+- **Ciclo Unificado de Piscar de Cursor (1200ms):** Padronização rigorosa do cursor (`blink-cursor-interval 0.6`, `blink-cursor-delay 0.6`, `blink-cursor-blinks 0`), sincronizando exatamente o intervalo de 1200ms em GUI e PTY com GTK3/GTK4 (`gtk-cursor-blink-time=1200`), XTerm (`*cursorBlink: always`), NeoVim e Vim (`blinkwait600-blinkoff600-blinkon600`).
+
+---
+
+## 📖 Suíte Soberana de Leitura de Documentos & Aplicações Nativas
+
+O GNU Emacs substitui suítes pesadas de visualizadores e gerenciadores externos, oferecendo leitores contínuos integrados diretamente ao despachante `$ o <arquivo>` / `$ open <arquivo>` no terminal e no Aweshell:
+
+### 1. Leitores Soberanos de Documentos
+
+- **PDF e DjVu (`doc-view-mode`):** Renderização contínua a 192 DPI (`doc-view-continuous t`, `doc-view-resolution 192`) acelerada nativamente via `mutool` (MuPDF), `pdftoppm` (Poppler) ou `ddjvu` (`graphics/djvulibre`). Oferece scroll contínuo suave (`j`/`k`, `n`/`p`), zoom (`+`/`-`/`0`), ajuste de tela (`W`/`H`/`P`) e chaveamento instantâneo para modo escuro invertido via tecla `i` (`doc-view-invert-colors`).
+- **EPUB (`nov-mode`):** Leitor de livros digitais com reflow tipográfico dinâmico, margens calibradas (`nov-text-width t`), paginação estruturada e suporte a notas.
+
+### 2. Suíte de Aplicações Nativas Integradas
+
+- **Bancos de Dados SQLite (`sqlite-mode`):** Inspeção de tabelas, esquemas e consultas SQL nativas via `$ o db.sqlite3` ou comando `$ sql`.
+- **Arquivos Compactados (`arc-mode` / `tar-mode`):** Navegação, visualização de conteúdo e extração de arquivos nos formatos `.zip`, `.tar.gz`, `.tar.xz`, `.zst` e `.7z` via `$ o arquivo.zip`.
+- **Visualizador de Imagens (`image-mode`):** Renderização instantânea de PNG, JPEG, WebP e SVG com redimensionamento nativo.
+- **Gerenciador de Processos (`proced`):** Monitor interativo de processos do sistema com envio de sinais (`kill`, `renice`) via `$ procs` ou `$ htop`.
+- **Comparação e Mesclagem (`ediff`):** Ferramenta visual interativa de diferenças de arquivo e merge lado a lado com granularidade de caractere via `$ ediff file-a file-b`.
+- **Calculadora Avançada (`calc`):** Calculadora científica, algébrica simbólica e financeira em notação RPN via `$ calc [expressão]`.
+- **Editor Hexadecimal (`hexl-mode`):** Inspeção e modificação binária de baixo nível em hexadecimal e ASCII via `$ hex arquivo.bin`.
+- **Gerenciamento de Pastas Dual-Pane (`dired` + `wdired`):** Navegação ágil de diretórios com edição de nomes de arquivos em lote diretamente no buffer de texto via `wdired` (`C-x C-q` ou `r`).
 
 ---
 

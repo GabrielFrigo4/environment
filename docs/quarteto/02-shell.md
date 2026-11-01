@@ -112,16 +112,23 @@ A função interna `_resolve_desktop_font` resolve tipografias através de um pi
 
 ### Gerenciamento de Janelas: `wwm` (Wayland) e `xwm` (X11)
 
-- **`wwm` (Wayland Window Manager):** Despacha sessões Wayland puras (`sway`, `labwc`, `river` ou `cage` com terminal `foot`). No Sway, acopla o script `wwm-status` que gera uma barra de status interativa em formato JSON contínuo (`"click_events": true`). Apresenta botões clicáveis com feedback visual dinâmico em `:hover` (realce de bordas e acento `#3584e4` / `#e01b24`): `[Web Browser]`, `[Terminal]`, `[Files]`, `[Emacs]`, `[Menu]`, `[Close]` (swaymsg kill) e `[Exit]` (swaymsg exit), além do indicador de data/hora.
+- **`wwm` (Wayland Window Manager):** Despacha sessões Wayland puras (`sway`, `labwc`, `river` ou `cage` com terminal `foot`). No Sway, acopla a barra superior interativa `wwm-bar` em GTK3 (com fallback contínuo para streaming JSON da Swaybar com `"click_events": true`). Adota botões estilo pílula inspirados nas diretrizes do GTK4 e Qt6 sem colchetes (`Web Browser`, `Terminal`, `Files`, `Emacs`, `Menu`, `Close`, `Exit`), feedback de `:hover` (`#3584e4` / `#e01b24`) e gerenciamento dinâmico de workspaces (`1..N`) com botões dedicados de criação (`+`, alocando o primeiro número livre) e destruição (`−`, migrando janelas e descartando o workspace atual).
 - **`xwm` (X11 Window Manager):** Inicia sessão gráfica sobre Openbox com suporte completo a decorações de janela server-side (SSD) para redimensionamento fluido por todas as 4 bordas e 4 cantos (`Top`, `Bottom`, `Left`, `Right`, cantos diagonais) diretamente pelo mouse, sem necessidade de combinações modais de teclado. Gera dinamicamente um menu raiz contextual via AWK varrendo arquivos `.desktop`:
     - Aplicações fixas de acesso rápido: `Web Browser`, `Terminal`, `Files`, `Emacs`.
     - 5 categorias indexadas dinamicamente via varredura de arquivos `.desktop`: `Development`, `Internet`, `Office`, `Media & Graphics`, `System & Tools`.
     - Comandos operacionais: `Reconfigure` e `Exit`.
 
-### Quiosques Efêmeros: `wgui` e `xgui` com Abas Dinâmicas
+### Quiosques Efêmeros: `wgui` e `xgui` com Paridade Visual 100%
 
 - **`wgui` (Wayland Kiosk com Abas Dinâmicas):** Opera sobre o Sway executando o daemon sentinela `wgui-tabwatch`. Em modo de janela única (`_count < 2`), aplica `layout splith, border none` para visual imersivo em tela cheia. Quando uma janela secundária ou diálogo modal é aberto (total $\ge 2$), comuta automaticamente para `layout tabbed, border normal 1`, apresentando abas estilizadas na paleta Adwaita-Breeze Dark Fusion (`#1e1e22`, `#2b2b30`, `#3584e4`).
-- **`xgui` (X11 Kiosk Declarativo):** Opera sobre Openbox com suporte a janelas maximizadas e decoração adaptativa, aplicando transições de abas visuais sob múltiplas instâncias e eliminando completamente loops em background de redimensionamento (`xdotool`), prevenindo condições de corrida e congelamento de renderização.
+- **`xgui` (X11 Kiosk com Dock de Abas `xgui-tabbar`):** Opera sobre Openbox integrando a barra superior dinâmica em Python 3 + GTK3 + X11 (`xgui-tabbar` dock de 28px). Atinge 100% de paridade visual e tipográfica com o `wgui`: fonte em `10pt Bold`, aba focada em `#2b2b30` com borda e realce superior em azul `#3584e4`, abas desfocadas em `#1e1e22` com bordas `#38383d` e rótulos `#9a9996` responsivos a `:hover` (`#ffffff`), colapsando automaticamente sob janela única.
+
+### Despachante Universal de Abertura Inteligente (`o` / `open`)
+
+Implementado no `context/desktop/common.sh`, a função `open-smart` (com aliases `o` e `open`) oferece roteamento contextual de arquivos e fluxos:
+
+- **Buffers Soberanos do Emacs:** Para documentos e arquivos estruturados (PDF, EPUB, DjVu, SQLite `.sqlite`/`.sqlite3`/`.db`, compactados `.zip`/`.tar.*`/`.7z`, scripts, fontes e código), despacha diretamente para o GNU Emacs via `emacsclient -n` (ou inicialização em background).
+- **Aplicações Especializadas do SO:** Para URLs web e formatos pesados proprietários (Office, suítes de mídia), despacha transparentemente para o manipulador padrão da plataforma (`open` no macOS, `cygstart` no Windows/MSYS2, `xdg-open` ou `gio open` no Linux/FreeBSD).
 
 ### Emacs OS: `ewm` (Wayland) e `exwm` (X11)
 
