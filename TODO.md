@@ -49,6 +49,10 @@
 
 Nos submenus com bordar arredondadas fica nessas bordar tipo um resto de retangulo preto... Em todas e quaisquer bordas arredondadas... É como se fosse um fundo retangular preto que fica atras desses submenus que só ficou vizivel porque a borda das quinas são arredondadas (se fossem retangulares retas ficaria escondido)... Tipo os menus dos emacs, do wireshark e etc...
 
+## Icones no Xorg/X11
+
+Em geral eles estão perfeitos 1 para 1 com o Waylando (onlyoffice, libreoffice e etc tudo correto) MAS no antigravity nos dialogs os icones não estão pareados... Tem que arrumar esse comportamento divergente do xgui e xwm e xewn
+
 ## Emacs no Wayland
 
 Em todo "botão/link" que muda de cor quando o mouse passa por cima (tipo no Dashboard, mas não só no dashboard) ele está meio travado e coicidentemente ele trava no ritimo da piscada do cursor kkk. Eu não quero mudar o comportamento do cursor e do mouse... Só quero fazer ficar "liso" que nem o emacs no xorg/x11 está... Esse travamento só acontece no wayland... E eu, repedindo de novo, não quero alterar o comportamento do mouse nem nada... Só quero que esse travamento não aconteça mais.
@@ -62,6 +66,10 @@ Em todo "botão/link" que muda de cor quando o mouse passa por cima (tipo no Das
 - [ ] Eu acho que temos que melhorar a integração de copiar e colar e de atalhos entre o emacs e o (x/w)ewm... Tipo meio qu fizemos isso mas aparentemente funciona só pela metade kkk, no colar funciona maravilhosamente bem mas no copiar... Ai ai ai, o atalho control-c buga muito... Não só esse atalho mas esse é o mais cotidiano que quebra
 - [ ] Por fim acho que seria interessante colocar o comando no emacs de agy... Tipo abri o agy num vterm ou term (eu realmente não sei qual dos 2 é melhor...) e usar... Seria incrivel... Levando em conta que o agy muda no FreeBSD e no Linux (olhar o Shell) e etc...
 - [ ] E por fim seria possivel melhorar o aweshell ao ponto de conseguir rodar o agy e aplicações TUI dentro do aweshell sem bugar completamente? Seria o meu sonho fazer isso
+
+## Setup
+
+- [ ] Além disso temos que baixar o libtool no FreeBSD / Fedora e etc... para poder compilar o vterm
 
 ---
 
