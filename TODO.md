@@ -68,6 +68,10 @@ Em geral eles estavam perfeitos 1 para 1 com o Waylando (onlyoffice, libreoffice
 - [ ] cwm (Xenocara/OpenBSD): instalar um compositor pelos pacotes (`pkg_add picom` ou `xcompmgr`) e testar o vsync com `glx`. Depende do suporte do Mesa a swap control no hardware, então pode variar. Conferir em `/var/log/Xorg.0.log` e no `man` do driver se `TearFree` existe.
 - [ ] Se funcionar, avaliar iniciar o compositor automaticamente junto com o `xwm`/cwm no `Shell`.
 
+## (X/W)GUI e (X/W)WM
+
+Gostaria de deixar claro que no geral o sway e o openbox estão muito bons... Mas tem outros compositores no pipeline e eu gostaria de deixar absolutamente todos com um comportamento semelhante satfatorio (claro que cada um com a sua peculiariedade mas seguindo a mesma linha de recursos, tabs, abas, temas, menus e etc...)
+
 ## Emacs no Wayland
 
 Em todo "botão/link" que muda de cor quando o mouse passa por cima (tipo no Dashboard, mas não só no dashboard) ele está meio travado e coicidentemente ele trava no ritimo da piscada do cursor kkk. Eu não quero mudar o comportamento do cursor e do mouse... Só quero fazer ficar "liso" que nem o emacs no xorg/x11 está... Esse travamento só acontece no wayland... E eu, repedindo de novo, não quero alterar o comportamento do mouse nem nada... Só quero que esse travamento não aconteça mais.
