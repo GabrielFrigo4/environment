@@ -77,6 +77,10 @@ Em todo "botão/link" que muda de cor quando o mouse passa por cima (tipo no Das
 - [ ] Ele falhou na atualização do nvim... Tipo só falhou... Eu fui no diretorio e dei um git pull e foi kkkk... Lembrando que essas ferramentas as configurações estão fora do MSYS2...
 - [ ] No Windows o nvim muda o formato do cursor corretamente mas o vim não... E o emacs-no-windows (en / enw) simplesmente abrem o emacs client (com window) kkkk
 
+## Shell & Aweshell
+
+- [ ] Tem varias coisas que foram adicionadas para o Shell que não foram espelhadas para o Aweshell, Powershell, Nushell, CMD/Clink...
+
 ---
 
 > [!TIP]
