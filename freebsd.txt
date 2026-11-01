@@ -100,8 +100,8 @@ sh ~/Documents/Environment/Setup/common/office/office.sh
 5.5. Executar a receita modular de editores (Emacs, Neovim, Vim, Helix, Micro):
 sh ~/Documents/Environment/Setup/common/editors/editors.sh
 
-5.6. Instalar ferramentas de leitura nativa de documentos, Poppler e DjVu:
-sudo pkg install -y graphics/djvulibre graphics/poppler-utils print/pdftk textproc/hs-pandoc
+5.6. Instalar ferramentas de leitura nativa de documentos, Poppler, DjVu e dependências do PDF-Tools (epdfinfo):
+sudo pkg install -y graphics/djvulibre graphics/poppler-utils graphics/poppler-glib devel/autoconf devel/automake graphics/png print/pdftk textproc/hs-pandoc
 sh ~/Documents/Environment/Setup/common/docs/typesetting.sh
 
 --------------------------------------------------------------------------------

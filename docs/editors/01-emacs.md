@@ -69,8 +69,21 @@ O GNU Emacs substitui suítes pesadas de visualizadores e gerenciadores externos
 
 ### 1. Leitores Soberanos de Documentos
 
-- **PDF e DjVu (`doc-view-mode`):** Renderização contínua a 192 DPI (`doc-view-continuous t`, `doc-view-resolution 192`) acelerada nativamente via `mutool` (MuPDF), `pdftoppm` (Poppler) ou `ddjvu` (`graphics/djvulibre`). Oferece scroll contínuo suave (`j`/`k`, `n`/`p`), zoom (`+`/`-`/`0`), ajuste de tela (`W`/`H`/`P`) e chaveamento instantâneo para modo escuro invertido via tecla `i` (`doc-view-invert-colors`).
-- **EPUB (`nov-mode`):** Leitor de livros digitais com reflow tipográfico dinâmico, margens calibradas (`nov-text-width t`), paginação estruturada e suporte a notas.
+A visualização de documentos adota o **`pdf-tools`** com o servidor nativo de alta performance **`epdfinfo`** (compilado sobre Poppler-GLib) como motor primário e o **`doc-view-mode`** contínuo (192 DPI com Poppler/MuPDF/DjVuLibre) como motor de retaguarda para arquivos PDF, DjVu (`ddjvu`), PostScript e imagens, acompanhado do **`nov-mode`** para livros digitais EPUB:
+
+- **Renderização Cromática Fiel:** Todos os documentos abrem por padrão em suas cores naturais e nítidas originais (fundo claro original), preservando fidelidade tipográfica e diagramação. O modo escuro / Midnight Mode (`#e5e9f0` sobre `#1e1e22`) pode ser ativado e desativado sob demanda teclando `i` ou `m`.
+- **Enquadramento Automático na Abertura:** Ajuste inteligente imediato de página à janela (`fit-page`) logo após a carga do documento, sem requerer intervenção manual de escala.
+- **Ocultação de Cursor (`cursor-type nil`):** O cursor de texto piscante é suprimido durante a leitura tanto no Emacs nativo quanto nos estados Evil (Normal e Motion), eliminando ruído visual sobre as páginas.
+- **Atalhos Unificados Padrão da Comunidade:**
+    - **Scroll Contínuo:** `j` / `k` ou `<down>` / `<up>` para rolagem suave de linhas.
+    - **Navegação de Páginas:** `n` / `p` ou `SPC` / `S-SPC` (além de `J`/`K`, `<next>`/`<prior>` e `DEL`) para avançar ou retroceder páginas / capítulos.
+    - **Zoom e Escala:** `+` / `=` para ampliar, `-` para reduzir e `0` para restaurar a escala original (`100%`).
+    - **Ajustes de Janela:** `w` / `W` para ajustar à largura (`fit-width`), `h` / `H` para ajustar à altura (`fit-height`) e `f` / `P` para enquadrar a página inteira (`fit-page`).
+    - **Rotação:** `r` / `R` para girar a página atual em 90 graus no sentido horário.
+    - **Sumário e Navegação Estruturada:** `o` / `t` para abrir o sumário / índice estruturado (TOC / Outline).
+    - **Salto Direto:** `g` para ir para uma página específica (`goto-page`) e `G` para saltar à última página.
+    - **Modo Escuro:** `i` / `m` para alternar entre cores originais e Midnight Mode / cores invertidas.
+    - **Saída Rápida:** `q` para fechar o visualizador (`quit-window`).
 
 ### 2. Suíte de Aplicações Nativas Integradas
 
