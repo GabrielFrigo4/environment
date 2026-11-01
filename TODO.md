@@ -53,6 +53,13 @@ Nos submenus com bordar arredondadas fica nessas bordar tipo um resto de retangu
 
 Em geral eles estavam perfeitos 1 para 1 com o Waylando (onlyoffice, libreoffice e etc tudo correto) MAS no antigravity e agora no libreoffice e nos dialogs os icones não estão pareados... Tem que arrumar esse comportamento divergente do xgui e xwm e xewn... O erro era nos arquivos de configuração do gtk3 e gtk4... Tem que arrumar eles se não me engano...
 
+## Tearing / VSync no Xorg/X11 (Openbox e cwm)
+
+- [ ] Resolver a dessincronização (tearing) ao mover janelas no Xorg/X11, tanto no Openbox (`xwm`) quanto no cwm. Sem compositor as janelas vão direto pro framebuffer sem sincronizar com o retrace vertical.
+- [ ] Openbox: baixar testar `picom --backend glx --vsync` (o backend `xrender` ainda pode dar tearing). Ver também a opção `TearFree` no driver (`amdgpu`/`intel`/`radeon`), que não precisa de compositor. O `modesetting` não tem essa opção.
+- [ ] cwm (Xenocara/OpenBSD): instalar um compositor pelos pacotes (`pkg_add picom` ou `xcompmgr`) e testar o vsync com `glx`. Depende do suporte do Mesa a swap control no hardware, então pode variar. Conferir em `/var/log/Xorg.0.log` e no `man` do driver se `TearFree` existe.
+- [ ] Se funcionar, avaliar iniciar o compositor automaticamente junto com o `xwm`/cwm no `Shell`.
+
 ## Emacs no Wayland
 
 Em todo "botão/link" que muda de cor quando o mouse passa por cima (tipo no Dashboard, mas não só no dashboard) ele está meio travado e coicidentemente ele trava no ritimo da piscada do cursor kkk. Eu não quero mudar o comportamento do cursor e do mouse... Só quero fazer ficar "liso" que nem o emacs no xorg/x11 está... Esse travamento só acontece no wayland... E eu, repedindo de novo, não quero alterar o comportamento do mouse nem nada... Só quero que esse travamento não aconteça mais.
@@ -73,7 +80,7 @@ Em todo "botão/link" que muda de cor quando o mouse passa por cima (tipo no Das
 
 ## Shell (MSYS2/Windows/uped)
 
-- [ ] Ele não atualiza o emacs que fica na posição ~/.emacs.d e nem o vim que fica ~/vimfiles... (tem que adicionar esses caminhos na lista dos caminhos validos)
+- [ ] Ele não atualiza o emacs que fica na pasta ~/.emacs.d e nem o vim que fica ~/vimfiles... (tem que adicionar esses caminhos na lista dos caminhos validos)
 - [ ] Ele falhou na atualização do nvim... Tipo só falhou... Eu fui no diretorio e dei um git pull e foi kkkk... Lembrando que essas ferramentas as configurações estão fora do MSYS2...
 - [ ] No Windows o nvim muda o formato do cursor corretamente mas o vim não... E o emacs-no-windows (en / enw) simplesmente abrem o emacs client (com window) kkkk
 
