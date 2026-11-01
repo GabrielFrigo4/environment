@@ -59,7 +59,7 @@ Em todo "botão/link" que muda de cor quando o mouse passa por cima (tipo no Das
 ⛔ Error (use-package): evil/:catch: Symbol’s value as variable is void: doc-view-mode-map
 ```
 
-- [ ] Eu acho que temos que melhorar a integração de copiar e colar e de atalhos entre o emacs e o (x/w)ewm... Tipo meio qu fizemos isso mas aparentemente funciona só pela metade kkk, no colar funciona maravilhosamente bem mas no copiar... Ai ai ai, o atalho control-c buga muito
+- [ ] Eu acho que temos que melhorar a integração de copiar e colar e de atalhos entre o emacs e o (x/w)ewm... Tipo meio qu fizemos isso mas aparentemente funciona só pela metade kkk, no colar funciona maravilhosamente bem mas no copiar... Ai ai ai, o atalho control-c buga muito... Não só esse atalho mas esse é o mais cotidiano que quebra
 - [ ] Por fim acho que seria interessante colocar o comando no emacs de agy... Tipo abri o agy num vterm ou term (eu realmente não sei qual dos 2 é melhor...) e usar... Seria incrivel... Levando em conta que o agy muda no FreeBSD e no Linux (olhar o Shell) e etc...
 - [ ] E por fim seria possivel melhorar o aweshell ao ponto de conseguir rodar o agy e aplicações TUI dentro do aweshell sem bugar completamente? Seria o meu sonho fazer isso
 
