@@ -51,7 +51,7 @@ Nos submenus com bordar arredondadas fica nessas bordar tipo um resto de retangu
 
 ## Icones no Xorg/X11
 
-Em geral eles estão perfeitos 1 para 1 com o Waylando (onlyoffice, libreoffice e etc tudo correto) MAS no antigravity nos dialogs os icones não estão pareados... Tem que arrumar esse comportamento divergente do xgui e xwm e xewn
+Em geral eles estavam perfeitos 1 para 1 com o Waylando (onlyoffice, libreoffice e etc tudo correto) MAS no antigravity e agora no libreoffice e nos dialogs os icones não estão pareados... Tem que arrumar esse comportamento divergente do xgui e xwm e xewn... O erro era nos arquivos de configuração do gtk3 e gtk4... Tem que arrumar eles se não me engano...
 
 ## Emacs no Wayland
 
