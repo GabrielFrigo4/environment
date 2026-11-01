@@ -140,14 +140,19 @@ sh ~/Documents/Environment/Setup/common/editors/ewm.sh
 PASSO 7: NOVIDADES DE SESSÃO GRÁFICA E COMUTAÇÃO DE USERLAND
 --------------------------------------------------------------------------------
 Recursos de sessão gráfica disponibilizados no repositório Shell:
-- wwm: Wayland Window Manager com barra clicável interativa em formato JSON
-  (controles diretos: Web Browser, Terminal, Files, Emacs, Menu, Close, Exit).
-- xwm: X11 Window Manager (Openbox) com menu dinâmico categorizado
-  (aplicações fixas [Web Browser, Terminal, Files, Emacs] e 5 categorias
-  dinâmicas: Development, Internet, Office, Media & Graphics, System & Tools).
-- wgui / xgui: Lançadores de quiosque com abas inteligentes auto-ocultáveis no
-  Wayland (visíveis apenas com 2 ou mais janelas abertas) e gerenciamento
-  declarativo no Openbox X11 (eliminando loops de resize).
+- wwm: Wayland Window Manager (Sway) com barra superior interativa GTK3
+  (wwm-bar) com transições reais de CSS :hover nos workspaces (1..5) e botões
+  de ação ([ Web Browser ], [ Terminal ], [ Files ], [ Emacs ], [ Menu ],
+  [ Close ], [ Exit ]), com fallback automático para swaybar JSON.
+- xwm: X11 Window Manager (Openbox) com suporte a redimensionamento em 8
+  direções (bordas, cantos, grips) e atalho Alt+RightClick para janelas SSD
+  (Terminal, Emacs, etc.), além do menu dinâmico categorizado (5 categorias).
+- wgui / xgui: Lançadores de quiosque com abas dinâmicas auto-ocultáveis no
+  Wayland (wgui-tabwatch) e barra superior dinâmica em Python 3 + GTK3 + X11
+  (xgui-tabbar dock de 28px exibido sob >= 2 janelas) no Openbox X11.
+- Pipeline 11-DE / 10-compositor: Detecção automática da cascata (KDE > GNOME >
+  MATE > Cinnamon > XFCE > LXQt > LXDE > Budgie > Pantheon > Deepin > COSMIC)
+  e harmonização determinística de temas GTK/Qt, cursores e fontes.
 - ewm / exwm: Emacs Wayland Manager com frame limpo (tool-bar desabilitada) e
   EXWM com simulação contextual de teclas (emacs/wm-gui-simulation-keys vs
   emacs/wm-terminal-simulation-keys) conforme a classe da janela.

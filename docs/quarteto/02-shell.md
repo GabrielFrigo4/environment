@@ -79,6 +79,15 @@ Uma das inovações de resiliência do Universal Shell é o modelo de **processo
 - **Quiosque Mono-Aplicação (`(x/w)gui`):** Focado no ciclo de vida de uma única aplicação principal (`gui firefox`, `xgui gimp`), mantendo suporte transparente a caixas de diálogo modais e subjanelas efêmeras. Ao encerrar o aplicativo, o compositor é descarregado e o terminal virtual retorna imediatamente ao prompt de texto.
 - **Window Management Completo (`(x/w)wm`, `exwm`, `ewm`):** Sessão gráfica persistente por terminal virtual com gerenciador de janelas completo, barra de status modular, menus com tema escuro e barramentos D-Bus com isolamento estrito entre diferentes terminais TTY.
 
+### Pipeline de Detecção de Desktop & Harmonização Estética
+
+O Universal Shell integra um subsistema modular composto por quatro scripts centrais:
+
+- **`Shell/library/detect-desktop.sh`**: Motor central de sondagem que identifica com precisão 11 Desktop Environments canônicos (`kde`, `gnome`, `mate`, `cinnamon`, `xfce`, `lxqt`, `lxde`, `budgie`, `pantheon`, `deepin`, `cosmic`) e mais de 10 compositores Wayland e gerenciadores X11 independentes (`sway`, `hyprland`, `river`, `labwc`, `cage`, `niri`, `wayfire`, `dwl`, `openbox`, `cwm`). Resolve dinamicamente o tema GTK (`_resolve_gtk_theme`), esquema escuro (`_detect_color_scheme`), estilos de widgets Qt (`_detect_qt_theme`) e a plataforma Qt (`_detect_qt_platform_theme`).
+- **`Shell/context/desktop/common.sh`**: Responsável pela unificação do ambiente de desktop em tempo de execução. Exporta a hierarquia canônica de cursores (`XCURSOR_THEME` e `XCURSOR_SIZE=24`) seguindo a cascata de precedência `KDE > GNOME > MATE > Cinnamon > XFCE > LXQt > LXDE > Budgie > Pantheon > Deepin > COSMIC > Fallback (Adwaita -> breeze_cursors -> default)`. Sincroniza `GTK_THEME`, `QT_STYLE_OVERRIDE`, `QT_QPA_PLATFORMTHEME`, caminhos universais de ícones (`XCURSOR_PATH`), renderização Wayland nativa em Electron (`ELECTRON_OZONE_PLATFORM_HINT="auto"`) e proteção contra janelas em branco no Java AWT (`_JAVA_AWT_WM_NONREPARENTING=1`).
+- **`Shell/target/linux/desktop-session.sh`**: Launcher e orquestrador de sessões de desktop completas (`wwm`, `xwm`), configurando barramentos D-Bus isolados por TTY (`dbus-run-session`), variáveis de display e inicialização robusta de compositores e ferramentas de acessibilidade.
+- **`Shell/target/linux/desktop-kiosk.sh`**: Orquestrador de quiosques mono-aplicação efêmeros (`wgui`, `xgui`), garantindo inicialização limpa, confinamento de ciclo de vida e retorno automático ao terminal após o encerramento do aplicativo.
+
 ### Identidade Visual GTK4/Qt6 & Pipeline de Fontes
 
 O ambiente gráfico adota uma paleta inspirada no **Adwaita Dark (GTK4)** e **Breeze Dark (Qt6)**:
@@ -87,29 +96,32 @@ O ambiente gráfico adota uma paleta inspirada no **Adwaita Dark (GTK4)** e **Br
 - Superfície ativa / barras: `#2b2b30`
 - Borda e seleção ativa (azul): `#3584e4`
 - Borda e destaques de saída (vermelho): `#e01b24`
+- Borda de separação / container: `#38383d`
 - Texto secundário: `#9a9996`
 
 A função interna `_resolve_desktop_font` resolve tipografias através de um pipeline determinístico:
 
 1. `JetBrainsMono Nerd Font` (preferência primária universal se detectada via `fc-list`).
 2. Resolução por ambiente desktop configurado:
-    - **KDE / Plasma:** `Noto Sans`
-    - **GNOME:** `Adwaita Sans` $\rightarrow$ `Cantarell`
-    - **MATE / Cinnamon / XFCE:** `Ubuntu` $\rightarrow$ `DejaVu Sans`
+    - **KDE / Plasma / LXQt / Deepin:** `Noto Sans`
+    - **GNOME / Budgie:** `Adwaita Sans` $\rightarrow$ `Cantarell`
+    - **Pantheon:** `Inter` $\rightarrow$ `Open Sans`
+    - **COSMIC:** `Fira Sans` $\rightarrow$ `Cantarell`
+    - **MATE / Cinnamon / XFCE / LXDE:** `Ubuntu` $\rightarrow$ `DejaVu Sans`
 3. Fallback universal: `Sans`.
 
 ### Gerenciamento de Janelas: `wwm` (Wayland) e `xwm` (X11)
 
-- **`wwm` (Wayland Window Manager):** Despacha sessões Wayland puras (`sway`, `labwc`, `river` ou `cage` com terminal `foot`). No Sway, acopla o script `wwm-status` que gera uma barra de status interativa em formato JSON (`"click_events": true`), com botões clicáveis: `[Web Browser]`, `[Terminal]`, `[Files]`, `[Emacs]`, `[Menu]`, `[Close]`, `[Exit]` e indicador de data/hora.
-- **`xwm` (X11 Window Manager):** Inicia sessão gráfica sobre Openbox sem depender de painéis pesados. Gera dinamicamente um menu raiz contextual com:
+- **`wwm` (Wayland Window Manager):** Despacha sessões Wayland puras (`sway`, `labwc`, `river` ou `cage` com terminal `foot`). No Sway, acopla o script `wwm-status` que gera uma barra de status interativa em formato JSON contínuo (`"click_events": true`). Apresenta botões clicáveis com feedback visual dinâmico em `:hover` (realce de bordas e acento `#3584e4` / `#e01b24`): `[Web Browser]`, `[Terminal]`, `[Files]`, `[Emacs]`, `[Menu]`, `[Close]` (swaymsg kill) e `[Exit]` (swaymsg exit), além do indicador de data/hora.
+- **`xwm` (X11 Window Manager):** Inicia sessão gráfica sobre Openbox com suporte completo a decorações de janela server-side (SSD) para redimensionamento fluido por todas as 4 bordas e 4 cantos (`Top`, `Bottom`, `Left`, `Right`, cantos diagonais) diretamente pelo mouse, sem necessidade de combinações modais de teclado. Gera dinamicamente um menu raiz contextual via AWK varrendo arquivos `.desktop`:
     - Aplicações fixas de acesso rápido: `Web Browser`, `Terminal`, `Files`, `Emacs`.
     - 5 categorias indexadas dinamicamente via varredura de arquivos `.desktop`: `Development`, `Internet`, `Office`, `Media & Graphics`, `System & Tools`.
     - Comandos operacionais: `Reconfigure` e `Exit`.
 
-### Quiosques Efêmeros: `wgui` e `xgui`
+### Quiosques Efêmeros: `wgui` e `xgui` com Abas Dinâmicas
 
-- **`wgui` (Wayland Kiosk com Abas Inteligentes):** Opera sobre o Sway executando o daemon sentinela `wgui-tabwatch`. Quando há apenas uma aplicação em tela, aplica `layout splith, border none` para visual limpo em tela cheia. Quando uma janela secundária é disparada (total $\ge 2$), comuta automaticamente para `layout tabbed, border normal 1`, apresentando abas auto-ocultáveis na borda superior.
-- **`xgui` (X11 Kiosk Declarativo):** Opera sobre Openbox com tema de alto contraste. Configura regras estáticas em XML (`<application type="normal"><decor>no</decor><maximized>yes</maximized></application>`), eliminando completamente loops em background de redimensionamento (`xdotool`), prevenindo condições de corrida e congelamento de renderização.
+- **`wgui` (Wayland Kiosk com Abas Dinâmicas):** Opera sobre o Sway executando o daemon sentinela `wgui-tabwatch`. Em modo de janela única (`_count < 2`), aplica `layout splith, border none` para visual imersivo em tela cheia. Quando uma janela secundária ou diálogo modal é aberto (total $\ge 2$), comuta automaticamente para `layout tabbed, border normal 1`, apresentando abas estilizadas na paleta Adwaita-Breeze Dark Fusion (`#1e1e22`, `#2b2b30`, `#3584e4`).
+- **`xgui` (X11 Kiosk Declarativo):** Opera sobre Openbox com suporte a janelas maximizadas e decoração adaptativa, aplicando transições de abas visuais sob múltiplas instâncias e eliminando completamente loops em background de redimensionamento (`xdotool`), prevenindo condições de corrida e congelamento de renderização.
 
 ### Emacs OS: `ewm` (Wayland) e `exwm` (X11)
 
