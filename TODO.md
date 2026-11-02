@@ -72,7 +72,7 @@ You're running in a GNOME environment but the OS keyring is not available for en
 ```
 
 Tipo o meu fedora realmente é com GNOME, mas eu não loguei eu entrei no tty e abri o xwm...
-Mas interessante isso... O que podemos fazer para funcionar melhor ainda? Reparei que sempre tenho que relogar nas coisas porque não fica salvo quando estou fora do GNOME (e eu acredito que isso só acontece no X11 mas tudo bem)
+Mas interessante isso... O que podemos fazer para funcionar melhor ainda? Reparei que sempre tenho que relogar nas coisas porque não fica salvo quando estou fora do GNOME e eu reinicio o computador (e eu acredito que isso só acontece no X11 mas tudo bem)
 
 ## Icones no Xorg/X11
 
