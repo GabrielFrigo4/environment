@@ -57,6 +57,14 @@ A ideia seria semelhante ao pipeline dos browsers no Emacs... Que muda entre Lin
 
 Nos submenus com bordar arredondadas fica nessas bordar tipo um resto de retangulo preto... Em todas e quaisquer bordas arredondadas... É como se fosse um fundo retangular preto que fica atras desses submenus que só ficou vizivel porque a borda das quinas são arredondadas (se fossem retangulares retas ficaria escondido)... Tipo os menus dos emacs, do wireshark e etc...
 
+Gostaria que isso acontecesse
+
+```
+Com o mouse (Menu da área de trabalho): Clique com o botão do meio do mouse em qualquer área livre do fundo da tela (desktop). Isso abrirá um menu suspenso listando todas as janelas abertas. As janelas minimizadas aparecem com o nome entre parênteses (Nome da Janela). Basta clicar nelas para restaurá-las.
+```
+
+E por fim gostaria que se eu pegar no title bar e arrastar que a janela desmaximize e se mova... Um comportamento meio comum...
+
 ## Icones no Xorg/X11
 
 Em geral eles estavam perfeitos 1 para 1 com o Waylando (onlyoffice, libreoffice e etc tudo correto) MAS no antigravity e agora no libreoffice e nos dialogs os icones não estão pareados... Tem que arrumar esse comportamento divergente do xgui e xwm e xewn... O erro era nos arquivos de configuração do gtk3 e gtk4... Tem que arrumar eles se não me engano...
