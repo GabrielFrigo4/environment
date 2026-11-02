@@ -89,6 +89,7 @@ Em todo "botão/link" que muda de cor quando o mouse passa por cima (tipo no Das
 ## Setup
 
 - [ ] Além disso temos que baixar o libtool no FreeBSD / Fedora e etc... para poder compilar o vterm
+- [ ] Baixar isso no MSYS2, FreeBSD e Linux "pacman -S --needed mingw-w64-ucrt-x86_64-texlive-plain-generic"
 
 ## Shell (MSYS2/Windows/uped)
 
@@ -99,6 +100,10 @@ Em todo "botão/link" que muda de cor quando o mouse passa por cima (tipo no Das
 ## Shell & Aweshell
 
 - [ ] Tem varias coisas que foram adicionadas para o Shell que não foram espelhadas para o Aweshell, Powershell, Nushell, CMD/Clink...
+
+## Make
+
+Fazer com que o make fique "posix" de verade... Apesar do bmake e gmake funcionarem muito bem mesmo no posix mode, o busybox ele não funciona o -C quando está no posix...
 
 ---
 
