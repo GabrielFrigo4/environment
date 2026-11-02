@@ -65,9 +65,18 @@ Com o mouse (Menu da área de trabalho): Clique com o botão do meio do mouse em
 
 E por fim gostaria que se eu pegar no title bar e arrastar que a janela desmaximize e se mova... Um comportamento meio comum...
 
+E olha o que apareceu no meu "Antigravity"
+
+```
+You're running in a GNOME environment but the OS keyring is not available for encryption. Ensure you have gnome-keyring or another libsecret compatible implementation installed and running.
+```
+
+Tipo o meu fedora realmente é com GNOME, mas eu não loguei eu entrei no tty e abri o xwm...
+Mas interessante isso... O que podemos fazer para funcionar melhor ainda? Reparei que sempre tenho que relogar nas coisas porque não fica salvo quando estou fora do GNOME (e eu acredito que isso só acontece no X11 mas tudo bem)
+
 ## Icones no Xorg/X11
 
-Em geral eles estavam perfeitos 1 para 1 com o Waylando (onlyoffice, libreoffice e etc tudo correto) MAS no antigravity e agora no libreoffice e nos dialogs os icones não estão pareados... Tem que arrumar esse comportamento divergente do xgui e xwm e xewn... O erro era nos arquivos de configuração do gtk3 e gtk4... Tem que arrumar eles se não me engano...
+Em geral eles estavam perfeitos 1 para 1 com o Waylando (onlyoffice, libreoffice e etc tudo correto) MAS no antigravity e agora no libreoffice e nos dialogs os icones não estão pareados... Tem que arrumar esse comportamento divergente do xgui e xwm e xewn... O erro era nos arquivos de configuração do gtk3 e gtk4... Tem quYou're running in a GNOME environment but the OS keyring is not available for encryption. Ensure you have gnome-keyring or another libsecret compatible implementation installed and running.e arrumar eles se não me engano...
 
 ## Tearing / VSync no Xorg/X11 (Openbox e cwm)
 
