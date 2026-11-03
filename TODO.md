@@ -128,6 +128,61 @@ Simplesmente no Linux no terminal no zsh quando eu clico a seta para a esquerda 
 
 ## FreeBSD
 
+### Setup
+
+```
+ 15.1  zsh
+┌── 07:36:46─ 03/11/26─ Setup─  gabrielf 󰊢 main
+└─ sh Setup/freebsd/desktop/system/system.sh
+==> Iniciando configuração base do FreeBSD...
+pkg: illegal option -- -
+pkg: Invalid argument provided
+
+ 15.1  zsh
+┌── 07:37:02─ 03/11/26─ Setup─  gabrielf 󰊢 main
+└─ sh Setup/freebsd/desktop/system/ttys.sh
+.: cannot open /home/gabrielf/Documents/Environment/core/ui.sh: No such file or directory
+
+ 15.1  zsh
+┌── 07:38:53─ 03/11/26─ ~─  gabrielf
+└─ sudo pkg install -y textproc/hunspell textproc/en-hunspell textproc/pt_BR-hunspell
+Updating FreeBSD-ports repository catalogue...
+FreeBSD-ports repository is up to date.
+Updating FreeBSD-ports-kmods repository catalogue...
+FreeBSD-ports-kmods repository is up to date.
+Updating FreeBSD-base repository catalogue...
+FreeBSD-base repository is up to date.
+All repositories are up to date.
+pkg: No packages available to install matching 'textproc/pt_BR-hunspell' have been found in the repositories
+
+sudo pkg install -y \
+    x11-wm/openbox \
+    x11-wm/cwm \
+    x11-wm/matchbox-window-manager \
+    x11-wm/sway \
+    x11-wm/labwc \
+    x11-wm/river \
+    x11-wm/cage \
+    sysutils/seatd \
+    x11/foot
+Updating FreeBSD-ports repository catalogue...
+FreeBSD-ports repository is up to date.
+Updating FreeBSD-ports-kmods repository catalogue...
+FreeBSD-ports-kmods repository is up to date.
+Updating FreeBSD-base repository catalogue...
+FreeBSD-base repository is up to date.
+All repositories are up to date.
+pkg: No packages available to install matching 'x11-wm/matchbox-window-manager' have been found in the repositories
+
+ 15.1  zsh
+┌── 07:49:33─ 03/11/26─ ~─  gabrielf
+└─ sh ~/Documents/Environment/Setup/common/editors/editors.sh
+==> Configurando perfis de editores de código...
+Already up to date.
+Already up to date.
+fatal: destination path '/home/gabrielf/.vim' already exists and is not an empty directory.
+```
+
 ### Shell
 
 o clear no sh não está funcionando...
