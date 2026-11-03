@@ -126,6 +126,26 @@ Fazer com que o make fique "posix" de verade... Apesar do bmake e gmake funciona
 
 Simplesmente no Linux no terminal no zsh quando eu clico a seta para a esquerda é como se eu tivesse apertado control-<left> ai ele volta 1 palavra e não 1 char... No zsh no Linux.
 
+## FreeBSD
+
+### Shell
+
+o clear no sh não está funcionando...
+
+```
+ 15.1  zsh
+┌── 23:23:06─ 02/11/26─ ~─  gabrielf
+└─ sh
+x1b[1 q 15.1  sh  ~  gabrielf  clear
+x1b[2Jx1b[3Jx1b[H 15.1  sh  ~  gabrielf 
+```
+
+### Emacs TTY no FreeBSD
+
+Simplesmente o tema fica estranho... Coisa light com light e dark com dark... 0 contraste...
+MAS NO LINUX ESTÁ PERFEITO...
+Poderia arrumar
+
 ---
 
 > [!TIP]
