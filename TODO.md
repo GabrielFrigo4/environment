@@ -122,6 +122,10 @@ Em todo "botão/link" que muda de cor quando o mouse passa por cima (tipo no Das
 
 Fazer com que o make fique "posix" de verade... Apesar do bmake e gmake funcionarem muito bem mesmo no posix mode, o busybox ele não funciona o -C quando está no posix...
 
+## Shell / Zsh
+
+Simplesmente no Linux no terminal no zsh quando eu clico a seta para a esquerda é como se eu tivesse apertado control-<left> ai ele volta 1 palavra e não 1 char... No zsh no Linux.
+
 ---
 
 > [!TIP]
