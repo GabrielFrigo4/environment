@@ -107,6 +107,7 @@ Em todo "botão/link" que muda de cor quando o mouse passa por cima (tipo no Das
 
 - [ ] Além disso temos que baixar o libtool no FreeBSD / Fedora e etc... para poder compilar o vterm
 - [ ] Baixar isso no MSYS2, FreeBSD e Linux "pacman -S --needed mingw-w64-ucrt-x86_64-texlive-plain-generic"
+- [ ] Baixar typst no Windows, FreeBSD e Linux
 
 ## Shell (MSYS2/Windows/uped)
 
@@ -200,6 +201,15 @@ x1b[2Jx1b[3Jx1b[H 15.1  sh  ~  gabrielf 
 Simplesmente o tema fica estranho... Coisa light com light e dark com dark... 0 contraste...
 MAS NO LINUX ESTÁ PERFEITO...
 Poderia arrumar
+
+### Arrumar Todos os CI/CD e Pre-Commits de todos os repositorios (menos o OSS) no Documents
+
+Simplesmente tem CI/CD discrepante com os pre-commits e com os commit-msg...
+Tem pre-commit que não é recursivo na verificação e tem make format tmb que não...
+Todas as verificações e etc não devem ser só para raiz e nem até uma profundadie X... Devem ser recursivos que nem o upgit kkkkkkkk
+
+Os pre-commit, commit-msg e CI/CD DEVEM FACILITAR A MINHA VIDA...
+Eu odeio ver mensagem de erro toda hora no pipeline ou no pre-commit ou no commit-msg porque algo absolutamente tosco deu erro... Tipo eu não quero que essa coisa tosca passe mas NÃO TEM COMO AUTOMATIZAR ISSO / AUTO CURA em vez de eu sofrer aqui?
 
 ---
 
