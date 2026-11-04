@@ -186,7 +186,7 @@ fatal: destination path '/home/gabrielf/.vim' already exists and is not an empty
 
 ### Shell
 
-o clear no sh não está funcionando...
+O clear no sh não está funcionando...
 
 ```
  15.1  zsh
@@ -194,6 +194,48 @@ o clear no sh não está funcionando...
 └─ sh
 x1b[1 q 15.1  sh  ~  gabrielf  clear
 x1b[2Jx1b[3Jx1b[H 15.1  sh  ~  gabrielf 
+```
+
+### Profile
+
+Arrumar isso do settings do GTK por causa do FreeBSD com KDE e do Fedora com GNOME...
+
+```
+git diff
+diff --git a/desktop/gtk-3.0/settings.ini b/desktop/gtk-3.0/settings.ini
+index 3c927b7..7011b08 100644
+--- a/desktop/gtk-3.0/settings.ini
++++ b/desktop/gtk-3.0/settings.ini
+@@ -2,13 +2,13 @@
+ gtk-application-prefer-dark-theme=true
+ gtk-button-images=true
+ gtk-cursor-blink=true
+-gtk-cursor-blink-time=1200
+-gtk-cursor-theme-name=Adwaita
++gtk-cursor-blink-time=1000
++gtk-cursor-theme-name=breeze_cursors
+ gtk-cursor-theme-size=24
+ gtk-decoration-layout=icon:minimize,maximize,close
+ gtk-enable-animations=true
+ gtk-font-name=Noto Sans,  10
+-gtk-icon-theme-name=Adwaita
++gtk-icon-theme-name=breeze-dark
+ gtk-menu-images=true
+ gtk-modules=colorreload-gtk-module
+ gtk-primary-button-warps-slider=true
+diff --git a/desktop/gtk-4.0/settings.ini b/desktop/gtk-4.0/settings.ini
+index d3f2cd6..3e82770 100644
+--- a/desktop/gtk-4.0/settings.ini
++++ b/desktop/gtk-4.0/settings.ini
+@@ -1,13 +1,13 @@
+ [Settings]
+ gtk-application-prefer-dark-theme=true
+ gtk-cursor-blink=true
+-gtk-cursor-blink-time=1200
+-gtk-cursor-theme-name=Adwaita
++gtk-cursor-blink-time=1000
++gtk-cursor-theme-name=breeze_cursors
+ gtk-cursor-theme-size=24
 ```
 
 ### Emacs TTY no FreeBSD
