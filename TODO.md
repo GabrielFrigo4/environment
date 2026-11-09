@@ -103,6 +103,8 @@ Em todo "botão/link" que muda de cor quando o mouse passa por cima (tipo no Das
 - [ ] Por fim acho que seria interessante colocar o comando no emacs de agy... Tipo abri o agy num vterm ou term (eu realmente não sei qual dos 2 é melhor...) e usar... Seria incrivel... Levando em conta que o agy muda no FreeBSD e no Linux (olhar o Shell) e etc...
 - [ ] E por fim seria possivel melhorar o aweshell ao ponto de conseguir rodar o agy e aplicações TUI dentro do aweshell sem bugar completamente? Seria o meu sonho fazer isso
 
+Alem disso no repositorio aqui do emacs, não era para jamais ficar lixo do var (isso no repositorio aqui do Environment de dev. No de produção ele vai existir sim kk)... Mas toda hora que voce testa e altera fica esse lixo... Daria para arrumarmos isso? Tipo fazer algo que limpa o lixo ou sla oq... Algo robusto e padrão da industria e não gambiarra.
+
 ## Setup
 
 - [ ] Além disso temos que baixar o libtool no FreeBSD / Fedora e etc... para poder compilar o vterm
@@ -252,6 +254,17 @@ Todas as verificações e etc não devem ser só para raiz e nem até uma profun
 
 Os pre-commit, commit-msg e CI/CD DEVEM FACILITAR A MINHA VIDA...
 Eu odeio ver mensagem de erro toda hora no pipeline ou no pre-commit ou no commit-msg porque algo absolutamente tosco deu erro... Tipo eu não quero que essa coisa tosca passe mas NÃO TEM COMO AUTOMATIZAR ISSO / AUTO CURA em vez de eu sofrer aqui?
+
+### Arrumar no Shell os comandos que iniciam o Debian no Bhyve no meu FreeBSD
+
+Era para ele iniciar e esperar o servidor subir para tentar conectar... Com isso ai acontecendo é algo um pouco frustante apesar de que se eu rodar dnovo o lx vai entrar dboa
+
+```
+lx -s
+==> Iniciando máquina virtual Debian no Bhyve sob demanda...
+"System is booting up. Unprivileged users are not permitted to log in yet. Please come back later. For technical details, see pam_nologin(8)."
+Connection closed by 192.168.8.2 port 22
+```
 
 ---
 

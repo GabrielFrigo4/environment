@@ -7,7 +7,7 @@ MAKEFLAGS += --no-print-directory -s
 # Makefile: Universal Environment
 # ----------------------------------------------------------------
 
-.PHONY: help status audit sync-docs pull update test fix-banners ci doctor clone hooks format prettier lint-format bench uped upgit strip install deploy bootstrap main
+.PHONY: help status audit sync-docs pull update test fix-banners ci doctor clone hooks format prettier lint-format bench uped upgit strip install deploy bootstrap main clean
 
 REPOS     = Setup Shell Vault Profile
 EDITORS   = Editor/Emacs Editor/Helix Editor/NeoVim Editor/Vim
@@ -45,6 +45,8 @@ help:
 	cmd "prettier"       "Formata recursivamente arquivos com Prettier"; \
 	cmd "lint-format"    "Valida formatação recursiva com Prettier sem alterar arquivos"; \
 	cmd "ci"             "Executa pipeline completa de testes, auditoria e pre-commit"; \
+	sec "Manutenção & Limpeza:"; \
+	cmd "clean"          "Remove artefatos temporários, caches e ambientes virtuais (.venv)"; \
 	echo ""
 
 ### ================================
@@ -310,3 +312,20 @@ ci: test audit lint-format
 	echo "⚡ Medindo benchmark de inicialização do Shell..."
 	(cd Shell && sh .githooks/pre-commit)
 	echo "🚀 Ecossistema 100% pronto para produção e commits!"
+
+### ================================
+### CLEANUP
+### ================================
+clean:
+	echo "🧹 Limpando artefatos, caches e ambientes virtuais no Environment..."
+	for r in $(ALL_REPOS); do \
+		if [ -e "$$r/Makefile" ]; then \
+			$(MAKE) -C "$$r" clean 2> "/dev/null" || true; \
+		fi; \
+	done
+	rm -rf .venv
+	find . -type d -name "__pycache__" -exec rm -rf {} + 2> "/dev/null" || true
+	find . -type d -name ".pytest_cache" -exec rm -rf {} + 2> "/dev/null" || true
+	find . -type d -name ".ruff_cache" -exec rm -rf {} + 2> "/dev/null" || true
+	find . -type d -name ".mypy_cache" -exec rm -rf {} + 2> "/dev/null" || true
+	echo "✅ Limpeza do Environment concluída!"

@@ -36,7 +36,7 @@ help:
 	cmd "lint"           "Valida formatação sem modificar arquivos"; \
 	cmd "ci"             "Executa pipeline local completa (check test lint audit)"; \
 	sec "Manutenção & Limpeza:"; \
-	cmd "clean"          "Remove artefatos de build e diretórios temporários"; \
+	cmd "clean"          "Remove artefatos de build, caches e ambientes virtuais (.venv)"; \
 	echo ""
 
 ### ================================
@@ -101,6 +101,10 @@ ci: check test lint
 ### CLEANUP
 ### ================================
 clean:
-	echo "🧹 Limpando artefatos temporários..."
-	rm -rf bin/ build/ dist/ .tmp/ *.log
+	echo "🧹 Limpando artefatos temporários, caches e ambientes virtuais..."
+	rm -rf .venv bin/ build/ dist/ .tmp/ *.log .eggs *.egg-info .coverage htmlcov
+	find . -type d -name "__pycache__" -exec rm -rf {} + 2> "/dev/null" || true
+	find . -type d -name ".pytest_cache" -exec rm -rf {} + 2> "/dev/null" || true
+	find . -type d -name ".ruff_cache" -exec rm -rf {} + 2> "/dev/null" || true
+	find . -type d -name ".mypy_cache" -exec rm -rf {} + 2> "/dev/null" || true
 	echo "✅ Limpeza concluída!"

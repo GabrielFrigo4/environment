@@ -6,7 +6,7 @@
 set -eu
 
 _dir="$(cd "$(dirname "$0")" && pwd)"
-. "${_dir}/scripts/ui.sh"
+. "${_dir}/.scripts/ui.sh"
 
 _name="${1:-}"
 _desc="${2:-}"
