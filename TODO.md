@@ -45,59 +45,6 @@
 
 ## 📌 Histórico de Entregas & Backlog Concluído (100% Entregue)
 
-### 🪟 Xorg/X11 & Wayland (WWM / XWM / WGUI / XGUI / EXWM)
-
-- [x] Resolução de pipelines de compositores por SO (Wayland com `sway`/`labwc`/`river`/`cage`, X11 com `openbox`/`cwm` no OpenBSD/FreeBSD).
-- [x] Eliminação de artefatos visuais e retângulos pretos em bordas arredondadas nos submenus GTK/X11.
-- [x] Menu dinâmico desktop via botão do meio listando janelas abertas e restaurando minimizadas.
-- [x] Desmaximização e movimentação fluida de janelas ao arrastar pela barra de título.
-- [x] Suporte e compatibilidade de chaveiro (`gnome-keyring` / `libsecret` compatível) em sessões puras X11/TTY.
-- [x] Paridade 1:1 de ícones e temas entre Wayland e X11 no GTK3/4 (OnlyOffice, LibreOffice, Antigravity, caixas de diálogo).
-- [x] Mitigação de screen tearing e VSync no Xorg/X11 (Openbox e cwm via `picom --backend glx --vsync` e `TearFree` quando suportado).
-- [x] Paridade arquitetural de tabs, abas de 26px e temas consistentes entre `wgui` e `xgui`.
-
-### 🔮 GNU Emacs Sensorial & Editores Modais
-
-- [x] Correção de travamento intermitente de links/botões no Wayland mantendo o ciclo unificado de cursor 1200ms.
-- [x] Resolução do erro `doc-view-mode-map` no carregamento com Evil Mode.
-- [x] Paridade bidirecional completa de clipboard e atalhos (`Ctrl-C`, `Ctrl-V`) entre GNU Emacs, `ewm` e `exwm`.
-- [x] Integração do Antigravity CLI (`agy`) nos terminais soberanos do Emacs com suporte híbrido host/guest.
-- [x] Aprimoramento do `aweshell` com suporte estável para execução de TUIs e scripts interativos.
-- [x] Purga hermética de diretórios temporários (`var/`, caches) em desenvolvimento e testes.
-- [x] Resolução de caminhos no Windows/MSYS2 (`~/.emacs.d`, `~/vimfiles`) no despachante `uped`.
-- [x] Formato e piscar determinístico de cursor no Vim e NeoVim em Windows, FreeBSD console e Linux.
-
-### 📦 Provisionamento de Sistema Operacional (Setup)
-
-- [x] Instalação declarativa de `libtool` em FreeBSD, Fedora e Debian para compilação nativa de `vterm`.
-- [x] Provisão de `texlive-plain-generic` no MSYS2, FreeBSD e Linux.
-- [x] Provisão do compilador tipográfico `typst` em Linux, FreeBSD e Windows.
-- [x] Correção de sintaxe e flags em `pkg` e caminhos do `ui.sh` no setup do FreeBSD (`system.sh`, `ttys.sh`).
-- [x] Inclusão dos pacotes corretos de dicionários Hunspell em FreeBSD (`textproc/hunspell`, `textproc/en-hunspell`, `textproc/pt_BR-hunspell`).
-- [x] Resolução defensiva de destinos de clone já existentes em editores (`~/.vim`).
-
-### 🐚 Terminal & Shell Runtime
-
-- [x] Correção da sequência de escape de `clear` em `/bin/sh` puro no FreeBSD e Linux.
-- [x] Correção dos atalhos de navegação de palavras no Zsh no Linux (setas direcionais).
-- [x] Sentinela assíncrona com polling de inicialização para VM Debian no Bhyve (`lx -s`), prevenindo desconexão prematura por `pam_nologin`.
-- [x] Espelhamento de recursos, aliases e rotinas utilitárias do Shell para Aweshell, PowerShell, NuShell e CMD/Clink.
-- [x] Estrita conformidade POSIX no Makefile central com suporte universal a `bmake`, `gmake` e BusyBox make.
-
-### 🛡️ Hardening, Tuning de Memória & Estabilidade de GPU no FreeBSD 15.1/15.2
-
-- [x] Resolução de instabilidade da GPU Intel Iris Xe (Alder Lake) sob pressão de memória via proporção 16 partes e recomendação de `drm-66-kmod` / repositório `latest` (`drm-612-kmod >= 6.12.110`).
-- [x] Cálculo dinâmico de orçamento de memória: `1/16` para VMs Bhyve, `4/16` para ZFS ARC e `11/16` preservados para host gráfico e DRM.
-- [x] Expurgo e consolidação de notas de campo (`freebsd.txt` e `freebsd.md`) nos runbooks oficiais de provisionamento.
-
-### ⚙️ Quality Gates, Arquétipo de Templates & Githooks Universais
-
-- [x] Implementação dos alvos antifrágeis `sync-template` e `scaffold` no Makefile do Environment.
-- [x] Padronização de `.githooks/pre-commit` e `.githooks/commit-msg` com paridade 100% byte-a-byte em todos os 34 repositórios em `~/Documents` e no `Template`.
-- [x] Auto-cura total de modos octais (`0700`/`0600` no Vault, `0755`/`0644` nos demais), trailing whitespace, formatação Prettier e validação de shebang portável `#!/usr/bin/env`.
-- [x] Auto-cura e validação de Conventional Commits (`add`, `update`, `fix`, `docs`, `feat`, `chore`, `refactor`, `style`, `ci`, `test`, `sec`, `init`).
-- [x] Ativação determinística de `git config core.hooksPath .githooks` em todo o ecossistema.
-
 ---
 
 > [!TIP]
