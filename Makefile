@@ -7,7 +7,7 @@ MAKEFLAGS += --no-print-directory -s
 # Makefile: Universal Environment
 # ----------------------------------------------------------------
 
-.PHONY: help status audit sync-docs pull update test fix-banners ci doctor clone hooks format prettier lint-format bench uped upgit strip install deploy bootstrap main clean
+.PHONY: help status audit sync-docs sync-template scaffold pull update test fix-banners ci doctor clone hooks format prettier lint-format bench uped upgit strip install deploy bootstrap main clean
 
 REPOS     = Setup Shell Vault Profile
 EDITORS   = Editor/Emacs Editor/Helix Editor/NeoVim Editor/Vim
@@ -29,7 +29,9 @@ help:
 	cmd "pull"           "Atualiza todos os submódulos e repositórios com o GitHub"; \
 	cmd "install"        "Clona e instala todos os repositórios em suas posições canônicas no SO"; \
 	cmd "update"         "Atualiza todas as instalações soberanas no SO (Shell, Profile, Vault, Editores)"; \
-	cmd "sync-docs"      "Propaga ENVIRONMENT.md e PRINCIPLES.md para todos os repositórios"; \
+	cmd "sync-docs"      "Propaga ENVIRONMENT.md para os submódulos e executa sync-template"; \
+	cmd "sync-template"  "Propaga Template estático, githooks e auditoria a todos os repositórios"; \
+	cmd "scaffold"       "Gera novo repositório a partir de Template (DIR=... NAME=... DESC=...)"; \
 	cmd "uped"           "Atualiza os 4 repositórios da Suíte de Editores com o upstream"; \
 	cmd "upgit"          "Atualiza todos os repositórios Git encontrados recursivamente"; \
 	cmd "strip"          "Purga metadados (.git*, .agents, *.md) para modo Zero-Bloat (TARGET=<dir>)"; \
@@ -162,7 +164,7 @@ uped:
 
 upgit:
 	echo "🔄 Atualizando repositórios Git..."
-	find . -maxdepth 3 -name ".git" 2> "/dev/null" | while read -r g; do \
+	find . \( -type d -name ".git" -print -prune \) -o \( -type f -name ".git" -print \) 2> "/dev/null" | awk '{ n=split($$0, a, "/"); print n, $$0 }' | sort -n -k1,1 | cut -d' ' -f2- | while read -r g; do \
 		d="$$(dirname "$$g")"; \
 		echo "# ----------------------------------------------------------------"; \
 		echo "# $$d"; \
@@ -172,21 +174,85 @@ upgit:
 	done
 	echo "✅ Repositórios Git atualizados!"
 
-sync-docs:
-	echo "📖 Sincronizando documentação canônica (ENVIRONMENT.md & PRINCIPLES.md)..."
+sync-template:
+	echo "🔄 Sincronizando arquétipo Template em todos os repositórios Git..."
+	_docs_root="$${DOCS_ROOT:-$$(cd .. && pwd)}"; \
+	find "$${_docs_root}" \
+		\( -name "OSS" -o -name "usr" -o -name "elpaca" -o -name "node_modules" -o -name ".venv" -o -name "var" -o -name "tmp" \) -prune \
+		-o \( -name ".git" \) -print | while read -r git_entry; do \
+		repo_dir="$$(dirname "$$git_entry")"; \
+		repo_name="$$(basename "$$repo_dir")"; \
+		echo "  📦 Sincronizando: $$repo_name ($$repo_dir)"; \
+		mkdir -p "$$repo_dir/.githooks"; \
+		cp Template/.githooks/pre-commit "$$repo_dir/.githooks/pre-commit"; \
+		cp Template/.githooks/commit-msg "$$repo_dir/.githooks/commit-msg"; \
+		cp Template/.editorconfig "$$repo_dir/.editorconfig"; \
+		if [ "$$repo_name" != "Environment" ]; then \
+			cp Template/PRINCIPLES.md "$$repo_dir/PRINCIPLES.md"; \
+			cp Template/AGENTS.md "$$repo_dir/AGENTS.md"; \
+			cp Template/CONTRIBUTING.md "$$repo_dir/CONTRIBUTING.md"; \
+			cp Template/LICENSE "$$repo_dir/LICENSE"; \
+		fi; \
+		if [ -f "$$repo_dir/.prettierrc" ] && grep -q "svelte" "$$repo_dir/.prettierrc" 2> "/dev/null"; then \
+			: ; \
+		else \
+			cp Template/.prettierrc "$$repo_dir/.prettierrc"; \
+		fi; \
+		if [ -f "$$repo_dir/.gitattributes" ] && grep -E -q "(git-crypt|dataset)" "$$repo_dir/.gitattributes" 2> "/dev/null"; then \
+			: ; \
+		else \
+			cp Template/.gitattributes "$$repo_dir/.gitattributes"; \
+		fi; \
+		if [ -d "$$repo_dir/.scripts/audit" ]; then \
+			cp Template/.scripts/audit/* "$$repo_dir/.scripts/audit/"; \
+			chmod 0755 "$$repo_dir"/.scripts/audit/*.py 2> "/dev/null" || true; \
+		fi; \
+		if [ "$$repo_name" = "Vault" ]; then \
+			chmod 0700 "$$repo_dir"/.githooks/* 2> "/dev/null" || true; \
+			chmod 0600 "$$repo_dir"/*.md "$$repo_dir"/.editorconfig "$$repo_dir"/.gitattributes "$$repo_dir"/.prettierrc "$$repo_dir"/LICENSE 2> "/dev/null" || true; \
+		else \
+			chmod 0755 "$$repo_dir"/.githooks/* 2> "/dev/null" || true; \
+			chmod 0644 "$$repo_dir"/*.md "$$repo_dir"/.editorconfig "$$repo_dir"/.gitattributes "$$repo_dir"/.prettierrc "$$repo_dir"/LICENSE 2> "/dev/null" || true; \
+		fi; \
+		git -C "$$repo_dir" config core.hooksPath .githooks 2> "/dev/null" || true; \
+	done
+	echo "✅ Todos os repositórios foram sincronizados com o Template!"
+
+sync-docs: sync-template
+	echo "📖 Sincronizando documentação canônica do hub (ENVIRONMENT.md)..."
 	for r in $(ALL_REPOS); do \
 		if [ -d "$$r" ]; then \
 			cp ENVIRONMENT.md "$$r/ENVIRONMENT.md"; \
-			cp PRINCIPLES.md "$$r/PRINCIPLES.md"; \
-			echo "  ✅ $$r: documentação sincronizada"; \
+			chmod 0644 "$$r/ENVIRONMENT.md" 2> "/dev/null" || true; \
+			echo "  ✅ $$r: ENVIRONMENT.md sincronizado"; \
 		fi; \
 	done
-	if [ -d "Vault" ]; then \
-		cp ENVIRONMENT.md Vault/ENVIRONMENT.md; \
-		cp PRINCIPLES.md Vault/PRINCIPLES.md; \
-		echo "  ✅ Vault: documentação sincronizada"; \
-	fi
-	echo "🎉 Documentação canônica propagada para todos os repositórios!"
+	echo "🎉 Documentação do ecossistema sincronizada com sucesso!"
+
+scaffold:
+	if [ -z "$${DIR}" ]; then \
+		echo "Uso: make scaffold DIR=<caminho> [NAME=<nome>] [DESC=<descrição>] [APP=<app>]"; \
+		echo "Exemplo: make scaffold DIR=\"../Personal/Labs/NovoProjeto\" NAME=\"NovoProjeto\" DESC=\"Descrição do projeto\""; \
+		exit 1; \
+	fi; \
+	_target="$${DIR}"; \
+	_name="$${NAME:-$$(basename "$${_target}")}"; \
+	_desc="$${DESC:-Repositório soberano $${_name}}"; \
+	_app="$${APP:-$$(echo "$${_name}" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')}"; \
+	echo "🏗️  Scaffolding novo repositório em $${_target}..."; \
+	mkdir -p "$${_target}"; \
+	cp -R Template/. "$${_target}/"; \
+	(cd "$${_target}" && \
+		git init > "/dev/null" 2>&1 || true; \
+		if [ -f "./init.sh" ]; then \
+			sh ./init.sh "$${_name}" "$${_desc}" "$${_app}" > "/dev/null" 2>&1 || true; \
+			rm -f ./init.sh; \
+		fi; \
+		chmod 0755 .githooks/* .scripts/audit/*.py 2> "/dev/null" || true; \
+		chmod 0644 *.md .editorconfig .gitattributes .prettierrc LICENSE 2> "/dev/null" || true; \
+		git config core.hooksPath .githooks > "/dev/null" 2>&1 || true \
+	); \
+	echo "✅ Repositório $${_name} scaffolded com sucesso em $${_target}!"
 
 install:
 	echo "🚀 Instalando ecossistema nas posições canônicas do sistema operacional..."
@@ -267,33 +333,35 @@ lint-format:
 		echo "ℹ️ Prettier não instalado; pulando validação."; \
 	fi
 
-SH_VALIDATOR ?= $(shell command -v bash 2>/dev/null || command -v zsh 2>/dev/null || echo sh)
-
 audit:
 	echo "🔍 [1/6] Auditando Setup..."
 	python3 Setup/.scripts/audit/all.py
 	echo "🔍 [2/6] Auditando Profile..."
 	python3 Profile/.scripts/audit/all.py
 	echo "🔍 [3/6] Validando sintaxe do Shell..."
-	find Shell -name "*.sh" -not -path "*/.git/*" -exec $(SH_VALIDATOR) -n {} +
+	_sh=$$(command -v bash 2> "/dev/null" || command -v zsh 2> "/dev/null" || echo sh); \
+	find Shell -name "*.sh" -not -path "*/.git/*" -exec "$$_sh" -n {} +
 	echo "🔍 [4/6] Validando sintaxe do Vault..."
-	$(SH_VALIDATOR) -n Vault/vault.sh
+	_sh=$$(command -v bash 2> "/dev/null" || command -v zsh 2> "/dev/null" || echo sh); \
+	"$$_sh" -n Vault/vault.sh
 	echo "🔍 [5/6] Validando a Suíte de Editores (Sintaxe & Headless)..."
-	$(MAKE) -C Editor/Helix test
-	find Editor -name "*.sh" -not -path "*/.git/*" -exec $(SH_VALIDATOR) -n {} + && echo "  ✅ Editor Shell Scripts: sintaxe POSIX OK"
-	$(MAKE) -C Editor/NeoVim test
-	$(MAKE) -C Editor/Vim test
-	$(MAKE) -C Editor/Emacs test
+	(cd Editor/Helix && $(MAKE) test)
+	_sh=$$(command -v bash 2> "/dev/null" || command -v zsh 2> "/dev/null" || echo sh); \
+	find Editor -name "*.sh" -not -path "*/.git/*" -exec "$$_sh" -n {} + && echo "  ✅ Editor Shell Scripts: sintaxe POSIX OK"
+	(cd Editor/NeoVim && $(MAKE) test)
+	(cd Editor/Vim && $(MAKE) test)
+	(cd Editor/Emacs && $(MAKE) test)
 	echo "🔍 [6/6] Auditando Template..."
 	python3 Template/.scripts/audit/all.py
 	echo "🎉 Todas as auditorias estáticas foram aprovadas com sucesso!"
 
 test:
 	echo "🧪 Testando sintaxe de scripts do ecossistema..."
+	_sh=$$(command -v bash 2> "/dev/null" || command -v zsh 2> "/dev/null" || echo sh); \
 	for dir in Setup Vault Profile Editor; do \
-		[ -d "$$dir" ] && find "$$dir" -name "*.sh" -not -path "*/.git/*" -exec $(SH_VALIDATOR) -n {} +; \
+		[ -d "$$dir" ] && find "$$dir" -name "*.sh" -not -path "*/.git/*" -exec "$$_sh" -n {} +; \
 	done
-	[ -d "Shell" ] && $(MAKE) -C Shell test
+	[ -d "Shell" ] && (cd Shell && $(MAKE) test)
 	echo "✅ Sintaxe de todos os scripts está perfeita!"
 
 fix-banners:
@@ -320,7 +388,7 @@ clean:
 	echo "🧹 Limpando artefatos, caches e ambientes virtuais no Environment..."
 	for r in $(ALL_REPOS); do \
 		if [ -e "$$r/Makefile" ]; then \
-			$(MAKE) -C "$$r" clean 2> "/dev/null" || true; \
+			(cd "$$r" && $(MAKE) clean) 2> "/dev/null" || true; \
 		fi; \
 	done
 	rm -rf .venv

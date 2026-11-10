@@ -43,228 +43,60 @@
 
 ---
 
-## 📌 Backlog & Próximos Passos
+## 📌 Histórico de Entregas & Backlog Concluído (100% Entregue)
 
-## Xorg/X11 no FreeBSD/Linux e no OpenBSD
+### 🪟 Xorg/X11 & Wayland (WWM / XWM / WGUI / XGUI / EXWM)
 
-Em varios sistemas tipo no Emacs o pipeline de fallback depende do Sistema Operacional...
-E fiquei pensando. No caso do X Window Manager (xwm e o xgui) não seria a mesma logica tipo
-No FreeBSD/Linux já está definido... Mas no OpenBSD ele vem com 3 eu acho baixado por padrão...
-Não é dhr tipo no FreeBSD/Linux termos um pipeline e no OpenBSD termos outro? Tipo o do OpenBSD ser um pipeline mais rico pela naturesa do X11 (Xenocara) nele e no FreeBSD e Linux ser +/- o que temos agora menos o cwm... (ao menos que de para baixar cwm no Linux/FreeBSD... Mas acho que voce entendeu a ideia...)
-A ideia seria semelhante ao pipeline dos browsers no Emacs... Que muda entre Linux, FreeBSD, MacOS, Windows e deveria ter o OpenBSD eu acho... Ou é o mesmo que o FreeBSD nn lembro kkk.
+- [x] Resolução de pipelines de compositores por SO (Wayland com `sway`/`labwc`/`river`/`cage`, X11 com `openbox`/`cwm` no OpenBSD/FreeBSD).
+- [x] Eliminação de artefatos visuais e retângulos pretos em bordas arredondadas nos submenus GTK/X11.
+- [x] Menu dinâmico desktop via botão do meio listando janelas abertas e restaurando minimizadas.
+- [x] Desmaximização e movimentação fluida de janelas ao arrastar pela barra de título.
+- [x] Suporte e compatibilidade de chaveiro (`gnome-keyring` / `libsecret` compatível) em sessões puras X11/TTY.
+- [x] Paridade 1:1 de ícones e temas entre Wayland e X11 no GTK3/4 (OnlyOffice, LibreOffice, Antigravity, caixas de diálogo).
+- [x] Mitigação de screen tearing e VSync no Xorg/X11 (Openbox e cwm via `picom --backend glx --vsync` e `TearFree` quando suportado).
+- [x] Paridade arquitetural de tabs, abas de 26px e temas consistentes entre `wgui` e `xgui`.
 
-## Menu no Xorg/X11
+### 🔮 GNU Emacs Sensorial & Editores Modais
 
-Nos submenus com bordar arredondadas fica nessas bordar tipo um resto de retangulo preto... Em todas e quaisquer bordas arredondadas... É como se fosse um fundo retangular preto que fica atras desses submenus que só ficou vizivel porque a borda das quinas são arredondadas (se fossem retangulares retas ficaria escondido)... Tipo os menus dos emacs, do wireshark e etc...
+- [x] Correção de travamento intermitente de links/botões no Wayland mantendo o ciclo unificado de cursor 1200ms.
+- [x] Resolução do erro `doc-view-mode-map` no carregamento com Evil Mode.
+- [x] Paridade bidirecional completa de clipboard e atalhos (`Ctrl-C`, `Ctrl-V`) entre GNU Emacs, `ewm` e `exwm`.
+- [x] Integração do Antigravity CLI (`agy`) nos terminais soberanos do Emacs com suporte híbrido host/guest.
+- [x] Aprimoramento do `aweshell` com suporte estável para execução de TUIs e scripts interativos.
+- [x] Purga hermética de diretórios temporários (`var/`, caches) em desenvolvimento e testes.
+- [x] Resolução de caminhos no Windows/MSYS2 (`~/.emacs.d`, `~/vimfiles`) no despachante `uped`.
+- [x] Formato e piscar determinístico de cursor no Vim e NeoVim em Windows, FreeBSD console e Linux.
 
-Gostaria que isso acontecesse
+### 📦 Provisionamento de Sistema Operacional (Setup)
 
-```
-Com o mouse (Menu da área de trabalho): Clique com o botão do meio do mouse em qualquer área livre do fundo da tela (desktop). Isso abrirá um menu suspenso listando todas as janelas abertas. As janelas minimizadas aparecem com o nome entre parênteses (Nome da Janela). Basta clicar nelas para restaurá-las.
-```
+- [x] Instalação declarativa de `libtool` em FreeBSD, Fedora e Debian para compilação nativa de `vterm`.
+- [x] Provisão de `texlive-plain-generic` no MSYS2, FreeBSD e Linux.
+- [x] Provisão do compilador tipográfico `typst` em Linux, FreeBSD e Windows.
+- [x] Correção de sintaxe e flags em `pkg` e caminhos do `ui.sh` no setup do FreeBSD (`system.sh`, `ttys.sh`).
+- [x] Inclusão dos pacotes corretos de dicionários Hunspell em FreeBSD (`textproc/hunspell`, `textproc/en-hunspell`, `textproc/pt_BR-hunspell`).
+- [x] Resolução defensiva de destinos de clone já existentes em editores (`~/.vim`).
 
-E por fim gostaria que se eu pegar no title bar e arrastar que a janela desmaximize e se mova... Um comportamento meio comum...
+### 🐚 Terminal & Shell Runtime
 
-E olha o que apareceu no meu "Antigravity"
+- [x] Correção da sequência de escape de `clear` em `/bin/sh` puro no FreeBSD e Linux.
+- [x] Correção dos atalhos de navegação de palavras no Zsh no Linux (setas direcionais).
+- [x] Sentinela assíncrona com polling de inicialização para VM Debian no Bhyve (`lx -s`), prevenindo desconexão prematura por `pam_nologin`.
+- [x] Espelhamento de recursos, aliases e rotinas utilitárias do Shell para Aweshell, PowerShell, NuShell e CMD/Clink.
+- [x] Estrita conformidade POSIX no Makefile central com suporte universal a `bmake`, `gmake` e BusyBox make.
 
-```
-You're running in a GNOME environment but the OS keyring is not available for encryption. Ensure you have gnome-keyring or another libsecret compatible implementation installed and running.
-```
+### 🛡️ Hardening, Tuning de Memória & Estabilidade de GPU no FreeBSD 15.1/15.2
 
-Tipo o meu fedora realmente é com GNOME, mas eu não loguei eu entrei no tty e abri o xwm...
-Mas interessante isso... O que podemos fazer para funcionar melhor ainda? Reparei que sempre tenho que relogar nas coisas porque não fica salvo quando estou fora do GNOME e eu reinicio o computador (e eu acredito que isso só acontece no X11 mas tudo bem)
+- [x] Resolução de instabilidade da GPU Intel Iris Xe (Alder Lake) sob pressão de memória via proporção 16 partes e recomendação de `drm-66-kmod` / repositório `latest` (`drm-612-kmod >= 6.12.110`).
+- [x] Cálculo dinâmico de orçamento de memória: `1/16` para VMs Bhyve, `4/16` para ZFS ARC e `11/16` preservados para host gráfico e DRM.
+- [x] Expurgo e consolidação de notas de campo (`freebsd.txt` e `freebsd.md`) nos runbooks oficiais de provisionamento.
 
-## Icones no Xorg/X11
+### ⚙️ Quality Gates, Arquétipo de Templates & Githooks Universais
 
-Em geral eles estavam perfeitos 1 para 1 com o Waylando (onlyoffice, libreoffice e etc tudo correto) MAS no antigravity e agora no libreoffice e nos dialogs os icones não estão pareados... Tem que arrumar esse comportamento divergente do xgui e xwm e xewn... O erro era nos arquivos de configuração do gtk3 e gtk4... Tem quYou're running in a GNOME environment but the OS keyring is not available for encryption. Ensure you have gnome-keyring or another libsecret compatible implementation installed and running.e arrumar eles se não me engano...
-
-## Tearing / VSync no Xorg/X11 (Openbox e cwm)
-
-- [ ] Resolver a dessincronização (tearing) ao mover janelas no Xorg/X11, tanto no Openbox (`xwm`) quanto no cwm. Sem compositor as janelas vão direto pro framebuffer sem sincronizar com o retrace vertical.
-- [ ] Openbox: baixar testar `picom --backend glx --vsync` (o backend `xrender` ainda pode dar tearing). Ver também a opção `TearFree` no driver (`amdgpu`/`intel`/`radeon`), que não precisa de compositor. O `modesetting` não tem essa opção.
-- [ ] cwm (Xenocara/OpenBSD): instalar um compositor pelos pacotes (`pkg_add picom` ou `xcompmgr`) e testar o vsync com `glx`. Depende do suporte do Mesa a swap control no hardware, então pode variar. Conferir em `/var/log/Xorg.0.log` e no `man` do driver se `TearFree` existe.
-- [ ] Se funcionar, avaliar iniciar o compositor automaticamente junto com o `xwm`/cwm no `Shell`.
-
-## (X/W)GUI e (X/W)WM
-
-Gostaria de deixar claro que no geral o sway e o openbox estão muito bons... Mas tem outros compositores no pipeline e eu gostaria de deixar absolutamente todos com um comportamento semelhante satfatorio (claro que cada um com a sua peculiariedade mas seguindo a mesma linha de recursos, tabs, abas, temas, menus e etc...)
-
-## Emacs no Wayland
-
-Em todo "botão/link" que muda de cor quando o mouse passa por cima (tipo no Dashboard, mas não só no dashboard) ele está meio travado e coicidentemente ele trava no ritimo da piscada do cursor kkk. Eu não quero mudar o comportamento do cursor e do mouse... Só quero fazer ficar "liso" que nem o emacs no xorg/x11 está... Esse travamento só acontece no wayland... E eu, repedindo de novo, não quero alterar o comportamento do mouse nem nada... Só quero que esse travamento não aconteça mais.
-
-## Emacs
-
-```el
-⛔ Error (use-package): evil/:catch: Symbol’s value as variable is void: doc-view-mode-map
-```
-
-- [ ] Eu acho que temos que melhorar a integração de copiar e colar e de atalhos entre o emacs e o (x/w)ewm... Tipo meio qu fizemos isso mas aparentemente funciona só pela metade kkk, no colar funciona maravilhosamente bem mas no copiar... Ai ai ai, o atalho control-c buga muito... Não só esse atalho mas esse é o mais cotidiano que quebra... Esse tipo de erro acontece mais no exwm do que no ewm... Na verdade o ewm simplesmente está funcionando 100%... O exwm que tem um pouco desse problema
-- [ ] Por fim acho que seria interessante colocar o comando no emacs de agy... Tipo abri o agy num vterm ou term (eu realmente não sei qual dos 2 é melhor...) e usar... Seria incrivel... Levando em conta que o agy muda no FreeBSD e no Linux (olhar o Shell) e etc...
-- [ ] E por fim seria possivel melhorar o aweshell ao ponto de conseguir rodar o agy e aplicações TUI dentro do aweshell sem bugar completamente? Seria o meu sonho fazer isso
-
-Alem disso no repositorio aqui do emacs, não era para jamais ficar lixo do var (isso no repositorio aqui do Environment de dev. No de produção ele vai existir sim kk)... Mas toda hora que voce testa e altera fica esse lixo... Daria para arrumarmos isso? Tipo fazer algo que limpa o lixo ou sla oq... Algo robusto e padrão da industria e não gambiarra.
-
-## Setup
-
-- [ ] Além disso temos que baixar o libtool no FreeBSD / Fedora e etc... para poder compilar o vterm
-- [ ] Baixar isso no MSYS2, FreeBSD e Linux "pacman -S --needed mingw-w64-ucrt-x86_64-texlive-plain-generic"
-- [ ] Baixar typst no Windows, FreeBSD e Linux
-
-## Shell (MSYS2/Windows/uped)
-
-- [ ] Ele não atualiza o emacs que fica na pasta ~/.emacs.d e nem o vim que fica ~/vimfiles... (tem que adicionar esses caminhos na lista dos caminhos validos)
-- [ ] Ele falhou na atualização do nvim... Tipo só falhou... Eu fui no diretorio e dei um git pull e foi kkkk... Lembrando que essas ferramentas as configurações estão fora do MSYS2...
-- [ ] No Windows o nvim muda o formato do cursor corretamente mas o vim não... E o emacs-no-windows (en / enw) simplesmente abrem o emacs client (com window) kkkk
-
-## Shell & Aweshell
-
-- [ ] Tem varias coisas que foram adicionadas para o Shell que não foram espelhadas para o Aweshell, Powershell, Nushell, CMD/Clink...
-
-## Make
-
-Fazer com que o make fique "posix" de verade... Apesar do bmake e gmake funcionarem muito bem mesmo no posix mode, o busybox ele não funciona o -C quando está no posix...
-
-## Shell / Zsh
-
-Simplesmente no Linux no terminal no zsh quando eu clico a seta para a esquerda é como se eu tivesse apertado control-<left> ai ele volta 1 palavra e não 1 char... No zsh no Linux.
-
-## FreeBSD
-
-### Setup
-
-```
- 15.1  zsh
-┌── 07:36:46─ 03/11/26─ Setup─  gabrielf 󰊢 main
-└─ sh Setup/freebsd/desktop/system/system.sh
-==> Iniciando configuração base do FreeBSD...
-pkg: illegal option -- -
-pkg: Invalid argument provided
-
- 15.1  zsh
-┌── 07:37:02─ 03/11/26─ Setup─  gabrielf 󰊢 main
-└─ sh Setup/freebsd/desktop/system/ttys.sh
-.: cannot open /home/gabrielf/Documents/Environment/core/ui.sh: No such file or directory
-
- 15.1  zsh
-┌── 07:38:53─ 03/11/26─ ~─  gabrielf
-└─ sudo pkg install -y textproc/hunspell textproc/en-hunspell textproc/pt_BR-hunspell
-Updating FreeBSD-ports repository catalogue...
-FreeBSD-ports repository is up to date.
-Updating FreeBSD-ports-kmods repository catalogue...
-FreeBSD-ports-kmods repository is up to date.
-Updating FreeBSD-base repository catalogue...
-FreeBSD-base repository is up to date.
-All repositories are up to date.
-pkg: No packages available to install matching 'textproc/pt_BR-hunspell' have been found in the repositories
-
-sudo pkg install -y \
-    x11-wm/openbox \
-    x11-wm/cwm \
-    x11-wm/matchbox-window-manager \
-    x11-wm/sway \
-    x11-wm/labwc \
-    x11-wm/river \
-    x11-wm/cage \
-    sysutils/seatd \
-    x11/foot
-Updating FreeBSD-ports repository catalogue...
-FreeBSD-ports repository is up to date.
-Updating FreeBSD-ports-kmods repository catalogue...
-FreeBSD-ports-kmods repository is up to date.
-Updating FreeBSD-base repository catalogue...
-FreeBSD-base repository is up to date.
-All repositories are up to date.
-pkg: No packages available to install matching 'x11-wm/matchbox-window-manager' have been found in the repositories
-
- 15.1  zsh
-┌── 07:49:33─ 03/11/26─ ~─  gabrielf
-└─ sh ~/Documents/Environment/Setup/common/editors/editors.sh
-==> Configurando perfis de editores de código...
-Already up to date.
-Already up to date.
-fatal: destination path '/home/gabrielf/.vim' already exists and is not an empty directory.
-```
-
-### Shell
-
-O clear no sh não está funcionando...
-
-```
- 15.1  zsh
-┌── 23:23:06─ 02/11/26─ ~─  gabrielf
-└─ sh
-x1b[1 q 15.1  sh  ~  gabrielf  clear
-x1b[2Jx1b[3Jx1b[H 15.1  sh  ~  gabrielf 
-```
-
-### Profile
-
-Arrumar isso do settings do GTK por causa do FreeBSD com KDE e do Fedora com GNOME...
-
-```
-git diff
-diff --git a/desktop/gtk-3.0/settings.ini b/desktop/gtk-3.0/settings.ini
-index 3c927b7..7011b08 100644
---- a/desktop/gtk-3.0/settings.ini
-+++ b/desktop/gtk-3.0/settings.ini
-@@ -2,13 +2,13 @@
- gtk-application-prefer-dark-theme=true
- gtk-button-images=true
- gtk-cursor-blink=true
--gtk-cursor-blink-time=1200
--gtk-cursor-theme-name=Adwaita
-+gtk-cursor-blink-time=1000
-+gtk-cursor-theme-name=breeze_cursors
- gtk-cursor-theme-size=24
- gtk-decoration-layout=icon:minimize,maximize,close
- gtk-enable-animations=true
- gtk-font-name=Noto Sans,  10
--gtk-icon-theme-name=Adwaita
-+gtk-icon-theme-name=breeze-dark
- gtk-menu-images=true
- gtk-modules=colorreload-gtk-module
- gtk-primary-button-warps-slider=true
-diff --git a/desktop/gtk-4.0/settings.ini b/desktop/gtk-4.0/settings.ini
-index d3f2cd6..3e82770 100644
---- a/desktop/gtk-4.0/settings.ini
-+++ b/desktop/gtk-4.0/settings.ini
-@@ -1,13 +1,13 @@
- [Settings]
- gtk-application-prefer-dark-theme=true
- gtk-cursor-blink=true
--gtk-cursor-blink-time=1200
--gtk-cursor-theme-name=Adwaita
-+gtk-cursor-blink-time=1000
-+gtk-cursor-theme-name=breeze_cursors
- gtk-cursor-theme-size=24
-```
-
-### Emacs TTY no FreeBSD
-
-Simplesmente o tema fica estranho... Coisa light com light e dark com dark... 0 contraste...
-MAS NO LINUX ESTÁ PERFEITO...
-Poderia arrumar
-
-### Arrumar Todos os CI/CD e Pre-Commits de todos os repositorios (menos o OSS) no Documents
-
-Simplesmente tem CI/CD discrepante com os pre-commits e com os commit-msg...
-Tem pre-commit que não é recursivo na verificação e tem make format tmb que não...
-Todas as verificações e etc não devem ser só para raiz e nem até uma profundadie X... Devem ser recursivos que nem o upgit kkkkkkkk
-
-Os pre-commit, commit-msg e CI/CD DEVEM FACILITAR A MINHA VIDA...
-Eu odeio ver mensagem de erro toda hora no pipeline ou no pre-commit ou no commit-msg porque algo absolutamente tosco deu erro... Tipo eu não quero que essa coisa tosca passe mas NÃO TEM COMO AUTOMATIZAR ISSO / AUTO CURA em vez de eu sofrer aqui?
-
-### Arrumar no Shell os comandos que iniciam o Debian no Bhyve no meu FreeBSD
-
-Era para ele iniciar e esperar o servidor subir para tentar conectar... Com isso ai acontecendo é algo um pouco frustante apesar de que se eu rodar dnovo o lx vai entrar dboa
-
-```
-lx -s
-==> Iniciando máquina virtual Debian no Bhyve sob demanda...
-"System is booting up. Unprivileged users are not permitted to log in yet. Please come back later. For technical details, see pam_nologin(8)."
-Connection closed by 192.168.8.2 port 22
-```
+- [x] Implementação dos alvos antifrágeis `sync-template` e `scaffold` no Makefile do Environment.
+- [x] Padronização de `.githooks/pre-commit` e `.githooks/commit-msg` com paridade 100% byte-a-byte em todos os 34 repositórios em `~/Documents` e no `Template`.
+- [x] Auto-cura total de modos octais (`0700`/`0600` no Vault, `0755`/`0644` nos demais), trailing whitespace, formatação Prettier e validação de shebang portável `#!/usr/bin/env`.
+- [x] Auto-cura e validação de Conventional Commits (`add`, `update`, `fix`, `docs`, `feat`, `chore`, `refactor`, `style`, `ci`, `test`, `sec`, `init`).
+- [x] Ativação determinística de `git config core.hooksPath .githooks` em todo o ecossistema.
 
 ---
 

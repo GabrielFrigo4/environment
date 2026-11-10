@@ -7,7 +7,7 @@ MAKEFLAGS += --no-print-directory -s
 # Makefile: {{PROJECT_NAME}}
 # ----------------------------------------------------------------
 
-APP         ?= app
+APP         ?= {{APP_NAME}}
 VERSION     != cat VERSION 2> "/dev/null" || echo "0.1.0-dev"
 
 .PHONY: help hooks dev build check test audit format prettier lint ci clean
@@ -64,7 +64,8 @@ dev: build
 ### ================================
 check:
 	echo "🔍 Validando integridade e sintaxe de shell scripts..."
-	find . -name "*.sh" -not -path "*/.git/*" -exec sh -n {} + 2> "/dev/null" || true
+	_sh=$$(command -v bash 2> "/dev/null" || command -v zsh 2> "/dev/null" || echo sh); \
+	find . -type f -name "*.sh" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" -not -path "*/OSS/*" -exec "$$_sh" -n {} +
 	echo "✅ Validação estática aprovada!"
 
 test:
@@ -80,21 +81,37 @@ format: prettier
 
 prettier:
 	if command -v prettier > "/dev/null" 2>&1; then \
-		prettier --write "**/*.{md,json,jsonc,yml,yaml,html,css}" 2> "/dev/null" || true; \
+		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.jsonc" -o -name "*.yml" -o -name "*.yaml" -o -name "*.html" -o -name "*.css" \) \
+			-not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
+			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "*/build/*" -not -path "*/dist/*" \
+			-not -path "*/target/*" -not -path "*/.cache/*" \
+			-exec prettier --write {} + 2> "/dev/null" || true; \
 	elif command -v npx > "/dev/null" 2>&1; then \
-		npx --yes prettier --write "**/*.{md,json,jsonc,yml,yaml,html,css}" 2> "/dev/null" || true; \
+		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.jsonc" -o -name "*.yml" -o -name "*.yaml" -o -name "*.html" -o -name "*.css" \) \
+			-not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
+			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "*/build/*" -not -path "*/dist/*" \
+			-not -path "*/target/*" -not -path "*/.cache/*" \
+			-exec npx --yes prettier --write {} + 2> "/dev/null" || true; \
 	fi
 
 lint:
 	echo "🔍 Validando conformidade com Prettier..."
 	if command -v prettier > "/dev/null" 2>&1; then \
-		prettier --check "**/*.{md,json,jsonc,yml,yaml,html,css}" 2> "/dev/null" || true; \
+		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.jsonc" -o -name "*.yml" -o -name "*.yaml" -o -name "*.html" -o -name "*.css" \) \
+			-not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
+			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "*/build/*" -not -path "*/dist/*" \
+			-not -path "*/target/*" -not -path "*/.cache/*" \
+			-exec prettier --check {} + 2> "/dev/null" || true; \
 	elif command -v npx > "/dev/null" 2>&1; then \
-		npx --yes prettier --check "**/*.{md,json,jsonc,yml,yaml,html,css}" 2> "/dev/null" || true; \
+		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.jsonc" -o -name "*.yml" -o -name "*.yaml" -o -name "*.html" -o -name "*.css" \) \
+			-not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
+			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "*/build/*" -not -path "*/dist/*" \
+			-not -path "*/target/*" -not -path "*/.cache/*" \
+			-exec npx --yes prettier --check {} + 2> "/dev/null" || true; \
 	fi
 	echo "✅ Conformidade aprovada!"
 
-ci: check test lint
+ci: check test audit lint
 	echo "🚀 Pipeline local aprovada com 100% de sucesso!"
 
 ### ================================

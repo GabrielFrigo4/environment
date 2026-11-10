@@ -33,19 +33,10 @@ O **{{PROJECT_NAME}}** é projetado sob os 22 princípios soberanos de engenhari
 ### Primeiros Passos
 
 ```sh
-# 1. Instalar os ganchos locais do Git
 make hooks
-
-# 2. Consultar o catálogo interativo de comandos
 make help
-
-# 3. Compilar o projeto
 make build
-
-# 4. Executar os testes
 make test
-
-# 5. Executar a suíte completa de validação local
 make ci
 ```
 

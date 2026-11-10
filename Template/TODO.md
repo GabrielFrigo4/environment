@@ -1,4 +1,4 @@
-# 🗺️ Roadmap & Status — Universal Template
+# 🗺️ Roadmap & Status — {{PROJECT_NAME}}
 
 > **Status:** 🟢 **100% Operacional & Estável — Zero Pendências Ativas**
 > Arquétipo canônico para novos repositórios do ecossistema, dotado de automação de scaffolding `init.sh`, auditoria estática `.scripts/audit/`, biblioteca semântica de terminal `.scripts/ui.sh` e ganchos Git rigorosos.
@@ -31,4 +31,4 @@
 ---
 
 > [!TIP]
-> Para detalhes sobre a arquitetura e convenções de engenharia, consulte o [PRINCIPLES.md](PRINCIPLES.md) e o [ENVIRONMENT.md](ENVIRONMENT.md).
+> Para detalhes sobre a arquitetura e convenções de engenharia, consulte o [PRINCIPLES.md](PRINCIPLES.md).
