@@ -37,7 +37,7 @@ Consulte os manuais técnicos especializados em `references/`:
 
 ## 📐 Invariantes de Engenharia e Roadmap
 
-- **Modularização Atômica:** Scripts do componente `Setup` são idempotentes e escritos em POSIX `/bin/sh`.
+- **Modularização Atômica:** Scripts do componente `Setup` são idempotentes e escritos em POSIX `sh`.
 - **Sensibilidade de Display:** Editores inspecionam capacidades gráficas e de aceleração em voo com degradação graciosa.
 - **Paridade Multiplataforma:** Perfis de shell e terminal preservam equivalência entre UNIX e Windows.
 - **Instalação Out-of-the-Box:** Zero intervenções manuais de permissões pós-clonagem.

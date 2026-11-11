@@ -60,7 +60,7 @@ jls -v
 jls -j minha_jail -n
 
 # Conectar uma sessão de shell interativa dentro da jail
-sudo jexec minha_jail /bin/sh
+sudo jexec minha_jail sh
 
 # Iniciar ou reiniciar uma jail declarada no /etc/jail.conf
 sudo jail -c minha_jail

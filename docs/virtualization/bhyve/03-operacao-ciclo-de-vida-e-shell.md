@@ -42,7 +42,7 @@ sudo zfs destroy zroot/vm/debian@pre-upgrade
 
 ## 🐚 3. Integração com o Shell & Despacho de Comandos
 
-A integração é implementada de forma modular e em conformidade estrita POSIX `/bin/sh` em [`Shell/target/freebsd/bhyve.sh`](file:///home/gabrielf/Documents/Environment/Shell/target/freebsd/bhyve.sh).
+A integração é implementada de forma modular e em conformidade estrita POSIX `sh` em [`Shell/target/freebsd/bhyve.sh`](../../../Shell/target/freebsd/bhyve.sh).
 
 ### Mecanismos de Funcionamento:
 
@@ -66,7 +66,7 @@ A integração é implementada de forma modular e em conformidade estrita POSIX 
 
 ## 🛡️ 4. Modo Efêmero no Linuxulator (`agy-compat`)
 
-Para cenários onde a máquina virtual estiver parada ou inacessível, o ecossistema mantém a rotina de contenção via FreeBSD Linuxulator em [`Shell/target/freebsd/compat.sh`](file:///home/gabrielf/Documents/Environment/Shell/target/freebsd/compat.sh):
+Para cenários onde a máquina virtual estiver parada ou inacessível, o ecossistema mantém a rotina de contenção via FreeBSD Linuxulator em [`Shell/target/freebsd/compat.sh`](../../../Shell/target/freebsd/compat.sh):
 
 ```sh
 # Execução local temporária com mitigação de vazamento e pinning de CPU
@@ -88,7 +88,7 @@ Parâmetros de contenção aplicados:
 
 ## 🔄 5. Rotinas Automatizadas de Atualização
 
-O comando [`update-linux`](file:///home/gabrielf/Documents/Environment/Shell/target/freebsd/bhyve.sh) (aliases: `uplx`, `updeb`) conecta à VM e dispara a suíte completa de atualização:
+O comando [`update-linux`](../../../Shell/target/freebsd/bhyve.sh) (aliases: `uplx`, `updeb`) conecta à VM e dispara a suíte completa de atualização:
 
 ```sh
 # Atualização manual do Linux guest
@@ -96,7 +96,7 @@ update-linux
 uplx
 ```
 
-Esse comando é acionado de forma automática pelo orquestrador global [`update-all`](file:///home/gabrielf/Documents/Environment/Shell/library/functions.sh) (`upall`) sempre que executado em estações FreeBSD.
+Esse comando é acionado de forma automática pelo orquestrador global [`update-all`](../../../Shell/library/functions.sh) (`upall`) sempre que executado em estações FreeBSD.
 
 ---
 

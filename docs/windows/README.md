@@ -11,7 +11,7 @@ Integrar o ecossistema UNIX a estações de trabalho Microsoft Windows sem abrir
 No Universal Environment, o suporte ao Windows é governado pela **Hierarquia Tripartite de Três Classes**:
 
 1. **Classe 1 (Ouro) — UNIX Nativo:** FreeBSD e Linux bare-metal. É o padrão de referência absoluto (_ground truth_) de engenharia, onde todo o tooling POSIX opera sem camadas de tradução.
-2. **Classe 2 (Prata) — MSYS2 (Centro de Comando Soberano no Windows):** Ambiente POSIX de alta fidelidade rodando nativamente no Windows. Provê `/bin/sh`, utilitários GNU, `git` e suporte a symlinks NTFS nativos (`MSYS=winsymlinks:nativestrict`). É o responsável por executar scripts de sincronização de dotfiles (`profile.sh`) e governança de repositórios.
+2. **Classe 2 (Prata) — MSYS2 (Centro de Comando Soberano no Windows):** Ambiente POSIX de alta fidelidade rodando nativamente no Windows. Provê `sh`, utilitários GNU, `git` e suporte a symlinks NTFS nativos (`MSYS=winsymlinks:nativestrict`). É o responsável por executar scripts de sincronização de dotfiles (`profile.sh`) e governança de repositórios.
 3. **Classe 3 (Bronze) — Terminais Nativos Rápidos:** Consumidores leves e rápidos do dia a dia: **PowerShell 7 (`pwsh`)**, **Nushell (`nu`)** e **CMD com Clink**. Eles não tentam duplicar lógica de infraestrutura complexa; em vez disso, carregam dotfiles simplificados com UI semântica `_ui_*` e delegam operações pesadas à Classe 2.
 
 ```mermaid

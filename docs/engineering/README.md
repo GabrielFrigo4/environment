@@ -43,4 +43,4 @@ flowchart TD
 
 - **Declaração Constitucional de Princípios:** [`PRINCIPLES.md`](../../PRINCIPLES.md)
 - **Arquitetura Geral do Ecossistema:** [`ENVIRONMENT.md`](../../ENVIRONMENT.md)
-- **Runbook Cognitivo de Antifragilidade:** [`.agents/skills/antifragile-engineering/SKILL.md`](../../.agents/skills/antifragile-engineering/SKILL.md)
+- **Runbook Cognitivo de Antifragilidade:** [`Profile/agents/skills/antifragile-engineering/SKILL.md`](../../Profile/agents/skills/antifragile-engineering/SKILL.md)

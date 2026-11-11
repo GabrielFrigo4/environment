@@ -90,7 +90,7 @@ fi
 
 ### Pilar 7: Invariante de Shift Seguro (`shift`)
 
-Sob `set -e` em POSIX `/bin/sh`, executar `shift N` quando o número de argumentos disponíveis for menor que $N$ resulta em encerramento fatal imediato da execução, mesmo se acompanhado de `|| true`. Todo comando `shift` deve ser protegido pela validação de contagem:
+Sob `set -e` em POSIX `sh`, executar `shift N` quando o número de argumentos disponíveis for menor que $N$ resulta em encerramento fatal imediato da execução, mesmo se acompanhado de `|| true`. Todo comando `shift` deve ser protegido pela validação de contagem:
 
 ```sh
 # Padrão Antifrágil Canônico:

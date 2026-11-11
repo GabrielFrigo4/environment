@@ -16,7 +16,7 @@ sudo pkg install -y vm-bhyve bhyve-firmware tigervnc-viewer
 - **`bhyve-firmware`**: Imagens binárias de firmware UEFI (EDK2) para inicialização de sistemas modernos de 64 bits.
 - **`tigervnc-viewer`**: Cliente VNC (`vncviewer`) utilizado exclusivamente durante a instalação interativa inicial do Debian.
 
-As receitas automatizadas deste processo residem em [`Setup/freebsd/container/bhyve.sh`](file:///home/gabrielf/Documents/Environment/Setup/freebsd/container/bhyve.sh) e [`Setup/linux/desktop/debian/bhyve-guest.sh`](file:///home/gabrielf/Documents/Environment/Setup/linux/desktop/debian/bhyve-guest.sh).
+As receitas automatizadas deste processo residem em [`Setup/freebsd/container/bhyve.sh`](../../../Setup/freebsd/container/bhyve.sh) e [`Setup/linux/desktop/debian/bhyve-guest.sh`](../../../Setup/linux/desktop/debian/bhyve-guest.sh).
 
 ---
 

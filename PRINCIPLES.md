@@ -307,13 +307,13 @@ Para garantir longevidade, idempotência e excelência técnica, toda contribui�
 ### 11. Execução pelo Shell Ativo (_Active Shell Invocation_)
 
 - Funções utilitárias do terminal e rotinas interativas (como `reinstall-shell`, `bench-shell`, `install.sh`) não devem invocar `sh <script>` de forma cega.
-- Em distribuições Linux baseadas em Debian e Ubuntu, `/bin/sh` aponta para o interpretador `dash`, cuja BNF estrita rejeita nomes em `kebab-case` (`-`) em funções (`update-all`, `reinstall-shell`, etc.).
-- A execução de sub-rotinas interativas deve sempre delegar para o shell ativo em execução seguindo a ordem canônica de preferência: `command -v "$(_detect_shell)" || command -v zsh || command -v bash || command -v sh`. No FreeBSD, o `/bin/sh` permanece como fallback leve de sistema. Scripts instaladores devem conter guards de auto-elevação para o shell interativo suportado do usuário.
+- Em distribuições Linux baseadas em Debian e Ubuntu, `sh` aponta para o interpretador `dash`, cuja BNF estrita rejeita nomes em `kebab-case` (`-`) em funções (`update-all`, `reinstall-shell`, etc.).
+- A execução de sub-rotinas interativas deve sempre delegar para o shell ativo em execução seguindo a ordem canônica de preferência: `command -v "$(_detect_shell)" || command -v zsh || command -v bash || command -v sh`. No FreeBSD, o `sh` permanece como fallback leve de sistema. Scripts instaladores devem conter guards de auto-elevação para o shell interativo suportado do usuário.
 
 ### 12. Nomenclatura Kebab-Case para Funções de Shell
 
 - Todas as funções utilitárias do motor interativo (`Shell`) adotam a convenção **kebab-case** (`reinstall-shell`, `update-editors`, `update-git`, `open-neovim`).
-- A matriz de shells interativos suportados compreende `zsh`, `bash`, FreeBSD `/bin/sh` e OpenBSD `ksh`. O interpretador `dash` é formalmente descartado como shell interativo por incompatibilidade com essa convenção.
+- A matriz de shells interativos suportados compreende `zsh`, `bash`, FreeBSD `sh` e OpenBSD `ksh`. O interpretador `dash` é formalmente descartado como shell interativo por incompatibilidade com essa convenção.
 
 ### 13. Simetria de Escopo & Não-Assimetria de Subgrupo na Documentação
 

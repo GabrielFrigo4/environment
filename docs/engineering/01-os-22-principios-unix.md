@@ -32,7 +32,7 @@ A comunicação entre repositórios ocorre por contratos mínimos e bem definido
 
 ### 5. Portabilidade e Padrões Abertos
 
-Prioridade absoluta para especificações abertas: POSIX `/bin/sh` estrito, OpenZFS, XDG Base Directory, SSH OpenSSH e Markdown compatível com GitHub Flavored Markdown (GFM).
+Prioridade absoluta para especificações abertas: POSIX `sh` estrito, OpenZFS, XDG Base Directory, SSH OpenSSH e Markdown compatível com GitHub Flavored Markdown (GFM).
 
 ---
 

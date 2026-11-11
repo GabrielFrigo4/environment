@@ -42,7 +42,7 @@ flowchart LR
 
 ## 🚫 Práticas Proibidas pelo Clean-Break
 
-Ao refatorar, renomear ou reorganizar qualquer componente do ecossistema, o desenvolvedor ou agente de IA **está terminantemente proibido de**:
+Ao refatorar, renomear ou reorganizar qualquer componente do ecossistema, o desenvolvedor ou agente de IA **não deve**:
 
 1. **Criar Aliases de Transição:**
     - ❌ `alias comando_antigo="comando_novo"` (para não esquecer o comando antigo).

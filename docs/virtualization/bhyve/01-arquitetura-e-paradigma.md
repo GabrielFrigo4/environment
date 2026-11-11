@@ -44,7 +44,7 @@ O host FreeBSD exporta `/home/gabrielf` com a diretiva `-mapall=gabrielf 192.168
 
 ### 3. Preservação de Contexto de Diretório (`$PWD`)
 
-O despachante interativo [`linux-host`](file:///home/gabrielf/Documents/Environment/Shell/target/freebsd/bhyve.sh) e seus derivados capturam a variável `$PWD` do shell no FreeBSD e injetam a navegação no Debian (`cd "$PWD"`), com fallback gracioso para a raiz da home caso o comando seja invocado em diretórios externos do sistema (como `/usr/ports` ou `/tmp`).
+O despachante interativo [`linux-host`](../../../Shell/target/freebsd/bhyve.sh) e seus derivados capturam a variável `$PWD` do shell no FreeBSD e injetam a navegação no Debian (`cd "$PWD"`), com fallback gracioso para a raiz da home caso o comando seja invocado em diretórios externos do sistema (como `/usr/ports` ou `/tmp`).
 
 ### 4. Propagação Transparente de TTY e Sinais
 

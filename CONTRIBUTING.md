@@ -9,17 +9,10 @@
 O **Universal Environment** é o orquestrador global do ecossistema. Para clonar a bancada completa e inicializar os submódulos e ganchos de segurança:
 
 ```sh
-# 1. Clonar com submódulos recursivos
 git clone --recurse-submodules "https://github.com/GabrielFrigo4/environment" "${HOME}/Documents/Environment"
 cd "${HOME}/Documents/Environment"
-
-# 2. Inicializar submódulos e configurar ganchos Git em todos os repositórios
 make clone
-
-# 3. Validar a sintaxe e integridade do ecossistema
 make test
-
-# 4. Executar suíte completa de auditoria estática
 make audit
 ```
 

@@ -36,5 +36,5 @@ Todo trabalho de engenharia e desenvolvimento neste repositório obedece rigoros
 ## 🎯 Invariantes Operacionais
 
 - **Makefile Silencioso:** Todo repositório possui `Makefile` POSIX `.SILENT:` com help colorido interativo (`make help`).
-- **Githooks Autônomos:** Pre-commit e commit-msg em POSIX `/bin/sh` sem dependências globais externas.
+- **Githooks Autônomos:** Pre-commit e commit-msg em POSIX `sh` sem dependências globais externas.
 - **Permissões Canônicas:** `chmod 0755` para scripts/hooks executáveis; `chmod 0644` para arquivos de texto/código.

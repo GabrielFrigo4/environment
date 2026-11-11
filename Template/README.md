@@ -16,7 +16,7 @@ O **{{PROJECT_NAME}}** é projetado sob os 22 princípios soberanos de engenhari
 
 - **Simplicidade Inerente:** Zero dependências desnecessárias; foco em código autoexplicativo e manutenível.
 - **Autonomia & Soberania:** O repositório é completamente autocontido e desacoplado.
-- **Quality Gates Nativos:** Ganchos de pré-commit e validação semântica em POSIX `/bin/sh` puro.
+- **Quality Gates Nativos:** Ganchos de pré-commit e validação semântica em POSIX `sh` puro.
 - **Orquestração Padronizada:** Interface unificada e previsível através de `Makefile` POSIX silencioso.
 
 ---
@@ -26,7 +26,7 @@ O **{{PROJECT_NAME}}** é projetado sob os 22 princípios soberanos de engenhari
 ### Pré-requisitos
 
 - Compilador ou runtime compatível com a stack do projeto.
-- Shell compatível com POSIX (`/bin/sh`, `dash`, `bash`, `zsh`).
+- Shell compatível com POSIX (`sh`, `dash`, `bash`, `zsh`).
 - Git (versão $\ge 2.20$).
 - [Prettier](https://prettier.io/) (opcional, para formatação de Markdown e configs).
 

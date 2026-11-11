@@ -90,7 +90,7 @@ jls -v
 # Iniciar jail específica
 sudo jail -c -f /etc/jail.conf minha_jail
 # Executar comando interativo dentro da jail
-sudo jexec minha_jail /bin/sh
+sudo jexec minha_jail sh
 ```
 
 ### BastilleBSD:

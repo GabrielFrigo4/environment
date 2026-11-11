@@ -77,7 +77,7 @@ alias docker-compose="podman-compose"
 
 ```sh
 # Executar container efêmero para testes interativos
-podman run --rm -it alpine:latest /bin/sh
+podman run --rm -it alpine:latest sh
 
 # Listar containers em execução e finalizados
 podman ps -a

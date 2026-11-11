@@ -46,7 +46,7 @@ Essas diretrizes são de aplicação obrigatória para qualquer modificação ou
 ## 7. Execução pelo Shell Ativo (Active Shell Invocation)
 
 - Funções utilitárias e rotinas interativas no ecossistema devem sempre delegar sub-rotinas para o shell atualmente em execução, seguindo a cascata de preferência: `command -v "$(_detect_shell)" || command -v zsh || command -v bash || command -v sh`.
-- Isso previne falhas no `dash` (Debian/Ubuntu) e assegura que os nomes canônicos em `kebab-case` (`reinstall-shell`, `update-editors`, etc.) rodem no shell compatível (`zsh`, `bash` ou FreeBSD `/bin/sh` como fallback).
+- Isso previne falhas no `dash` (Debian/Ubuntu) e assegura que os nomes canônicos em `kebab-case` (`reinstall-shell`, `update-editors`, etc.) rodem no shell compatível (`zsh`, `bash` ou FreeBSD `sh` como fallback).
 
 ## 8. Antifragilidade & Resiliência Ativa
 

@@ -56,8 +56,8 @@ O utilitário `jail(8)` lê nativamente suas especificações a partir do arquiv
 # ================================================================
 # Parâmetros Globais Aplicados a Todas as Jails
 # ================================================================
-exec.start = "/bin/sh /etc/rc";
-exec.stop  = "/bin/sh /etc/rc.shutdown";
+exec.start = "sh /etc/rc";
+exec.stop  = "sh /etc/rc.shutdown";
 exec.clean;
 mount.devfs;
 devfs_ruleset = 4;
@@ -135,5 +135,5 @@ echo "nameserver 1.1.1.1" | sudo tee /usr/jails/web01/etc/resolv.conf
 sudo jail -c web01
 
 # Acessar a jail interativamente
-sudo jexec web01 /bin/sh
+sudo jexec web01 sh
 ```
