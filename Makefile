@@ -335,9 +335,9 @@ lint-format:
 
 audit:
 	echo "🔍 [1/6] Auditando Setup..."
-	python3 Setup/.scripts/audit/all.py
+	PYTHONPYCACHEPREFIX="$${PYTHONPYCACHEPREFIX:-$$HOME/.cache/pycache}" PYTHONDONTWRITEBYTECODE=1 python3 Setup/.scripts/audit/all.py
 	echo "🔍 [2/6] Auditando Profile..."
-	python3 Profile/.scripts/audit/all.py
+	PYTHONPYCACHEPREFIX="$${PYTHONPYCACHEPREFIX:-$$HOME/.cache/pycache}" PYTHONDONTWRITEBYTECODE=1 python3 Profile/.scripts/audit/all.py
 	echo "🔍 [3/6] Validando sintaxe do Shell..."
 	_sh=$$(command -v bash 2> "/dev/null" || command -v zsh 2> "/dev/null" || echo sh); \
 	find Shell -name "*.sh" -not -path "*/.git/*" -exec "$$_sh" -n {} +
@@ -352,7 +352,12 @@ audit:
 	(cd Editor/Vim && $(MAKE) test)
 	(cd Editor/Emacs && $(MAKE) test)
 	echo "🔍 [6/6] Auditando Template..."
-	python3 Template/.scripts/audit/all.py
+	PYTHONPYCACHEPREFIX="$${PYTHONPYCACHEPREFIX:-$$HOME/.cache/pycache}" PYTHONDONTWRITEBYTECODE=1 python3 Template/.scripts/audit/all.py
+	echo "🔍 [Trava] Verificando ausência de __pycache__ e *.pyc na árvore..."
+	if [ -n "$$(find . -type d -name "__pycache__" -not -path "*/.git/*")" ] || [ -n "$$(find . -type f -name "*.pyc" -not -path "*/.git/*")" ]; then \
+		echo "❌ Erro: Arquivos __pycache__ ou *.pyc encontrados no repositório!"; \
+		exit 1; \
+	fi
 	echo "🎉 Todas as auditorias estáticas foram aprovadas com sucesso!"
 
 test:
@@ -366,8 +371,8 @@ test:
 
 fix-banners:
 	echo "📏 Normalizando réguas de banners em Setup e Profile..."
-	python3 Setup/.scripts/audit/banners.py --fix
-	python3 Profile/.scripts/audit/banners.py --fix
+	PYTHONPYCACHEPREFIX="$${PYTHONPYCACHEPREFIX:-$$HOME/.cache/pycache}" PYTHONDONTWRITEBYTECODE=1 python3 Setup/.scripts/audit/banners.py --fix
+	PYTHONPYCACHEPREFIX="$${PYTHONPYCACHEPREFIX:-$$HOME/.cache/pycache}" PYTHONDONTWRITEBYTECODE=1 python3 Profile/.scripts/audit/banners.py --fix
 	echo "✅ Réguas de banners normalizadas com sucesso!"
 
 bench:

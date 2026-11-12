@@ -74,7 +74,12 @@ test:
 
 audit:
 	echo "🔍 Executando suíte canônica de auditoria estática..."
-	python3 .scripts/audit/all.py
+	PYTHONPYCACHEPREFIX="$${PYTHONPYCACHEPREFIX:-$$HOME/.cache/pycache}" PYTHONDONTWRITEBYTECODE=1 python3 .scripts/audit/all.py
+	echo "🔍 Verificando ausência de __pycache__ e *.pyc no Template..."
+	if [ -n "$$(find . -type d -name "__pycache__" -not -path "*/.git/*")" ] || [ -n "$$(find . -type f -name "*.pyc" -not -path "*/.git/*")" ]; then \
+		echo "❌ Erro: __pycache__ ou *.pyc encontrados!"; \
+		exit 1; \
+	fi
 
 format: prettier
 	echo "✅ Formatação concluída!"
