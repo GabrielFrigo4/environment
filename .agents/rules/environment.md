@@ -1,0 +1,85 @@
+# Universal Environment — Engineering Rules & Constraints
+
+Essas diretrizes são de aplicação obrigatória para qualquer modificação ou extensão neste repositório (`Environment`).
+
+## 1. Papel do Environment: Hub Orquestrador e Bancada de Desenvolvimento
+
+- O Environment (`~/Documents/Environment`) é um repositório de **bancada de desenvolvimento, orquestração e documentação**, NÃO um ambiente de runtime de produção.
+- Absolutamente **NADA** residente no repositório do Environment deve ser usado ou apontado diretamente por symlinks no sistema hospedeiro.
+- Os 7 repositórios públicos (`Setup`, `Shell`, `Profile`, `Editor/Emacs`, `Editor/Helix`, `Editor/NeoVim`, `Editor/Vim`) são **Git Submodules** — opere neles individualmente ao desenvolver.
+- O `Vault` é um **clone privado** ignorado pelo `.gitignore` — NUNCA o adicione como submodule ou rastreie seu conteúdo.
+- Para implantar os componentes em seus caminhos canônicos no sistema operacional, utilize `make install` (que clona cada repositório de forma soberana).
+- **Ciclo Obrigatório de Propagação (Bancada -> Git Push -> Git Pull em Produção):** Toda edição ocorre estritamente na bancada de desenvolvimento (`Environment/<Componente>`), seguida de commit e push para o repositório remoto. Clones de produção (`/usr/local/share/shell`, `~/.local/share/profile`, `~/.emacs.d`, etc.) DEVEM ser atualizados unicamente via `git pull` (ou `upsh`/`uprc`/`uped`), evitando copiar arquivos via `cp` avulso de modo a deixar a árvore de produção suja (`unstaged/uncommitted changes`).
+
+## 2. Documentação Canônica
+
+- O `ENVIRONMENT.md` e `PRINCIPLES.md` **nesta raiz** são as versões autoritativas do ecossistema.
+- Os sub-repos contêm cópias sincronizadas que referenciam estas versões.
+- Ao atualizar princípios ou arquitetura, execute `make sync-docs` para propagar automaticamente para todos os submódulos.
+
+## 3. Makefile como Orquestrador
+
+- Todas as operações globais (`make clone`, `make install`, `make pull`, `make status`, `make audit`, `make sync-docs`, `make ci`) são executadas via Makefile.
+- O `make clone` inicializa submódulos de desenvolvimento + clone defensivo do Vault via SSH.
+- O `make install` clona e provisiona os runtimes soberanos nos caminhos canônicos do sistema.
+- O `make pull` atualiza submódulos + pull de todos os repos.
+- `make sync` não pertence ao Makefile do Environment; a sincronização de dotfiles ocorre exclusivamente no clone de produção do Profile (`~/.config/profile/profile.sh sync`).
+
+## 4. Modelo Híbrido de Submódulos
+
+- **Submódulos Públicos (Setup, Shell, Profile):** Rastreados pelo `.gitmodules` via URLs HTTPS públicas.
+- **Vault Privado:** Clonado via SSH (`git@github.com:GabrielFrigo4/vault.git`) com tratativa defensiva/tolerante a falhas.
+- Ao atualizar submódulos, use `git submodule update --remote --merge`.
+
+## 5. Permissões e Segurança
+
+- `chmod 0644` para arquivos de documentação e configuração do Environment.
+- `chmod 0755` para o Makefile.
+- NUNCA commite ou mencione conteúdos do Vault no Environment.
+
+## 6. Padrão Universal de Documentação
+
+- **README.md:** Portal institucional com badges do Quarteto, diagrama de arquitetura, tabela de comandos e instruções de instalação.
+- **AGENTS.md:** Briefing para agentes de IA com identidade, regras e referências.
+- **ENVIRONMENT.md / PRINCIPLES.md:** Documentação canônica do ecossistema.
+
+## 7. Execução pelo Shell Ativo (Active Shell Invocation)
+
+- Funções utilitárias e rotinas interativas no ecossistema devem sempre delegar sub-rotinas para o shell atualmente em execução, seguindo a cascata de preferência: `command -v "$(_detect_shell)" || command -v zsh || command -v bash || command -v sh`.
+- Isso previne falhas no `dash` (Debian/Ubuntu) e assegura que os nomes canônicos em `kebab-case` (`reinstall-shell`, `update-editors`, etc.) rodem no shell compatível (`zsh`, `bash` ou FreeBSD `sh` como fallback).
+
+## 8. Antifragilidade & Resiliência Ativa
+
+- Nenhum script, loader ou utilitário deve depender de caminhos rígidos (`~/.vault`) ou variáveis não validadas (`[ -f "$VAR" ]`).
+- Adotar ativamente a cascata de descoberta: Variável Explícita $\rightarrow$ Diretório do Componente $\rightarrow$ XDG Data (`~/.local/share`) $\rightarrow$ XDG Config (`~/.config`) $\rightarrow$ Home direta (`~/.`) $\rightarrow$ Global FHS (`/usr/local/share`).
+- Auto-curar permissões em tempo de voo (`chmod 0600` em chaves e segredos) e reparar a sessão ativa (`export`).
+
+## 9. Elevação Antifrágil & Shift Seguro
+
+- Em scripts e receitas executáveis sob `set -eu`, a resolução da variável `ELEVATE` deve utilizar estritamente o bloco explícito:
+    ```sh
+    ELEVATE=""
+    if [ "$(id -u)" -ne 0 ]; then
+        if command -v doas > "/dev/null" 2>&1; then
+            ELEVATE="doas"
+        elif command -v sudo > "/dev/null" 2>&1; then
+            ELEVATE="sudo"
+        fi
+    fi
+    ```
+    Isso previne o colapso fatal do script por retorno status 1 da substituição de comando `$( [ 0 -ne 0 ] ... )` quando executado nativamente como root.
+- Todo comando `shift` em scripts sob `set -e` deve ser precedido por validação de parâmetros (`[ "$#" -ge N ] && shift N`), prevenindo o término fatal do shell exigido pelo padrão POSIX para utilitários especiais (_special built-ins_) quando `$# < N`.
+
+## 10. Taxonomia Tripartite de Comentários & Banners Estruturais
+
+- Comentários Estruturais: cabeçalhos de 64 hífens nas linhas 2-4 (`# ----------------------------------------------------------------`), seções e subseções internas de 32 colunas (`### ================================` e `### --------------------------------`) com títulos estritamente em MAIÚSCULO (sem parênteses ou colchetes e contidos em até 32 caracteres), réguas de 64 sinais de igualdade em `.gitignore` com títulos em MAIÚSCULO.
+- Comentários de Sistema: permitidos exclusivamente para shebangs, pragmas e diretivas essenciais.
+- Comentários Explicativos: não utilize em código, receitas, configs e blocos de código em arquivos Markdown.
+
+## 11. Checklist de Validação
+
+Antes de concluir qualquer modificação no Environment:
+
+1. `git diff --check` (deve retornar 0 erros).
+2. `git status` (deve mostrar apenas arquivos do hub, nada dos sub-repos).
+3. `make status` (deve funcionar em todos os repos).

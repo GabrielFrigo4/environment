@@ -1,85 +1,40 @@
-# Universal Environment — Engineering Rules & Constraints
+---
+description: Regra canônica com os 22 princípios soberanos de engenharia e diretrizes operacionais.
+globs: "**/*"
+always_on: true
+---
 
-Essas diretrizes são de aplicação obrigatória para qualquer modificação ou extensão neste repositório (`Environment`).
+# 📜 Princípios Soberanos de Engenharia & Diretrizes Canônicas
 
-## 1. Papel do Environment: Hub Orquestrador e Bancada de Desenvolvimento
+Todo trabalho de engenharia e desenvolvimento neste repositório obedece rigorosamente aos 22 Princípios de Engenharia (17 Princípios UNIX de Eric S. Raymond + 5 Regras de Soberania & Antifragilidade).
 
-- O Environment (`~/Documents/Environment`) é um repositório de **bancada de desenvolvimento, orquestração e documentação**, NÃO um ambiente de runtime de produção.
-- Absolutamente **NADA** residente no repositório do Environment deve ser usado ou apontado diretamente por symlinks no sistema hospedeiro.
-- Os 7 repositórios públicos (`Setup`, `Shell`, `Profile`, `Editor/Emacs`, `Editor/Helix`, `Editor/NeoVim`, `Editor/Vim`) são **Git Submodules** — opere neles individualmente ao desenvolver.
-- O `Vault` é um **clone privado** ignorado pelo `.gitignore` — NUNCA o adicione como submodule ou rastreie seu conteúdo.
-- Para implantar os componentes em seus caminhos canônicos no sistema operacional, utilize `make install` (que clona cada repositório de forma soberana).
-- **Ciclo Obrigatório de Propagação (Bancada -> Git Push -> Git Pull em Produção):** Toda edição ocorre estritamente na bancada de desenvolvimento (`Environment/<Componente>`), seguida de commit e push para o repositório remoto. Clones de produção (`/usr/local/share/shell`, `~/.local/share/profile`, `~/.emacs.d`, etc.) DEVEM ser atualizados unicamente via `git pull` (ou `upsh`/`uprc`/`uped`), evitando copiar arquivos via `cp` avulso de modo a deixar a árvore de produção suja (`unstaged/uncommitted changes`).
+## 🏛️ Os 22 Princípios de Design
 
-## 2. Documentação Canônica
+1. **Modularidade:** Partes simples conectadas por interfaces limpas.
+2. **Clareza:** Clareza é melhor que esperteza; legibilidade sobre truques crípticos.
+3. **Composição:** Projete programas para serem conectados a outros programas.
+4. **Separação:** Separe política do mecanismo; separe o motor da interface.
+5. **Simplicidade:** Projete para a simplicidade; adicione complexidade apenas onde estritamente necessário.
+6. **Parcimônia:** Escreva código grande apenas quando demonstrado que nada menor resolverá.
+7. **Transparência:** Projete para visibilidade facilitando inspeção e auditoria.
+8. **Robustez:** Robustez advém da simplicidade e da validação defensiva de invariantes.
+9. **Representação:** Dobre conhecimento em dados/estruturas antes de espalhar lógica condicional.
+10. **Menor Espanto:** Siga sempre as convenções canônicas menos surpreendentes da plataforma.
+11. **Silêncio:** Programas devem executar quietos no sucesso, reportando apenas falhas reais.
+12. **Reparo:** Falhe ruidosamente e o mais rápido possível (fail-fast).
+13. **Economia:** Economize o tempo humano de engenharia em preferência ao tempo de máquina.
+14. **Geração:** Evite código mecânico e repetitivo; automatize scaffolds e templates.
+15. **Otimização:** Meça antes de otimizar; nunca sacrifique clareza por micro-otimizações precoces.
+16. **Diversidade:** Desconfie de visões absolutistas; forneça interoperabilidade e portabilidade.
+17. **Extensibilidade:** Projete para o futuro reconhecendo que os requisitos irão evoluir.
+18. **Soberania do Usuário:** Infraestrutura e dados pertencem ao criador; repatrie dependências de nuvem e serviços proprietários.
+19. **Autonomia Reentrante:** Toda operação deve ser idempotente, auto-recuperável e executável repetidamente sem efeitos colaterais.
+20. **Hermetismo de Produção:** Deleção de `.agents/` e governança de IA não interfere em nenhum artefato de build ou execução de produção (`rm -rf .agents`).
+21. **Desacoplamento Dev-Hub:** O código canônico reside na bancada de desenvolvimento; instalações em produção são atualizadas via pull limpo.
+22. **Antifragilidade & Resiliência Ativa:** O sistema se fortalece sob estresse e perturbação com auto-cura em tempo de voo e fallback dinâmico em cascata.
 
-- O `ENVIRONMENT.md` e `PRINCIPLES.md` **nesta raiz** são as versões autoritativas do ecossistema.
-- Os sub-repos contêm cópias sincronizadas que referenciam estas versões.
-- Ao atualizar princípios ou arquitetura, execute `make sync-docs` para propagar automaticamente para todos os submódulos.
+## 🎯 Invariantes Operacionais
 
-## 3. Makefile como Orquestrador
-
-- Todas as operações globais (`make clone`, `make install`, `make pull`, `make status`, `make audit`, `make sync-docs`, `make ci`) são executadas via Makefile.
-- O `make clone` inicializa submódulos de desenvolvimento + clone defensivo do Vault via SSH.
-- O `make install` clona e provisiona os runtimes soberanos nos caminhos canônicos do sistema.
-- O `make pull` atualiza submódulos + pull de todos os repos.
-- `make sync` não pertence ao Makefile do Environment; a sincronização de dotfiles ocorre exclusivamente no clone de produção do Profile (`~/.config/profile/profile.sh sync`).
-
-## 4. Modelo Híbrido de Submódulos
-
-- **Submódulos Públicos (Setup, Shell, Profile):** Rastreados pelo `.gitmodules` via URLs HTTPS públicas.
-- **Vault Privado:** Clonado via SSH (`git@github.com:GabrielFrigo4/vault.git`) com tratativa defensiva/tolerante a falhas.
-- Ao atualizar submódulos, use `git submodule update --remote --merge`.
-
-## 5. Permissões e Segurança
-
-- `chmod 0644` para arquivos de documentação e configuração do Environment.
-- `chmod 0755` para o Makefile.
-- NUNCA commite ou mencione conteúdos do Vault no Environment.
-
-## 6. Padrão Universal de Documentação
-
-- **README.md:** Portal institucional com badges do Quarteto, diagrama de arquitetura, tabela de comandos e instruções de instalação.
-- **AGENTS.md:** Briefing para agentes de IA com identidade, regras e referências.
-- **ENVIRONMENT.md / PRINCIPLES.md:** Documentação canônica do ecossistema.
-
-## 7. Execução pelo Shell Ativo (Active Shell Invocation)
-
-- Funções utilitárias e rotinas interativas no ecossistema devem sempre delegar sub-rotinas para o shell atualmente em execução, seguindo a cascata de preferência: `command -v "$(_detect_shell)" || command -v zsh || command -v bash || command -v sh`.
-- Isso previne falhas no `dash` (Debian/Ubuntu) e assegura que os nomes canônicos em `kebab-case` (`reinstall-shell`, `update-editors`, etc.) rodem no shell compatível (`zsh`, `bash` ou FreeBSD `sh` como fallback).
-
-## 8. Antifragilidade & Resiliência Ativa
-
-- Nenhum script, loader ou utilitário deve depender de caminhos rígidos (`~/.vault`) ou variáveis não validadas (`[ -f "$VAR" ]`).
-- Adotar ativamente a cascata de descoberta: Variável Explícita $\rightarrow$ Diretório do Componente $\rightarrow$ XDG Data (`~/.local/share`) $\rightarrow$ XDG Config (`~/.config`) $\rightarrow$ Home direta (`~/.`) $\rightarrow$ Global FHS (`/usr/local/share`).
-- Auto-curar permissões em tempo de voo (`chmod 0600` em chaves e segredos) e reparar a sessão ativa (`export`).
-
-## 9. Elevação Antifrágil & Shift Seguro
-
-- Em scripts e receitas executáveis sob `set -eu`, a resolução da variável `ELEVATE` deve utilizar estritamente o bloco explícito:
-    ```sh
-    ELEVATE=""
-    if [ "$(id -u)" -ne 0 ]; then
-        if command -v doas > "/dev/null" 2>&1; then
-            ELEVATE="doas"
-        elif command -v sudo > "/dev/null" 2>&1; then
-            ELEVATE="sudo"
-        fi
-    fi
-    ```
-    Isso previne o colapso fatal do script por retorno status 1 da substituição de comando `$( [ 0 -ne 0 ] ... )` quando executado nativamente como root.
-- Todo comando `shift` em scripts sob `set -e` deve ser precedido por validação de parâmetros (`[ "$#" -ge N ] && shift N`), prevenindo o término fatal do shell exigido pelo padrão POSIX para utilitários especiais (_special built-ins_) quando `$# < N`.
-
-## 10. Taxonomia Tripartite de Comentários & Banners Estruturais
-
-- Comentários Estruturais: cabeçalhos de 64 hífens nas linhas 2-4 (`# ----------------------------------------------------------------`), seções e subseções internas de 32 colunas (`### ================================` e `### --------------------------------`) com títulos estritamente em MAIÚSCULO (sem parênteses ou colchetes e contidos em até 32 caracteres), réguas de 64 sinais de igualdade em `.gitignore` com títulos em MAIÚSCULO.
-- Comentários de Sistema: permitidos exclusivamente para shebangs, pragmas e diretivas essenciais.
-- Comentários Explicativos: não utilize em código, receitas, configs e blocos de código em arquivos Markdown.
-
-## 11. Checklist de Validação
-
-Antes de concluir qualquer modificação no Environment:
-
-1. `git diff --check` (deve retornar 0 erros).
-2. `git status` (deve mostrar apenas arquivos do hub, nada dos sub-repos).
-3. `make status` (deve funcionar em todos os repos).
+- **Makefile Silencioso:** Todo repositório possui `Makefile` POSIX `.SILENT:` com help colorido interativo (`make help`).
+- **Githooks Autônomos:** Pre-commit e commit-msg em POSIX `sh` sem dependências globais externas.
+- **Permissões Canônicas:** `chmod 0755` para `.githooks/*` e scripts/entrypoints executáveis iniciados com shebang `#!`; `chmod 0644` para bibliotecas `sourced`, arquivos de configuração, código-fonte e documentação.

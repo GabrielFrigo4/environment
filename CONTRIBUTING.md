@@ -1,60 +1,20 @@
-# 🤝 Guia de Contribuição — Universal Environment
+# 🤝 Guia de Contribuição
 
-> Diretrizes de desenvolvimento, setup inicial da bancada, quality gates e padrões de engenharia para o repositório hub do **Quarteto de Produtividade**.
+> Diretrizes de desenvolvimento, ciclo de contribuição, quality gates defensivos e convenções de engenharia para repositórios do ecossistema.
 
 ---
 
-## 🚀 Setup Inicial da Bancada (Primeiros Passos)
+## 🚀 Setup Inicial
 
-O **Universal Environment** é o orquestrador global do ecossistema. Para clonar a bancada completa e inicializar os submódulos e ganchos de segurança:
+Para configurar o repositório local e ativar as barreiras de qualidade com auto-cura:
+
+1. Ativar os ganchos Git defensivos com permissões canônicas:
 
 ```sh
-git clone --recurse-submodules "https://github.com/GabrielFrigo4/environment" "${HOME}/Documents/Environment"
-cd "${HOME}/Documents/Environment"
-make clone
-make test
-make audit
+make hooks
 ```
 
-> [!IMPORTANT]
-> O alvo `make clone` executa automaticamente `make hooks`, que configura `core.hooksPath -> .githooks` e aplica permissões canônicas em todos os repositórios federados. Se já clonou anteriormente, execute `make hooks` manualmente.
-
----
-
-## 🛡️ Invariantes de Engenharia
-
-Toda contribuição ao ecossistema deve obedecer rigorosamente aos princípios em [PRINCIPLES.md](PRINCIPLES.md) e às regras em [AGENTS.md](AGENTS.md):
-
-1. **Invariante de Clonagem "Out-of-the-Box" (Zero-Tweaks Invariant):**
-    - O ecossistema deve funcionar 100% imediatamente após um `git clone`, sem necessidade de intervenções manuais.
-    - **Modos Octais no Git Index:** Scripts e ganchos executáveis devem estar registrados com modo `100755`. Arquivos de configuração, documentação e dados devem estar em `100644`.
-    - Se cometer um erro de permissão no Git Index, corrija com:
-        ```sh
-        git update-index --chmod=+x caminho/script.sh    # Para executáveis
-        git update-index --chmod=-x caminho/arquivo.md   # Para configs/docs
-        ```
-
-2. **Hermetismo de Produção (`rm -rf .agents`):**
-    - O código executável de produção (scripts, Makefiles, dotfiles, hooks) NUNCA deve depender de arquivos em `.agents/` ou `skills/`. Se `.agents/` for deletado, 100% do sistema deve continuar operando.
-
-3. **Bancada de Desenvolvimento vs. Runtimes de Produção:**
-    - O clone do Environment (`~/Documents/Environment`) é **exclusivamente uma bancada de orquestração**. Nenhum arquivo dentro dele deve ser symlinkado diretamente pelo SO hospedeiro. Para instalar no sistema, use `make install`.
-
-4. **Padrão de Banners & Clean Code:**
-    - Cabeçalhos de scripts: exatamente 64 hífens (`# ----------------------------------------------------------------`).
-    - Seções internas: exatamente 32 caracteres (`### ================================` ou `### --------------------------------`).
-    - Zero comentários narrativos que apenas parafraseiem o código.
-
----
-
-## 🪝 Quality Gates & Ganchos Git
-
-O repositório utiliza ganchos Git versionados em `.githooks/`:
-
-- **`pre-commit`:** Valida formatação de espaços (`git diff --check`), modos de arquivo no Git Index (0755 vs 0644), status dos submódulos, sintaxe POSIX dos scripts de shell e conformidade Markdown com Prettier.
-- **`commit-msg`:** Valida a mensagem de commit conforme a especificação semântica.
-
-Para rodar manualmente toda a bateria de validação local antes de abrir um PR ou enviar commits:
+2. Validar a integridade local e os quality gates integrados:
 
 ```sh
 make ci
@@ -62,32 +22,106 @@ make ci
 
 ---
 
+## 🔄 Ciclo Canônico de Contribuição
+
+Todo o fluxo de desenvolvimento segue o desacoplamento estrito entre a bancada de trabalho e os runtimes de produção:
+
+1. **Bancada de Edição:** Alterações devem ocorrer exclusivamente na bancada em `~/Documents/`. Nunca altere clones ou diretórios de produção diretamente.
+2. **Implementação Limpa:** Desenvolva mantendo o código autoexplicativo, respeitando a Taxonomia Tripartite de Comentários e a portabilidade POSIX.
+3. **Quality Gates Locais:** Valide seu trabalho localmente executando `make format`, `make audit`, `make test` e `make ci`.
+4. **Commit Semântico:** Registre alterações atômicas seguindo a convenção de commits semânticos, protegida pelos ganchos Git com auto-cura.
+5. **Deploy Canônico:** Envie as alterações via `git push`. Ambientes de produção recebem atualizações unicamente via `git pull`.
+
+---
+
+## 🛡️ Invariantes de Engenharia
+
+Toda contribuição deve respeitar rigorosamente as diretrizes em [PRINCIPLES.md](PRINCIPLES.md) e [AGENTS.md](AGENTS.md):
+
+1. **Taxonomia Tripartite de Comentários:**
+    - _Comentários de Sistema:_ PERMITIDOS (shebangs, pragmas, diretivas de linters).
+    - _Comentários Estruturais de 64/32 colunas:_ PERMITIDOS (cabeçalhos de 64 `-` `# ----------------------------------------------------------------`, réguas de 32 caracteres `### ================================` e `### --------------------------------` com títulos em MAIÚSCULO, réguas de 64 `=` em `.gitignore` com títulos em MAIÚSCULO).
+    - _Comentários Explicativos/Narrativos:_ PROIBIDOS em código-fonte, configurações e blocos de código dentro de arquivos Markdown.
+
+2. **Invariante de Modos no Git Index (`0755` vs `0644`):**
+    - Entrypoints executáveis com shebang `#!`, scripts utilitários com `#!` e ganchos Git (`.githooks/*`) devem manter permissão `0755` (`100755` no Git Index).
+    - Bibliotecas carregadas via `source` (`.`), arquivos de configuração, código-fonte sem shebang, documentações e templates devem manter `0644` (`100644` no Git Index).
+    - Permissões no índice podem ser ajustadas manualmente quando necessário:
+        ```sh
+        git update-index --chmod=+x scripts/util.sh
+        git update-index --chmod=-x README.md
+        ```
+
+3. **Hermetismo de Produção (`rm -rf .agents`):**
+    - Nenhum build, script de produção ou execução de aplicação pode depender de arquivos em `.agents/` ou `skills/`.
+
+4. **Portabilidade POSIX e Makefiles Silenciosos:**
+    - Scripts de automação devem adotar POSIX `sh` estrito, cabeçalho `#!/usr/bin/env sh` e redirecionamento seguro `> "/dev/null" 2>&1`.
+    - Makefiles devem conter `.POSIX: .SILENT:` e flags de supressão de ruído.
+
+---
+
+## 🪝 Quality Gates & Ganchos Git com Auto-Cura
+
+O repositório adota ganchos defensivos com auto-cura ativa em `.githooks/`:
+
+- **`.githooks/pre-commit`:**
+    - _Auto-cura de Modos:_ Detecta entrypoints com `#!` e ganchos ajustando permissões para `0755` no disco e no Git Index; normaliza bibliotecas `sourced`, códigos e arquivos de texto para `0644`.
+    - _Auto-cura de Formatação:_ Remove trailing whitespaces, normaliza finais de linha (`eol=lf`/`crlf`), executa Prettier em Markdowns e manifestos estruturados, corrige cabeçalhos de banners estruturais e re-adiciona ao stage.
+    - _Quality Gates Estáticos:_ Bloqueia escapes ANSI em notação octal (base-8 para `0x1b`), redirecionamentos não aspeados, inconsistências de whitespace/conflito e falhas de sintaxe de shell (`bash -n` / `zsh -n` / `sh -n`).
+- **`.githooks/commit-msg`:**
+    - _Auto-cura de Prefixo:_ Valida o prefixo semântico e formata automaticamente a mensagem com `chore:` se o tipo for omitido ou inválido.
+    - _Validação de Comprimento:_ Garante mensagens significativas com comprimento mínimo de 8 caracteres.
+
+Para executar os quality gates manualmente:
+
+| Comando       | Finalidade Operacional                                           |
+| :------------ | :--------------------------------------------------------------- |
+| `make hooks`  | Instala e ativa os ganchos Git locais com permissão `0755`       |
+| `make format` | Formata todo o repositório com Prettier e ferramentas canônicas  |
+| `make audit`  | Executa suíte estática de integridade, banners e taxonomia       |
+| `make test`   | Executa testes unitários e de integração locais                  |
+| `make ci`     | Executa o pipeline completo de verificação local antes de commit |
+
+---
+
 ## 📝 Convenção de Commits Semânticos
 
-As mensagens de commit devem seguir o formato:
+As mensagens de commit devem seguir o padrão:
 
 ```text
-<tipo>(<escopo>): <descrição objetiva em português ou inglês>
+<tipo>(<escopo>): <descrição objetiva>
+```
+
+ou
+
+```text
+<tipo>: <descrição objetiva>
 ```
 
 ### Tipos Permitidos:
 
-| Tipo       | Emoji | Finalidade                                                |
-| :--------- | :---: | :-------------------------------------------------------- |
-| `feat`     |  ✨   | Nova funcionalidade ou recurso                            |
-| `fix`      |  🐛   | Correção de bug ou falha                                  |
-| `refactor` |  ♻️   | Refatoração sem alteração de comportamento externo        |
-| `docs`     |  📝   | Alterações exclusivamente em documentação                 |
-| `style`    |  🎨   | Formatação, Prettier, banners ou estilo visual            |
-| `test`     |  🧪   | Adição ou ajuste de testes e auditorias                   |
-| `ci`       |  👷   | Ajustes em pipelines GitHub Actions ou ganchos Git locais |
-| `chore`    |  🔧   | Manutenção rotineira, Makefiles ou submódulos             |
+| Tipo       | Descrição                                                    |
+| :--------- | :----------------------------------------------------------- |
+| `feat`     | Nova funcionalidade de produto ou sistema                    |
+| `fix`      | Correção de bug ou falha de execução                         |
+| `docs`     | Alterações estritamente em documentação                      |
+| `style`    | Ajustes visuais, formatação de código ou Prettier            |
+| `refactor` | Refatoração de código sem alteração funcional externa        |
+| `perf`     | Otimização de desempenho, latência ou consumo de recursos    |
+| `test`     | Adição ou refatoração de testes automatizados                |
+| `build`    | Alterações no sistema de compilação ou dependências externas |
+| `ci`       | Ajustes em pipelines de CI ou ganchos Git locais             |
+| `chore`    | Tarefas rotineiras de manutenção ou infraestrutura           |
+| `revert`   | Reversão de commit anterior                                  |
+| `sec`      | Correções ou aprimoramentos de segurança e criptografia      |
+| `init`     | Inicialização de repositório, módulo ou estrutura inicial    |
 
 ---
 
-## 📖 Referências Canônicas
+## 📖 Referências Obrigatórias
 
-- [ENVIRONMENT.md](ENVIRONMENT.md) — Arquitetura federada e ciclo operacional
-- [PRINCIPLES.md](PRINCIPLES.md) — Os 22 Princípios de Engenharia UNIX + Clean Code
-- [AGENTS.md](AGENTS.md) — Briefing para agentes autônomos de IA
-- [TODO.md](TODO.md) — Roadmap estratégico e status do ecossistema
+- [README.md](README.md) — Documentação e visão geral do repositório
+- [TODO.md](TODO.md) — Roadmap de desenvolvimento e status operacional
+- [PRINCIPLES.md](PRINCIPLES.md) — Os 22 Princípios de Engenharia Soberanos
+- [AGENTS.md](AGENTS.md) — Manual operacional e briefing para agentes de IA

@@ -1,0 +1,57 @@
+name: Build Pandoc PDFs
+
+on:
+    workflow_call:
+    workflow_dispatch:
+
+env:
+    FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    PANDOC_CSS: "{{CSS_FILE}}"
+    PANDOC_LUA_FILTER: "{{LUA_FILTER_FILE}}"
+    PANDOC_WEBTEX_URL: "https://latex.codecogs.com/svg.latex?"
+    PANDOC_BUILD_CMD: "{{PANDOC_BUILD_COMMAND}}"
+
+jobs:
+    build-pandoc:
+        name: 📝 Compile Pandoc PDFs
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v7
+
+            - name: Setup Python
+              uses: actions/setup-python@v7
+              with:
+                  python-version: "3.x"
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v7
+              with:
+                  node-version: "22"
+
+            - name: Install Pandoc & Rendering Toolchain
+              run: |
+                  sudo DEBIAN_FRONTEND=noninteractive apt-get update
+                  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends pandoc texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-lang-portuguese latexmk
+                  pip install weasyprint
+                  export PUPPETEER_CACHE_DIR="/tmp/puppeteer-cache"
+                  npm install -g --allow-scripts=puppeteer mermaid-filter
+                  npx @puppeteer/browsers install chrome --path /tmp/chrome-bin || true
+
+            - name: Compile Pandoc Documents Into dist/
+              run: |
+                  mkdir -p dist
+                  CHROME_BIN="$(find /tmp/chrome-bin -type f \( -name "chrome" -o -name "headless_shell" \) 2> "/dev/null" | head -n 1 || true)"
+                  if [ -n "${CHROME_BIN}" ]; then
+                      export PUPPETEER_EXECUTABLE_PATH="${CHROME_BIN}"
+                  fi
+                  eval "${PANDOC_BUILD_CMD}"
+
+            - name: Upload Pandoc PDF Artifacts
+              uses: actions/upload-artifact@v7
+              with:
+                  name: pdf-pandoc
+                  path: dist/*.pdf
+                  if-no-files-found: error
+                  retention-days: 7

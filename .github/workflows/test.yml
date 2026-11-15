@@ -1,0 +1,40 @@
+name: Test
+
+on:
+    push:
+        branches: [main, master]
+    pull_request:
+        branches: [main, master]
+    workflow_dispatch:
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+env:
+    FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+    environment-suite:
+        name: 🏛️ Universal Environment Tests & Audits
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout Repository & Submodules
+              uses: actions/checkout@v7
+              with:
+                  submodules: recursive
+
+            - name: Install Shell Interpreters
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y zsh fish
+
+            - name: Validate Makefile Dry-Run
+              run: make -n all status test audit hooks clean
+
+            - name: Run Ecosystem Syntax Tests
+              run: make test
+
+            - name: Run Ecosystem Audits
+              run: make audit

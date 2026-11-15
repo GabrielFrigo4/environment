@@ -65,7 +65,7 @@ Delimitadores geométricos de arquitetura estritamente padronizados:
 
 ## 🚫 Banimento de Notação Octal para Bytes e Escapes ANSI
 
-- Não utilize notação octal (`\033`, `\001`, `\077`) para caracteres de escape ANSI, formatação de cores em terminal ou bytes arbitrários.
+- Não utilize notação octal (base-8 para `ESC`/`0x1b`, `SOH`/`0x01`) para caracteres de escape ANSI, formatação de cores em terminal ou bytes arbitrários.
 - **Forma Canônica:** Utilize `$'\e'` (em Makefiles: `_e=$$'\e';`) ou escapes hexadecimais (`\x1b`, `\x01`).
 - **Exceção Exclusiva para Octal:** Notação octal é aceita e exigida **estritamente** em contextos onde a natureza matemática da informação é octal por definição de sistema de arquivos POSIX (`chmod 0755`, `chmod 0644`, `chmod 0700`, `chmod 0600`, `umask 022`).
 

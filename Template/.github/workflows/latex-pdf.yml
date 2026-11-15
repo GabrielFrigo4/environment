@@ -1,0 +1,52 @@
+name: Build LaTeX PDFs
+
+on:
+    workflow_call:
+    workflow_dispatch:
+
+env:
+    FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    PRE_BUILD_CMD: ":"
+    LATEX_WORKING_DIR: "{{WORKING_DIRECTORY}}"
+    LATEX_ROOT_FILES: "{{ROOT_FILES}}"
+    LATEX_WORK_IN_ROOT_DIR: "{{WORK_IN_ROOT_FILE_DIR}}"
+    LATEX_SHELL_ESCAPE: "{{LATEXMK_SHELL_ESCAPE}}"
+    LATEX_EXTRA_PACKAGES: "{{EXTRA_SYSTEM_PACKAGES}}"
+    POST_BUILD_CMD: 'mkdir -p dist && mv *.pdf dist/ 2> "/dev/null" || true'
+
+jobs:
+    build-latex:
+        name: 📄 Compile LaTeX PDFs
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v7
+
+            - name: Setup Python
+              uses: actions/setup-python@v7
+              with:
+                  python-version: "3.x"
+
+            - name: Prepare LaTeX Sources
+              run: ${{ env.PRE_BUILD_CMD }}
+
+            - name: Compile LaTeX Documents
+              uses: xu-cheng/latex-action@v4
+              with:
+                  root_file: ${{ env.LATEX_ROOT_FILES }}
+                  working_directory: ${{ env.LATEX_WORKING_DIR }}
+                  work_in_root_file_dir: ${{ env.LATEX_WORK_IN_ROOT_DIR }}
+                  latexmk_shell_escape: ${{ env.LATEX_SHELL_ESCAPE }}
+                  extra_system_packages: ${{ env.LATEX_EXTRA_PACKAGES }}
+
+            - name: Package PDFs Into dist/
+              run: ${{ env.POST_BUILD_CMD }}
+
+            - name: Upload LaTeX PDF Artifacts
+              uses: actions/upload-artifact@v7
+              with:
+                  name: pdf-latex
+                  path: dist/*.pdf
+                  if-no-files-found: error
+                  retention-days: 7

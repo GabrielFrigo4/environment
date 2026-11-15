@@ -343,7 +343,11 @@ audit:
 	find Shell -name "*.sh" -not -path "*/.git/*" -exec "$$_sh" -n {} +
 	echo "🔍 [4/6] Validando sintaxe do Vault..."
 	_sh=$$(command -v bash 2> "/dev/null" || command -v zsh 2> "/dev/null" || echo sh); \
-	"$$_sh" -n Vault/vault.sh
+	if [ -f "Vault/vault.sh" ]; then \
+		"$$_sh" -n Vault/vault.sh; \
+	else \
+		echo "  ⏭️  Vault privado ausente neste clone; pulando."; \
+	fi
 	echo "🔍 [5/6] Validando a Suíte de Editores (Sintaxe & Headless)..."
 	(cd Editor/Helix && $(MAKE) test)
 	_sh=$$(command -v bash 2> "/dev/null" || command -v zsh 2> "/dev/null" || echo sh); \

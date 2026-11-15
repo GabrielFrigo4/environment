@@ -1,0 +1,121 @@
+name: Release PDFs
+
+on:
+    push:
+        branches: [main, master]
+        paths-ignore:
+            - "README.md"
+            - "TODO.md"
+            - "LICENSE"
+            - "PRINCIPLES.md"
+            - "CONTRIBUTING.md"
+            - "AGENTS.md"
+            - ".gitignore"
+            - ".gitattributes"
+            - ".editorconfig"
+            - ".prettierrc"
+            - ".agents/**"
+            - ".githooks/**"
+    pull_request:
+        branches: [main, master]
+        paths-ignore:
+            - "README.md"
+            - "TODO.md"
+            - "LICENSE"
+            - "PRINCIPLES.md"
+            - "CONTRIBUTING.md"
+            - "AGENTS.md"
+            - ".gitignore"
+            - ".gitattributes"
+            - ".editorconfig"
+            - ".prettierrc"
+            - ".agents/**"
+            - ".githooks/**"
+    workflow_dispatch:
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: write
+
+env:
+    FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    RELEASE_TITLE: "{{RELEASE_TITLE}}"
+    RELEASE_DESCRIPTION: "{{RELEASE_DESCRIPTION}}"
+    PRE_RELEASE_CMD: ":"
+    POST_RELEASE_CMD: ":"
+
+jobs:
+    latex:
+        uses: ./.github/workflows/latex-pdf.yml
+
+    pandoc:
+        uses: ./.github/workflows/pandoc-pdf.yml
+
+    release:
+        name: 🚀 Publish Latest PDF Release
+        needs: [latex, pandoc]
+        if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v7
+
+            - name: Download Compiled PDFs
+              uses: actions/download-artifact@v8
+              with:
+                  pattern: pdf-*
+                  merge-multiple: true
+                  path: dist
+
+            - name: Prepare Release Notes
+              run: |
+                  mkdir -p dist
+                  RELEASE_NOTE="release_note.md"
+                  export TZ="America/Sao_Paulo"
+                  printf -v FORMATTED_DATE '%(%d/%m/%Y %H:%M)T' -1
+                  cat <<- EOF > "${RELEASE_NOTE}"
+                  ### 📄 ${RELEASE_TITLE}
+
+                  ${RELEASE_DESCRIPTION}
+
+                  - **Commit:** \`${{ github.sha }}\`
+                  - **Data de Geração:** ${FORMATTED_DATE}
+
+                  ---
+
+                  ### 📦 Arquivos Disponíveis para Download
+
+                  EOF
+                  for pdf_path in dist/*.pdf; do
+                      [ -f "${pdf_path}" ] || continue
+                      pdf_name="$(basename "${pdf_path}")"
+                      echo "- 📄 [\`${pdf_name}\`](https://github.com/${{ github.repository }}/releases/download/latest/${pdf_name})" >> "${RELEASE_NOTE}"
+                  done
+                  eval "${PRE_RELEASE_CMD}"
+
+            - name: Delete Previous Latest Release
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  gh release delete latest --cleanup-tag --yes || true
+                  sleep 3
+
+            - name: Create Latest Release
+              uses: softprops/action-gh-release@v3
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  tag_name: latest
+                  name: ${{ env.RELEASE_TITLE }}
+                  body_path: release_note.md
+                  target_commitish: ${{ github.sha }}
+                  files: dist/*.pdf
+                  draft: false
+                  prerelease: false
+
+            - name: Run Post-Release Hook
+              run: ${{ env.POST_RELEASE_CMD }}
