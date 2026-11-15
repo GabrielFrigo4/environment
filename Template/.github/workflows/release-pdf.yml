@@ -1,36 +1,15 @@
 name: Release PDFs
 
 on:
-    push:
-        branches: [main, master]
-        paths-ignore:
-            - "README.md"
-            - "TODO.md"
-            - "LICENSE"
-            - "PRINCIPLES.md"
-            - "CONTRIBUTING.md"
-            - "AGENTS.md"
-            - ".gitignore"
-            - ".gitattributes"
-            - ".editorconfig"
-            - ".prettierrc"
-            - ".agents/**"
-            - ".githooks/**"
-    pull_request:
-        branches: [main, master]
-        paths-ignore:
-            - "README.md"
-            - "TODO.md"
-            - "LICENSE"
-            - "PRINCIPLES.md"
-            - "CONTRIBUTING.md"
-            - "AGENTS.md"
-            - ".gitignore"
-            - ".gitattributes"
-            - ".editorconfig"
-            - ".prettierrc"
-            - ".agents/**"
-            - ".githooks/**"
+    workflow_run:
+        workflows:
+            - "Build LaTeX PDFs"
+            - "Build Pandoc PDFs"
+        types:
+            - completed
+        branches:
+            - main
+            - master
     workflow_dispatch:
 
 concurrency:
@@ -39,65 +18,226 @@ concurrency:
 
 permissions:
     contents: write
+    actions: read
 
 env:
     FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-    RELEASE_TITLE: "{{RELEASE_TITLE}}"
-    RELEASE_DESCRIPTION: "{{RELEASE_DESCRIPTION}}"
-    PRE_RELEASE_CMD: ":"
-    POST_RELEASE_CMD: ":"
+    RELEASE_TITLE: "📚 Documentos Compilados"
 
 jobs:
-    latex:
-        uses: ./.github/workflows/latex-pdf.yml
-
-    pandoc:
-        uses: ./.github/workflows/pandoc-pdf.yml
-
     release:
         name: 🚀 Publish Latest PDF Release
-        needs: [latex, pandoc]
-        if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        if: |
+            github.event_name == 'workflow_dispatch' ||
+            (
+                github.event.workflow_run.conclusion == 'success' &&
+                github.event.workflow_run.event != 'pull_request' &&
+                (github.event.workflow_run.head_branch == 'main' || github.event.workflow_run.head_branch == 'master')
+            )
         runs-on: ubuntu-latest
 
         steps:
             - name: Checkout Repository
               uses: actions/checkout@v7
-
-            - name: Download Compiled PDFs
-              uses: actions/download-artifact@v8
               with:
-                  pattern: pdf-*
-                  merge-multiple: true
-                  path: dist
+                  ref: ${{ github.event.workflow_run.head_branch || github.ref_name }}
+
+            - name: Setup Python
+              uses: actions/setup-python@v7
+              with:
+                  python-version: "3.x"
+
+            - name: Verify Compilers & Collect PDF Artifacts
+              id: collect
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  TARGET_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+                  TRIGGER_ID: ${{ github.event.workflow_run.id || '' }}
+                  TRIGGER_PATH: ${{ github.event.workflow_run.path || '' }}
+                  TRIGGER_CONCLUSION: ${{ github.event.workflow_run.conclusion || '' }}
+              run: |
+                  python3 - << 'PY'
+                  import json
+                  import os
+                  import shutil
+                  import subprocess
+                  import sys
+                  from pathlib import Path
+
+                  repo = os.environ["GITHUB_REPOSITORY"]
+                  sha = os.environ["TARGET_SHA"]
+                  trigger_id = os.environ.get("TRIGGER_ID", "")
+                  trigger_path = os.environ.get("TRIGGER_PATH", "")
+                  trigger_conclusion = os.environ.get("TRIGGER_CONCLUSION", "")
+                  github_output = os.environ["GITHUB_OUTPUT"]
+
+                  expected = []
+                  for wf in (".github/workflows/latex-pdf.yml", ".github/workflows/pandoc-pdf.yml"):
+                      if Path(wf).is_file():
+                          expected.append(wf)
+
+                  if not expected:
+                      print("Nenhum workflow de compilação PDF encontrado.")
+                      with open(github_output, "a", encoding="utf-8") as fh:
+                          fh.write("ready=false\n")
+                      sys.exit(0)
+
+                  raw = subprocess.check_output(
+                      ["gh", "api", f"repos/{repo}/actions/runs?head_sha={sha}&per_page=100"],
+                      text=True,
+                  )
+                  runs = json.loads(raw).get("workflow_runs", [])
+
+                  latest_by_path = {}
+                  for run in runs:
+                      if run.get("event") == "pull_request":
+                          continue
+                      path = run.get("path", "")
+                      if path in expected and path not in latest_by_path:
+                          latest_by_path[path] = run
+
+                  if trigger_id and trigger_path in expected:
+                      entry = latest_by_path.get(trigger_path, {"id": int(trigger_id), "path": trigger_path})
+                      entry["status"] = "completed"
+                      entry["conclusion"] = trigger_conclusion or "success"
+                      latest_by_path[trigger_path] = entry
+
+                  run_ids = []
+                  for wf in expected:
+                      run = latest_by_path.get(wf)
+                      if not run or run.get("status") != "completed":
+                          print(f"Aguardando conclusão de {wf} para o commit {sha}...")
+                          with open(github_output, "a", encoding="utf-8") as fh:
+                              fh.write("ready=false\n")
+                          sys.exit(0)
+                      if run.get("conclusion") != "success":
+                          print(f"Pipeline {wf} falhou com status: {run.get('conclusion')}", file=sys.stderr)
+                          sys.exit(1)
+                      run_ids.append(str(run["id"]))
+
+                  dist_dir = Path("dist")
+                  dist_dir.mkdir(parents=True, exist_ok=True)
+                  tmp_dir = Path("dist_tmp")
+
+                  for rid in run_ids:
+                      if tmp_dir.exists():
+                          shutil.rmtree(tmp_dir)
+                      tmp_dir.mkdir(parents=True, exist_ok=True)
+                      subprocess.run(
+                          ["gh", "run", "download", rid, "--pattern", "pdf-*", "--dir", str(tmp_dir)],
+                          check=True,
+                      )
+                      for pdf in tmp_dir.rglob("*.pdf"):
+                          shutil.copy2(pdf, dist_dir / pdf.name)
+
+                  if tmp_dir.exists():
+                      shutil.rmtree(tmp_dir)
+
+                  pdfs = sorted(dist_dir.glob("*.pdf"))
+                  if not pdfs:
+                      print("Erro: Nenhum PDF baixado em dist/.", file=sys.stderr)
+                      sys.exit(1)
+
+                  print(f"Coletados {len(pdfs)} PDF(s) em dist/.")
+                  with open(github_output, "a", encoding="utf-8") as fh:
+                      fh.write("ready=true\n")
+                  PY
 
             - name: Prepare Release Notes
+              if: steps.collect.outputs.ready == 'true'
+              env:
+                  TARGET_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
               run: |
-                  mkdir -p dist
-                  RELEASE_NOTE="release_note.md"
-                  export TZ="America/Sao_Paulo"
-                  printf -v FORMATTED_DATE '%(%d/%m/%Y %H:%M)T' -1
-                  cat <<- EOF > "${RELEASE_NOTE}"
-                  ### 📄 ${RELEASE_TITLE}
+                  python3 - << 'PY'
+                  import os
+                  import subprocess
+                  from collections import defaultdict
+                  from datetime import datetime
+                  from pathlib import Path
+                  from zoneinfo import ZoneInfo
 
-                  ${RELEASE_DESCRIPTION}
+                  repo = os.environ["GITHUB_REPOSITORY"]
+                  sha = os.environ["TARGET_SHA"]
+                  now_str = datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M")
 
-                  - **Commit:** \`${{ github.sha }}\`
-                  - **Data de Geração:** ${FORMATTED_DATE}
+                  dist_pdfs = {p.name for p in Path("dist").glob("*.pdf")}
+                  mapped_entries = []
 
-                  ---
+                  if Path("Makefile").is_file():
+                      makefile_txt = Path("Makefile").read_text(encoding="utf-8", errors="ignore")
+                      if any(line.startswith("release-map:") for line in makefile_txt.splitlines()):
+                          out = subprocess.check_output(["make", "-s", "release-map"], text=True)
+                          for raw_line in out.splitlines():
+                              if "\t" not in raw_line:
+                                  continue
+                              src_path, pdf_name = [part.strip() for part in raw_line.split("\t", 1)]
+                              src_clean = src_path.lstrip("./")
+                              if pdf_name in dist_pdfs:
+                                  mapped_entries.append((src_clean, pdf_name))
 
-                  ### 📦 Arquivos Disponíveis para Download
+                  lines = [
+                      "# 📚 Biblioteca de Documentos Compilados",
+                      "",
+                      "Artefatos em PDF compilados e publicados automaticamente pelo pipeline de CI/CD.",
+                      "Clique em qualquer documento abaixo para download direto:",
+                      "",
+                      f"- **Repositório:** `{repo}`",
+                      f"- **Commit:** `{sha}`",
+                      f"- **Data de Geração:** `{now_str} (Horário de Brasília)`",
+                      f"- **Total de Documentos:** `{len(dist_pdfs)} PDF(s)`",
+                      "",
+                      "---",
+                      "",
+                      "## 📦 Arquivos Disponíveis para Download",
+                      "",
+                  ]
 
-                  EOF
-                  for pdf_path in dist/*.pdf; do
-                      [ -f "${pdf_path}" ] || continue
-                      pdf_name="$(basename "${pdf_path}")"
-                      echo "- 📄 [\`${pdf_name}\`](https://github.com/${{ github.repository }}/releases/download/latest/${pdf_name})" >> "${RELEASE_NOTE}"
-                  done
-                  eval "${PRE_RELEASE_CMD}"
+                  if mapped_entries:
+                      tree = defaultdict(lambda: defaultdict(list))
+                      direct = defaultdict(list)
+                      mapped_names = set()
+
+                      for src_clean, pdf_name in sorted(mapped_entries):
+                          mapped_names.add(pdf_name)
+                          parts = [p for p in src_clean.split("/") if p]
+                          if len(parts) >= 3:
+                              top_dir = parts[0]
+                              sub_dir = "/".join(parts[1:-1])
+                              tree[top_dir][sub_dir].append(pdf_name)
+                          elif len(parts) == 2:
+                              top_dir = parts[0]
+                              direct[top_dir].append(pdf_name)
+                          else:
+                              direct["Documentos"].append(pdf_name)
+
+                      for pdf_name in sorted(dist_pdfs - mapped_names):
+                          direct["Outros"].append(pdf_name)
+
+                      all_top_dirs = sorted(set(tree.keys()) | set(direct.keys()), key=lambda s: s.lower())
+                      for top_dir in all_top_dirs:
+                          title_top = top_dir if any(c.isupper() for c in top_dir) else top_dir.capitalize()
+                          lines.append(f"### 📂 {title_top}")
+                          lines.append("")
+                          for pdf_name in sorted(set(direct.get(top_dir, []))):
+                              url = f"https://github.com/{repo}/releases/download/latest/{pdf_name}"
+                              lines.append(f"- 📄 [`{pdf_name}`]({url})")
+                          for sub_dir in sorted(tree.get(top_dir, {}).keys()):
+                              lines.append(f"- **{sub_dir}/**")
+                              for pdf_name in sorted(set(tree[top_dir][sub_dir])):
+                                  url = f"https://github.com/{repo}/releases/download/latest/{pdf_name}"
+                                  lines.append(f"  - 📄 [`{pdf_name}`]({url})")
+                          lines.append("")
+                  else:
+                      for pdf_name in sorted(dist_pdfs):
+                          url = f"https://github.com/{repo}/releases/download/latest/{pdf_name}"
+                          lines.append(f"- 📄 [`{pdf_name}`]({url})")
+                      lines.append("")
+
+                  Path("release_note.md").write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+                  PY
 
             - name: Delete Previous Latest Release
+              if: steps.collect.outputs.ready == 'true'
               env:
                   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
@@ -105,17 +245,22 @@ jobs:
                   sleep 3
 
             - name: Create Latest Release
-              uses: softprops/action-gh-release@v3
+              if: steps.collect.outputs.ready == 'true'
               env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  tag_name: latest
-                  name: ${{ env.RELEASE_TITLE }}
-                  body_path: release_note.md
-                  target_commitish: ${{ github.sha }}
-                  files: dist/*.pdf
-                  draft: false
-                  prerelease: false
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  TARGET_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+              run: |
+                  gh release create latest \
+                      --title "${RELEASE_TITLE}" \
+                      --notes-file release_note.md \
+                      --target "${TARGET_SHA}" \
+                      dist/*.pdf
 
             - name: Run Post-Release Hook
-              run: ${{ env.POST_RELEASE_CMD }}
+              if: steps.collect.outputs.ready == 'true'
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  if [ -f Makefile ] && grep -Eq '^post-release[[:space:]]*:' Makefile; then
+                      make post-release
+                  fi

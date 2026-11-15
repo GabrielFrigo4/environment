@@ -10,7 +10,7 @@ MAKEFLAGS += --no-print-directory -s
 APP         ?= {{APP_NAME}}
 VERSION     != cat VERSION 2> "/dev/null" || echo "0.1.0-dev"
 
-.PHONY: help hooks dev build check test audit format prettier lint ci clean
+.PHONY: help hooks dev build build-latex build-pandoc release-map post-release check test audit format prettier lint ci clean
 
 ### ================================
 ### HELP & DOCUMENTATION
@@ -58,6 +58,18 @@ build:
 
 dev: build
 	echo "🚀 Executando $(APP) em modo de desenvolvimento..."
+
+build-latex:
+	mkdir -p dist
+
+build-pandoc:
+	mkdir -p dist
+
+release-map:
+	:
+
+post-release:
+	:
 
 ### ================================
 ### QUALITY & TESTING

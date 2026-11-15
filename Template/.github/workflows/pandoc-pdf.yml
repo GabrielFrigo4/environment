@@ -1,15 +1,45 @@
 name: Build Pandoc PDFs
 
 on:
+    push:
+        branches: [main, master]
+        paths-ignore:
+            - "README.md"
+            - "TODO.md"
+            - "LICENSE"
+            - "PRINCIPLES.md"
+            - "CONTRIBUTING.md"
+            - "AGENTS.md"
+            - ".gitignore"
+            - ".gitattributes"
+            - ".editorconfig"
+            - ".prettierrc"
+            - ".agents/**"
+            - ".githooks/**"
+    pull_request:
+        branches: [main, master]
+        paths-ignore:
+            - "README.md"
+            - "TODO.md"
+            - "LICENSE"
+            - "PRINCIPLES.md"
+            - "CONTRIBUTING.md"
+            - "AGENTS.md"
+            - ".gitignore"
+            - ".gitattributes"
+            - ".editorconfig"
+            - ".prettierrc"
+            - ".agents/**"
+            - ".githooks/**"
     workflow_call:
     workflow_dispatch:
 
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
 env:
     FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-    PANDOC_CSS: "{{CSS_FILE}}"
-    PANDOC_LUA_FILTER: "{{LUA_FILTER_FILE}}"
-    PANDOC_WEBTEX_URL: "https://latex.codecogs.com/svg.latex?"
-    PANDOC_BUILD_CMD: "{{PANDOC_BUILD_COMMAND}}"
 
 jobs:
     build-pandoc:
@@ -33,7 +63,13 @@ jobs:
             - name: Install Pandoc & Rendering Toolchain
               run: |
                   sudo DEBIAN_FRONTEND=noninteractive apt-get update
-                  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends pandoc texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-lang-portuguese latexmk
+                  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+                      pandoc \
+                      texlive-latex-recommended \
+                      texlive-latex-extra \
+                      texlive-fonts-recommended \
+                      texlive-lang-portuguese \
+                      latexmk
                   pip install weasyprint
                   export PUPPETEER_CACHE_DIR="/tmp/puppeteer-cache"
                   npm install -g --allow-scripts=puppeteer mermaid-filter
@@ -41,12 +77,12 @@ jobs:
 
             - name: Compile Pandoc Documents Into dist/
               run: |
-                  mkdir -p dist
                   CHROME_BIN="$(find /tmp/chrome-bin -type f \( -name "chrome" -o -name "headless_shell" \) 2> "/dev/null" | head -n 1 || true)"
                   if [ -n "${CHROME_BIN}" ]; then
                       export PUPPETEER_EXECUTABLE_PATH="${CHROME_BIN}"
                   fi
-                  eval "${PANDOC_BUILD_CMD}"
+                  export PUPPETEER_CACHE_DIR="/tmp/puppeteer-cache"
+                  make build-pandoc
 
             - name: Upload Pandoc PDF Artifacts
               uses: actions/upload-artifact@v7
