@@ -63,11 +63,14 @@ jobs:
                       texlive-latex-extra \
                       texlive-fonts-recommended \
                       texlive-fonts-extra \
+                      texlive-plain-generic \
+                      texlive-bibtex-extra \
                       texlive-lang-portuguese \
                       texlive-lang-english \
                       texlive-pictures \
                       texlive-publishers \
                       texlive-science \
+                      cm-super \
                       latexmk \
                       lmodern
 
