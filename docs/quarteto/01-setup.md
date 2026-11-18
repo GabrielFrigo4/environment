@@ -73,20 +73,20 @@ $ELEVATE pkg install -y git
 
 ### Suíte LibreOffice Completa (`common/office/office.sh`)
 
-A receita universal de escritório automatiza a instalação e integração de todos os 6 componentes da suíte LibreOffice:
+A receita universal de escritório automatiza a instalação e integração adaptativa de todos os 6 componentes da suíte LibreOffice:
 
 - **Componentes:** `Writer` (texto), `Calc` (planilhas), `Impress` (apresentações), `Draw` (vetores/diagramas), `Math` (fórmulas) e `Base` (banco de dados).
-- **Plugins VCL e Dark Mode:** Instala os módulos `libreoffice-gtk3` e `libreoffice-gtk4`.
-- **Injeção de Ambiente nos `.desktop`:** Modifica os lançadores em `~/.local/share/applications/` injetando prefixos `env SAL_USE_VCLPLUGIN=gtk3 GTK_THEME=adw-gtk3-dark GTK_APPLICATION_PREFER_DARK_THEME=1`, preservando o tema escuro em qualquer ambiente desktop.
-- **Configuração de Sessão (`environment.d`):** Gera `~/.config/environment.d/gtk-dark.conf` e propaga as variáveis via `systemctl --user set-environment` e `dbus-update-activation-environment`.
-- **Overrides Flatpak:** Aplica `flatpak override --user --env=GTK_THEME=Adwaita:dark` para paridade com aplicações empacotadas.
+- **Plugins VCL & Integração GTK3:** Instala `libreoffice-gtk3` e `libreoffice-gtk4`, mantendo o tema claro/escuro sob controle dinâmico do ambiente desktop.
+- **Injeção Limpa nos `.desktop`:** Copia e atualiza os lançadores em `~/.local/share/applications/` aplicando `env SAL_USE_VCLPLUGIN=gtk3 ` (sem fixar `GTK_THEME`) e `NoDisplay=false` para expor o lançador genérico `libreoffice-startcenter.desktop`.
+- **Higienização de Sessão (`environment.d` / `systemd`):** Remove `~/.config/environment.d/gtk-dark.conf`, limpa variáveis estáticas `GTK_THEME` e `GTK_APPLICATION_PREFER_DARK_THEME` no `systemctl --user`, e propaga apenas `SAL_USE_VCLPLUGIN=gtk3` via `systemctl --user` e `dbus-update-activation-environment`.
+- **Runtimes Flatpak:** Executa `flatpak override --unset-env=GTK_THEME` (usuário e sistema) e instala `org.gtk.Gtk3theme.adw-gtk3` e `org.gtk.Gtk3theme.adw-gtk3-dark` do Flathub para que aplicativos empacotados sigam automaticamente o esquema ativo do sistema.
 
-### Consolidação de Lançador do Emacs (`common/editors/editors.sh`)
+### Preservação e Lançador Adaptativo do Emacs (`common/editors/editors.sh`)
 
-A receita de editores padroniza a integração desktop do GNU Emacs:
+A receita de editores padroniza a integração desktop do GNU Emacs sem sobrescrever configurações gerenciadas pelo **Profile**:
 
-- **Lançador Único (`emacs.desktop`):** Aponta para `emacsclient --create-frame --alternate-editor="" %F` sob as variáveis de tema escuro `GTK_THEME=adw-gtk3-dark` e `GTK_APPLICATION_PREFER_DARK_THEME=1`.
-- **Ocultação de Entradas Redundantes:** Cria arquivos com `NoDisplay=true` para `emacsclient.desktop`, `emacs-mail.desktop` e `emacsclient-mail.desktop`, prevenindo poluição visual no catálogo de aplicativos.
+- **Preservação do Profile & Fallback `emacs.desktop`:** Mantém intactos symlinks e lançadores já sincronizados pelo **Profile**. Quando ausente (ou caso detecte arquivo legado contendo `GTK_THEME=`), cria `emacs.desktop` adaptativo (em `~/.local/share/applications/` e `/usr/local/share/applications/` quando elevado) invocando `emacs-client` ou `emacsclient --create-frame --alternate-editor="" "$@"` sem forçar `GTK_THEME`.
+- **Ocultação de Entradas Redundantes:** Gera arquivos com `NoDisplay=true` para `emacsclient.desktop`, `emacs-mail.desktop` e `emacsclient-mail.desktop` apenas quando ainda não existem, evitando duplicidade no menu de aplicativos.
 - **Editores Adicionais:** Clona e sincroniza repositórios soberanos para Neovim (`~/.config/nvim`), Vim (`~/.vim` e `.vimrc`), Helix (`~/.config/helix`) e Micro com tema Dracula (`~/.config/micro`).
 
 ---

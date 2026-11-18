@@ -104,20 +104,19 @@ Uma das inovações de resiliência do Universal Shell é o modelo de **processo
 O subsistema desktop integra quatro scripts centrais sob `library/desktop/` e `context/desktop/`:
 
 - **`Shell/library/desktop/detect.sh`**: Motor central de sondagem que identifica com precisão 11 Desktop Environments canônicos (`kde`, `gnome`, `mate`, `cinnamon`, `xfce`, `lxqt`, `lxde`, `budgie`, `pantheon`, `deepin`, `cosmic`) e mais de 10 compositores Wayland e gerenciadores X11 independentes (`sway`, `hyprland`, `river`, `labwc`, `cage`, `niri`, `wayfire`, `dwl`, `openbox`, `cwm`). Resolve dinamicamente o tema GTK (`_resolve_gtk_theme`), esquema escuro (`_detect_color_scheme`), estilos de widgets Qt (`_detect_qt_theme`) e a plataforma Qt (`_detect_qt_platform_theme`).
-- **`Shell/library/desktop/theme.sh` & `Shell/context/desktop/common.sh`**: Responsáveis pela propagação de tema (`_propagate_session_theme_env`) e unificação do ambiente de desktop em tempo de execução (`_desktop_apply_theme_context`). Exportam a hierarquia canônica de cursores (`XCURSOR_THEME` e `XCURSOR_SIZE=24`) seguindo a cascata de precedência `KDE > GNOME > MATE > Cinnamon > XFCE > LXQt > LXDE > Budgie > Pantheon > Deepin > COSMIC > Fallback`, sincronizam `GTK_THEME`, `SAL_USE_VCLPLUGIN="gtk3"`, `QT_STYLE_OVERRIDE`, `QT_QPA_PLATFORMTHEME`, `XCURSOR_PATH`, `ELECTRON_OZONE_PLATFORM_HINT="auto"` e `_JAVA_AWT_WM_NONREPARENTING=1`.
+- **`Shell/library/desktop/theme.sh` (invocado por `Shell/context/desktop/common.sh`)**: Responsável pela propagação de tema (`_propagate_session_theme_env`) e unificação do ambiente de desktop em tempo de execução (`_desktop_apply_theme_context`). Exporta a hierarquia canônica de cursores (`XCURSOR_THEME` e `XCURSOR_SIZE=24`) seguindo a cascata de precedência `KDE > GNOME > MATE > Cinnamon > XFCE > LXQt > LXDE > Budgie > Pantheon > Deepin > COSMIC > Fallback`, sincroniza `GTK_THEME`, `SAL_USE_VCLPLUGIN="gtk3"`, `QT_STYLE_OVERRIDE` (`"Breeze"` em KDE/LXQt), `QT_QPA_PLATFORMTHEME`, `XCURSOR_PATH`, `ELECTRON_OZONE_PLATFORM_HINT="auto"` e `_JAVA_AWT_WM_NONREPARENTING=1`.
 - **`Shell/library/desktop/session.sh`**: Launcher e orquestrador _lazy_ de sessões de desktop completas (`wwm`, `xwm`), configurando barramentos D-Bus isolados por TTY (`dbus-run-session`), variáveis de display e inicialização robusta de compositores e ferramentas de acessibilidade.
 - **`Shell/library/desktop/kiosk.sh`**: Orquestrador _lazy_ de quiosques mono-aplicação efêmeros (`wgui`, `xgui`), garantindo inicialização limpa, confinamento de ciclo de vida e retorno automático ao terminal após o encerramento do aplicativo.
 
-### Identidade Visual GTK4/Qt6 & Pipeline de Fontes
+### Identidade Visual Breeze-Adwaita Fusion & Pipeline de Fontes
 
-O ambiente gráfico adota uma paleta inspirada no **Adwaita Dark (GTK4)** e **Breeze Dark (Qt6)**:
+O ambiente gráfico de WMs e lançadores (`wwm`, `xwm`, `wgui`, `xgui`) adota a paleta **Breeze-Adwaita Fusion**:
 
-- Fundo inativo / base: `#1e1e22`
-- Superfície ativa / barras: `#2b2b30`
-- Borda e seleção ativa (azul): `#3584e4`
-- Borda e destaques de saída (vermelho): `#e01b24`
-- Borda de separação / container: `#38383d`
-- Texto secundário: `#9a9996`
+- Fundo da barra / inativo: `#1e222a`
+- Superfície de botões / tabs inativas: `#2a2e38` (borda `#3b404d`)
+- Destaque ativo (tab/workspace ativo & borda de foco): `#3daee9` (texto `#ffffff`)
+- Alerta / Exit / Close hover: `#e05263`
+- Fundo do desktop / root: `#181b20`
 
 A função interna `_resolve_desktop_font` resolve tipografias através de um pipeline determinístico:
 
@@ -132,7 +131,7 @@ A função interna `_resolve_desktop_font` resolve tipografias através de um pi
 
 ### Gerenciamento de Janelas: `wwm` (Wayland) e `xwm` (X11)
 
-- **`wwm` (Wayland Window Manager):** Despacha sessões Wayland puras (`sway`, `labwc`, `river` ou `cage` com terminal `foot`). No Sway, acopla a barra superior interativa `wwm-bar` em GTK3 (com fallback contínuo para streaming JSON da Swaybar com `"click_events": true`). Adota botões estilo pílula inspirados nas diretrizes do GTK4 e Qt6 sem colchetes (`Web Browser`, `Terminal`, `Files`, `Emacs`, `Menu`, `Close`, `Exit`), feedback de `:hover` (`#3584e4` / `#e01b24`), isolamento de processos despachados via `swaymsg exec` (evitando bloqueios e término em cascata), botão `Close` não-suicida direcionado exclusivamente à janela ativa em foco (`[con_id=...] kill`) sem afetar o compositor ou a barra, e gerenciamento dinâmico de workspaces (`1..N`) com botões dedicados de criação (`+`, alocando o primeiro número livre) e destruição (`−`, migrando janelas e descartando o workspace atual).
+- **`wwm` (Wayland Window Manager):** Despacha sessões Wayland puras (`sway`, `labwc`, `river` ou `cage` com terminal `foot`). No Sway, acopla a barra superior interativa `wwm-bar` (`BAR_H = 32`, 32px) em GTK3 (com fallback contínuo para streaming JSON da Swaybar com `"click_events": true`). Adota botões estilo pílula inspirados nas diretrizes do GTK4 e Qt6 sem colchetes (`Web Browser`, `Terminal`, `Files`, `Emacs`, `Menu`, `Close`, `Exit`), feedback de `:hover` (`#3daee9` / `#e05263`), isolamento de processos despachados via `swaymsg exec` (evitando bloqueios e término em cascata), botão `Close` não-suicida direcionado exclusivamente à janela ativa em foco (`[con_id=...] kill`) sem afetar o compositor ou a barra, e gerenciamento dinâmico de workspaces (`1..N`) com botões dedicados de criação (`+`, alocando o primeiro número livre) e destruição (`−`, migrando janelas e descartando o workspace atual).
 - **`xwm` (X11 Window Manager):** Inicia sessão gráfica sobre Openbox com suporte completo a decorações de janela server-side (SSD) para redimensionamento fluido por todas as 4 bordas e 4 cantos (`Top`, `Bottom`, `Left`, `Right`, cantos diagonais) diretamente pelo mouse, sem necessidade de combinações modais de teclado. Gera dinamicamente um menu raiz contextual varrendo arquivos `.desktop` em `~/.local/share/applications`, Flatpak e diretórios de sistema (`/usr/share/applications`, `/usr/local/share/applications`):
     - Aplicações fixas de acesso rápido: `Web Browser`, `Terminal`, `Files`, `Emacs`.
     - 8 categorias indexadas dinamicamente (sem `&` em rótulos): `Editors`, `Development`, `Internet`, `Office` (com suporte unificado à suíte LibreOffice, Start Center e ONLYOFFICE), `Graphics`, `Media Player`, `Tools`, `System`.
@@ -140,8 +139,8 @@ A função interna `_resolve_desktop_font` resolve tipografias através de um pi
 
 ### Quiosques Efêmeros: `wgui` e `xgui` com Paridade Visual 100%
 
-- **`wgui` (Wayland Kiosk com Abas Dinâmicas):** Opera sobre o Sway executando o daemon sentinela `wgui-tabwatch`. Em modo de janela única (`_count < 2`), aplica `layout splith, border none` para visual imersivo em tela cheia. Quando uma janela secundária ou diálogo modal é aberto (total $\ge 2$), comuta automaticamente para `layout tabbed, border normal 1`, apresentando abas estilizadas na paleta Adwaita-Breeze Dark Fusion (`#1e1e22`, `#2b2b30`, `#3584e4`).
-- **`xgui` (X11 Kiosk com Dock de Abas `xgui-tabbar`):** Opera sobre Openbox integrando a barra superior dinâmica em Python 3 + GTK3 + X11 (`xgui-tabbar` dock com altura exata de 26px e strut parcial sem sobreposição de janelas maximizadas). Atinge 100% de paridade estética, dimensional (26px) e tipográfica com o `wgui` (Sway `titlebar_padding 10 4` em `10pt Bold`): fonte em `10pt Bold`, aba focada em `#2b2b30` com borda e realce superior em azul `#3584e4`, abas desfocadas em `#1e1e22` com bordas `#38383d` e rótulos `#9a9996` responsivos a `:hover` (`#ffffff`), colapsando automaticamente sob janela única.
+- **`wgui` (Wayland Kiosk com Abas Dinâmicas):** Opera sobre o Sway executando o daemon sentinela `wgui-tabwatch`. Em modo de janela única (`_count < 2`), aplica `layout splith, border none` para visual imersivo em tela cheia. Quando uma janela secundária ou diálogo modal é aberto (total $\ge 2$), comuta automaticamente para `layout tabbed, border normal 1`, apresentando abas estilizadas na paleta **Breeze-Adwaita Fusion** (`#1e222a`, `#2a2e38`, `#3daee9`).
+- **`xgui` (X11 Kiosk com Dock de Abas `xgui-tabbar`):** Opera sobre Openbox integrando a barra superior dinâmica em Python 3 + GTK3 + X11 (`xgui-tabbar` dock com altura `BAR_H = 32` / `32px` e strut parcial sem sobreposição de janelas maximizadas). Atinge 100% de paridade estética, dimensional (`32px`) e tipográfica com o `wgui` (`10pt Bold`): aba focada com destaque `#3daee9` e texto `#ffffff`, abas desfocadas em `#2a2e38` sobre base `#1e222a` com bordas `#3b404d` e hover de encerramento em `#e05263`, colapsando automaticamente sob janela única.
 
 ### Despachante Universal de Abertura Inteligente (`o` / `open`)
 

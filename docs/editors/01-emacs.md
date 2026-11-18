@@ -58,6 +58,7 @@ No `init.el`, o bootstrapping do Elpaca garante que dependências sejam resolvid
 A arquitetura visual implementa proteções para consistência de frames e responsividade da interface:
 
 - **Supressão Incondicional da Tool-Bar:** A rotina `interface/apply-tool-bar` força `tool-bar-lines 0` e `tool-bar-mode -1` em todos os contextos de inicialização — interfaces gráficas (GUI), gerenciador de janelas Emacs (EWM) e consoles TTY. A barra de menu (`menu-bar`) é preservada exclusivamente em ambientes gráficos (`menu-bar-mode 1`) e suprimida em consoles de texto puro.
+- **Isolamento 100% Per-Frame do `Emacs Server` / `emacsclient`:** O daemon compartilhado e os clientes despachados via `Shell/library/desktop/emacs.sh` mantêm separação estrita por frame através dos hooks `after-make-frame-functions` e `server-after-make-frame-hook` (`interface/setup-frame`, `typography/init`, `interface/apply-tty-faces`, `interface/apply-menu-bar`, `interface/apply-scroll-bar`, `emacs/on-server-start`), garantindo que frames GUI e TTY simultâneos recebam fontes, faces, barras e cursores independentes sem contaminação cruzada entre sessões.
 - **Estabilidade Global de Cursor & Seleção com Mouse:** Preservação estrita de `track-mouse nil` em todos os buffers e modos (incluindo o Dashboard), garantindo que cliques com o ponteiro do mouse não travem o buffer em modo de seleção de arrasto (`mouse-drag-track`), mantendo seleção de texto e navegação gráfica limpas e estáveis.
 - **Ciclo Unificado de Piscar de Cursor (1200ms):** Padronização rigorosa do cursor (`blink-cursor-interval 0.6`, `blink-cursor-delay 0.6`, `blink-cursor-blinks 0`), sincronizando exatamente o intervalo de 1200ms em GUI e PTY com GTK3/GTK4 (`gtk-cursor-blink-time=1200`), XTerm (`*cursorBlink: always`), NeoVim e Vim (`blinkwait600-blinkoff600-blinkon600`).
 
@@ -111,7 +112,7 @@ O subsistema de texto e escrita do Emacs descarta rotinas síncronas legadas em 
 
 O **Aweshell** (`usr/local/aweshell`) é a extensão de terminal integrado desenvolvida para oferecer paridade 1:1 com a experiência interativa do Universal Shell:
 
-- **Biblioteca Semântica Nativa `_ui_*`:** Funções integradas do Eshell (`_ui_banner`, `_ui_step`, `_ui_sub`, `_ui_ok`, `_ui_warn`, `_ui_err`, `_ui_info`) garantem total paridade visual com `Shell/library/ui.sh`, com cores ricas em GUI/PTY e representação ASCII limpa em terminais básicos.
+- **Biblioteca Semântica Nativa `_ui_*`:** Funções integradas do Eshell (`_ui_banner`, `_ui_step`, `_ui_sub`, `_ui_ok`, `_ui_warn`, `_ui_err`, `_ui_info`) garantem total paridade visual com `Shell/core/ui.sh`, com cores ricas em GUI/PTY e representação ASCII limpa em terminais básicos.
 - **Isolamento de Completação do `eshell-mode`:** O modo global `completion-preview-mode` é desativado dentro do Aweshell (`(completion-preview-mode -1)`), evitando conflitos entre o completador de Lisp e os comandos do shell. Nos buffers convencionais de código e texto, o `completion-preview-mode` atua com delay de `0.2s` (`completion-preview-idle-delay 0.2`) e comprimento mínimo de símbolo de `2` caracteres (`completion-preview-minimum-symbol-length 2`).
 - **Ghost Completion Preditivo:** Motor de predição inline baseado na ordem histórica mais recente, com parada estrita em correspondência exata.
 - **Navegação Híbrida Unificada:** Tecla `<right>` aceita instantaneamente o texto fantasma previsto; tecla `TAB` abre e cicla pelo popup de completação do `company-mode`.
@@ -133,10 +134,10 @@ O Emacs atua como gerenciador de janelas soberano no X11 (**EXWM**) e no Wayland
 
 ## 🧪 Testes Automatizados Headless (`make test`)
 
-Todo commit no repositório `Editor/Emacs` é submetido ao teste de inicialização não-interativo via Makefile:
+Todo commit no repositório `Editor/Emacs` é submetido à suíte automatizada em modo batch via Makefile (`batch`, `test-filter` e `test-guards` executando `test/test-runtime-guards.el`):
 
 ```sh
-emacs --batch -l tests/test-startup.el
+make -C Editor/Emacs test
 ```
 
-Esse quality gate assegura a integridade estrutural e impede regressões sintáticas no ecossistema.
+Esse quality gate valida sintaxe Elisp, boot limpo em batch, emulação TUI (`eat`), filtro seletivo de avisos obsoletos (`test/test-obsolete-filter.el`), guardas de PGTK/GTK3 e consistência de sockets do daemon (`test/test-runtime-guards.el`).
