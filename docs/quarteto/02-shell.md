@@ -1,6 +1,6 @@
 # 🐚 Shell: Motor Interativo de Terminal & Prompts Ultra-Rápidos
 
-> Documentação canônica do Universal Shell: arquitetura modular multi-shell, prompts com latência inferior a 16ms e a biblioteca semântica de emissão `_ui_*`.
+> Documentação canônica do Universal Shell: arquitetura modular em `core/` (9 módulos coesos) e `library/` (5 dispatchers + subpastas), prompts de baixa latência (`< 64ms`) e biblioteca semântica `_ui_*`.
 
 ---
 
@@ -10,34 +10,54 @@ O repositório **Shell** é o **motor interativo do usuário**. Ele transforma q
 
 ### Invariantes Centrais do Shell:
 
-1. **Latência de Prompt Imperceptível (< 16ms):** Um dos maiores problemas de ferramentas populares (Oh-My-Zsh, Starship) é a lentidão ao renderizar novos prompts. O Universal Shell executa todas as checagens de git e renderização em menos de 16 milissegundos (medido formalmente via `benchmark.sh`).
-2. **Matriz de Interpretadores Suportada:** Arquitetura desacoplada que multiplexa código entre **Zsh**, **Bash**, **FreeBSD `sh`** e **OpenBSD `ksh`**.
-3. **Erradicação de Falsos Positivos de Git:** Utilização exclusiva de `git status --porcelain=v1` com `GIT_OPTIONAL_LOCKS=0`, imune a inconsistências de timestamps (_stat-cache_) causadas por ferramentas em background.
+1. **Latência de Boot Imperceptível (< 64ms):** Um dos maiores problemas de frameworks populares (Oh-My-Zsh, Starship) é a lentidão ao inicializar e renderizar prompts. O Universal Shell mantém o boot completo abaixo de 64ms (medido formalmente via `benchmark.sh`) combinando detecção com cache tmpfs, lookup de binários sem forks (`_has_bin`), e carregamento _lazy_ de módulos pesados (`desktop/device.sh`, `desktop/kiosk.sh`, `desktop/session.sh`).
+2. **Matriz de Interpretadores Suportada:** Arquitetura desacoplada compatível com **Zsh**, **Bash**, **FreeBSD `sh`**, **OpenBSD `ksh`**, além do **Fish** (`target/common/fish/`) e perfis nativos Windows (`pwsh`, `nu`, `cmd`).
+3. **Erradicação de Falsos Positivos de Git & Resiliência de Submódulos:** Renderização via `git status --porcelain=v1` com `GIT_OPTIONAL_LOCKS=0`, e sincronização resiliente via `_git_pull_resilient` (`library/functions/git.sh`) com resolução real de `gitdir:` em submódulos (eliminando loops de auto-cura) e proteção restrita de permissões (`u+rwX,go=` / `.githooks/*` em `0700`) para o `Vault`.
 
 ```mermaid
 flowchart TD
-    INTERP["Shell Interativo (Zsh / Bash / Sh)"] --> ENTRY["shell.sh (Entrypoint)"]
-    ENTRY --> CORE["core/ (Funções Centrais & Prompt)"]
-    ENTRY --> TARGET["target/ (Otimizações por SO: FreeBSD, Linux)"]
-    ENTRY --> THEME["themes/ (Temas Visuais PTY)"]
-    ENTRY --> UI["ui.sh (Biblioteca _ui_*)"]
+    INTERP["Shell Interativo (Zsh / Bash / Sh / Ksh)"] --> ENTRY["shell.sh / RC Entrypoint"]
+    ENTRY --> CORE_BASE["core/{detect,ui,elevate,perms,path}.sh"]
+    CORE_BASE --> LIB["library/{desktop,system,functions,ecosystem,hypervisor}.sh"]
+    LIB --> T_ENV["target/{OS}/environment.sh"]
+    T_ENV --> CORE_RT["core/{environment,userland,vault}.sh"]
+    CORE_RT --> CTX["context/{CONTEXT}/{common,OS}.sh"]
+    CTX --> TGT["target/{OS}/{SHELL}/prompt.sh ➔ theme/{SHELL}.sh"]
 ```
+
+---
+
+## 🧩 Arquitetura Modular (`core/`, `library/`, `context/`)
+
+### Camada `core/` (9 Módulos Coesos)
+
+- **Fundação de Boot:** `detect.sh` (OS, distro, shell, TTY, cache e CLI modernos), `ui.sh` (emissão semântica `_ui_*`), `elevate.sh` (`_as_root`), `perms.sh` (`_self_heal_perms` e `_install_repo_perms` com suporte a gitlinks) e `path.sh` (`path-front`, `path-back`, `path-dedup`, `_resolve_bin`, `_has_bin`).
+- **Runtime Interativo & Integração:** `environment.sh` (locale, TrueColor, `PYTHONPYCACHEPREFIX`, editores, `_shell_ls`, `zoxide`, `ssh`, `agy`, `git`/`tog`), `userland.sh` (motor dual-mode `gnu`/`bsd`/`default`) e `vault.sh` (integração silenciosa e _lazy_ com o cofre privado + `update-vault`/`upvt`).
+- **Implantação (`install.sh` exclusivo):** `deploy.sh` (motor declarativo para `fish`, `pwsh`, `nu` e `cmd`, ignorado em sessões interativas).
+
+### Camada `library/` (5 Dispatchers na Raiz + Subpastas Especializadas)
+
+- **`desktop.sh`** ➔ `library/desktop/` _(exclusivo `SHELL_CONTEXT=desktop`)_: `detect.sh` (DEs/WMs/temas), `theme.sh` (`_propagate_session_theme_env` e `_desktop_apply_theme_context` sem parsear `session.sh` no boot), `emacs.sh` (daemon/cliente Emacs e aliases `ek..esh`), `apps.sh` (`_restore_tty_cursor`, editores, apps e `open-smart`/`o`), além dos submódulos _lazy_ `device.sh`, `kiosk.sh` e `session.sh`.
+- **`system.sh`** ➔ `library/system/`: `packages.sh` (`update-pacman..update-system`), `network.sh` (`update-wifi`, `update-network`, `update-ports`, `update-linux`) e `lifecycle.sh` (`clean-system`, `update-all`, `poweroff`, `reboot`).
+- **`functions.sh`** ➔ `library/functions/`: `git.sh` (`update-git`/`upgit`, `push-git`/`psgit`, `_git_pull_resilient` com suporte a submódulos e proteção `0700`/`0600` do `Vault`, `vcs-status`, `vcs-diff`, `got-init`) e `utils.sh` (`clean-cache`, `take-dir`, `cd-git-root`, `hist-search`, `extract-archive`).
+- **`ecosystem.sh`** ➔ `library/ecosystem/`: `shell.sh` (`update-shell`, `reinstall-shell`, `bench-shell`), `profile.sh` (`update-profile`, `sync-extensions`) e `editors.sh` (`update-editors`, `update-emacs-modes`, junction Vim no Windows).
+- **`hypervisor.sh`** ➔ `library/hypervisor/`: `common.sh` (transporte SSH/TTY e helpers KVM/Bhyve/Bastille/Incus) e `managers.sh` (`freebsd`/`fb`, `linux`/`lx`, `openbsd`/`ob`, `netbsd`/`nb`).
 
 ---
 
 ## 🎨 A Biblioteca Universal de Emissão Semântica (`_ui_*`)
 
-O Shell padroniza a saída visual de status de todos os scripts do ecossistema através de rotinas semânticas ricas:
+O Shell padroniza a saída visual de status de todos os scripts do ecossistema em `core/ui.sh`:
 
 | Função                | Finalidade Visual                         | Cor / Prefixo                    |
 | :-------------------- | :---------------------------------------- | :------------------------------- |
-| `_ui_banner "TITULO"` | Régua de destaque para títulos principais | Ciano / Moldura de 60 caracteres |
-| `_ui_step "Mensagem"` | Início de etapa operacional               | Ciano (`:: `)                    |
-| `_ui_sub "Detalhe"`   | Sub-etapa de uma operação em andamento    | Cinza (` ──`)                    |
-| `_ui_ok "Sucesso"`    | Conclusão bem-sucedida de etapa           | Verde (` ✅` ou `[OK]`)          |
-| `_ui_warn "Aviso"`    | Alerta não-bloqueante                     | Amarelo (` ⚠️` ou `[AVISO]`)     |
-| `_ui_err "Falha"`     | Erro impeditivo                           | Vermelho (` ❌` ou `[ERRO]`)     |
-| `_ui_info "Nota"`     | Informação contextual                     | Azul (` ℹ️` ou `[INFO]`)         |
+| `_ui_banner "TITULO"` | Régua de destaque para títulos principais | Ciano / Moldura de 64 caracteres |
+| `_ui_step "Mensagem"` | Início de etapa operacional               | Ciano (`==>`)                    |
+| `_ui_sub "Detalhe"`   | Sub-etapa de uma operação em andamento    | Azul (`  ↳`)                     |
+| `_ui_ok "Sucesso"`    | Conclusão bem-sucedida de etapa           | Verde (` ✅` ou `OK`)            |
+| `_ui_warn "Aviso"`    | Alerta não-bloqueante                     | Amarelo (` ⚠️` ou `WARN`)        |
+| `_ui_err "Falha"`     | Erro impeditivo                           | Vermelho (` ❌` ou `FAIL`)       |
+| `_ui_info "Nota"`     | Informação contextual                     | Magenta (` ℹ️` ou `INFO`)        |
 
 ---
 
@@ -81,12 +101,12 @@ Uma das inovações de resiliência do Universal Shell é o modelo de **processo
 
 ### Pipeline de Detecção de Desktop & Harmonização Estética
 
-O Universal Shell integra um subsistema modular composto por quatro scripts centrais:
+O subsistema desktop integra quatro scripts centrais sob `library/desktop/` e `context/desktop/`:
 
-- **`Shell/library/detect-desktop.sh`**: Motor central de sondagem que identifica com precisão 11 Desktop Environments canônicos (`kde`, `gnome`, `mate`, `cinnamon`, `xfce`, `lxqt`, `lxde`, `budgie`, `pantheon`, `deepin`, `cosmic`) e mais de 10 compositores Wayland e gerenciadores X11 independentes (`sway`, `hyprland`, `river`, `labwc`, `cage`, `niri`, `wayfire`, `dwl`, `openbox`, `cwm`). Resolve dinamicamente o tema GTK (`_resolve_gtk_theme`), esquema escuro (`_detect_color_scheme`), estilos de widgets Qt (`_detect_qt_theme`) e a plataforma Qt (`_detect_qt_platform_theme`).
-- **`Shell/context/desktop/common.sh`**: Responsável pela unificação do ambiente de desktop em tempo de execução. Exporta a hierarquia canônica de cursores (`XCURSOR_THEME` e `XCURSOR_SIZE=24`) seguindo a cascata de precedência `KDE > GNOME > MATE > Cinnamon > XFCE > LXQt > LXDE > Budgie > Pantheon > Deepin > COSMIC > Fallback (Adwaita -> breeze_cursors -> default)`. Sincroniza `GTK_THEME`, `SAL_USE_VCLPLUGIN="gtk3"`, `GTK_APPLICATION_PREFER_DARK_THEME=1`, paridade de ícones GTK3/GTK4 (`Adwaita`), `QT_STYLE_OVERRIDE`, `QT_QPA_PLATFORMTHEME`, caminhos universais de ícones (`XCURSOR_PATH`), renderização Wayland nativa em Electron (`ELECTRON_OZONE_PLATFORM_HINT="auto"`) e proteção contra janelas em branco no Java AWT (`_JAVA_AWT_WM_NONREPARENTING=1`).
-- **`Shell/target/linux/desktop-session.sh`**: Launcher e orquestrador de sessões de desktop completas (`wwm`, `xwm`), configurando barramentos D-Bus isolados por TTY (`dbus-run-session`), variáveis de display e inicialização robusta de compositores e ferramentas de acessibilidade.
-- **`Shell/target/linux/desktop-kiosk.sh`**: Orquestrador de quiosques mono-aplicação efêmeros (`wgui`, `xgui`), garantindo inicialização limpa, confinamento de ciclo de vida e retorno automático ao terminal após o encerramento do aplicativo.
+- **`Shell/library/desktop/detect.sh`**: Motor central de sondagem que identifica com precisão 11 Desktop Environments canônicos (`kde`, `gnome`, `mate`, `cinnamon`, `xfce`, `lxqt`, `lxde`, `budgie`, `pantheon`, `deepin`, `cosmic`) e mais de 10 compositores Wayland e gerenciadores X11 independentes (`sway`, `hyprland`, `river`, `labwc`, `cage`, `niri`, `wayfire`, `dwl`, `openbox`, `cwm`). Resolve dinamicamente o tema GTK (`_resolve_gtk_theme`), esquema escuro (`_detect_color_scheme`), estilos de widgets Qt (`_detect_qt_theme`) e a plataforma Qt (`_detect_qt_platform_theme`).
+- **`Shell/library/desktop/theme.sh` & `Shell/context/desktop/common.sh`**: Responsáveis pela propagação de tema (`_propagate_session_theme_env`) e unificação do ambiente de desktop em tempo de execução (`_desktop_apply_theme_context`). Exportam a hierarquia canônica de cursores (`XCURSOR_THEME` e `XCURSOR_SIZE=24`) seguindo a cascata de precedência `KDE > GNOME > MATE > Cinnamon > XFCE > LXQt > LXDE > Budgie > Pantheon > Deepin > COSMIC > Fallback`, sincronizam `GTK_THEME`, `SAL_USE_VCLPLUGIN="gtk3"`, `QT_STYLE_OVERRIDE`, `QT_QPA_PLATFORMTHEME`, `XCURSOR_PATH`, `ELECTRON_OZONE_PLATFORM_HINT="auto"` e `_JAVA_AWT_WM_NONREPARENTING=1`.
+- **`Shell/library/desktop/session.sh`**: Launcher e orquestrador _lazy_ de sessões de desktop completas (`wwm`, `xwm`), configurando barramentos D-Bus isolados por TTY (`dbus-run-session`), variáveis de display e inicialização robusta de compositores e ferramentas de acessibilidade.
+- **`Shell/library/desktop/kiosk.sh`**: Orquestrador _lazy_ de quiosques mono-aplicação efêmeros (`wgui`, `xgui`), garantindo inicialização limpa, confinamento de ciclo de vida e retorno automático ao terminal após o encerramento do aplicativo.
 
 ### Identidade Visual GTK4/Qt6 & Pipeline de Fontes
 
@@ -125,7 +145,7 @@ A função interna `_resolve_desktop_font` resolve tipografias através de um pi
 
 ### Despachante Universal de Abertura Inteligente (`o` / `open`)
 
-Implementado no `context/desktop/common.sh`, a função `open-smart` (com aliases `o` e `open`) oferece roteamento contextual de arquivos e fluxos:
+Implementado em `library/desktop/apps.sh`, a função `open-smart` (com aliases `o` e `open`) oferece roteamento contextual de arquivos e fluxos:
 
 - **Buffers Soberanos do Emacs:** Para documentos e arquivos estruturados (PDF, EPUB, DjVu, SQLite `.sqlite`/`.sqlite3`/`.db`, compactados `.zip`/`.tar.*`/`.7z`, scripts, fontes e código), despacha diretamente para o GNU Emacs via `emacsclient -n` (ou inicialização em background).
 - **Aplicações Especializadas do SO:** Para URLs web e formatos pesados proprietários (Office, suítes de mídia), despacha transparentemente para o manipulador padrão da plataforma (`open` no macOS, `cygstart` no Windows/MSYS2, `xdg-open` ou `gio open` no Linux/FreeBSD).
@@ -144,7 +164,7 @@ Ao despachar aplicativos gráficos ou utilitários via linha de comando, o lanç
 
 ### Comutação de Userland & Hypervisor NetBSD
 
-- **Comando `userland`:** Permite alternar os binários e bibliotecas da sessão interativa entre toolchains:
+- **Comando `userland` (`core/userland.sh`):** Permite alternar os binários e bibliotecas da sessão interativa entre toolchains:
     - `userland gnu` (ou `gnu`): Prioriza utilitários GNU (`gnubin`, binários com prefixo `g*`).
     - `userland bsd` (ou `bsd`): Restaura o ambiente BSD padrão (`bmake`, `bsdtar`, `mandoc`).
     - `userland default` (ou `default`): Retorna à ordem nativa do sistema hospedeiro.
