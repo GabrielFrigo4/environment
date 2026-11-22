@@ -54,13 +54,13 @@ help:
 ### ================================
 ### REPOSITORIES ORCHESTRATION
 ### ================================
-PRIVATE_REPOS := \
+PRIVATE_REPOS = \
 	"Vault:GabrielFrigo4/vault"
 
 clone:
 	echo "📦 Inicializando submódulos públicos (Core + Editores)..."
 	git submodule update --init --recursive
-	echo "✅ Submódulos públicos inicializados!\n"
+	printf "✅ Submódulos públicos inicializados!\n\n"
 	echo "🔐 Verificando repositórios privados..."
 	for entry in $(PRIVATE_REPOS); do \
 		dir=$${entry%%:*}; \
@@ -90,7 +90,7 @@ main:
 			echo "  ⏭️  $$r: não clonado, pulando."; \
 		fi; \
 	done
-	echo "✅ Repositórios ativos configurados na branch main!\n"
+	printf "✅ Repositórios ativos configurados na branch main!\n\n"
 
 status:
 	echo "=== 🏛️ O Quarteto de Infraestrutura ==="
@@ -178,7 +178,7 @@ sync-template:
 	echo "🔄 Sincronizando arquétipo Template em todos os repositórios Git..."
 	_docs_root="$${DOCS_ROOT:-$$(cd .. && pwd)}"; \
 	find "$${_docs_root}" \
-		\( -name "OSS" -o -name "usr" -o -name "elpaca" -o -name "node_modules" -o -name ".venv" -o -name "var" -o -name "tmp" \) -prune \
+		\( -name "OSS" -o -name "Open Source" -o -name "usr" -o -name "elpaca" -o -name "node_modules" -o -name ".venv" -o -name "var" -o -name "tmp" \) -prune \
 		-o \( -name ".git" \) -print | while read -r git_entry; do \
 		repo_dir="$$(dirname "$$git_entry")"; \
 		repo_name="$$(basename "$$repo_dir")"; \
@@ -232,7 +232,7 @@ sync-docs: sync-template
 scaffold:
 	if [ -z "$${DIR}" ]; then \
 		echo "Uso: make scaffold DIR=<caminho> [NAME=<nome>] [DESC=<descrição>] [APP=<app>]"; \
-		echo "Exemplo: make scaffold DIR=\"../Personal/Labs/NovoProjeto\" NAME=\"NovoProjeto\" DESC=\"Descrição do projeto\""; \
+		echo "Exemplo: make scaffold DIR=\"../Personal/Laboratory/NovoProjeto\" NAME=\"NovoProjeto\" DESC=\"Descrição do projeto\""; \
 		exit 1; \
 	fi; \
 	_target="$${DIR}"; \

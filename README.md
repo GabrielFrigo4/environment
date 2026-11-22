@@ -125,10 +125,10 @@ Para inicializar a bancada e em seguida provisionar todos os runtimes soberanos 
 ```sh
 git clone --recurse-submodules "https://github.com/GabrielFrigo4/environment" "${HOME}/Documents/Environment"
 cd "${HOME}/Documents/Environment"
-make clone    # Inicializa submódulos e configura ganchos Git (make hooks)
-make test     # Valida sintaxe POSIX e testes de todos os módulos
-make ci       # Executa pipeline completa de testes locais
-make install  # Provisiona todos os repositórios em seus caminhos canônicos no SO
+make clone
+make test
+make ci
+make install
 ```
 
 ---
@@ -174,6 +174,8 @@ Environment/
 │   ├── Helix/      ← Submodule público (Helix modal; helix.sh na raiz)
 │   ├── NeoVim/     ← Submodule público (Neovim modular; neovim.sh na raiz)
 │   └── Vim/        ← Submodule público (Vim clássico UNIX; vim.sh na raiz)
+├── Template/       ← Arquétipo universal de scaffolding e auditoria
+├── docs/           ← Portal canônico de runbooks técnicos
 ├── environment.sh  ← Interface CLI e orquestrador mestre do ecossistema
 ├── Makefile        ← Orquestrador global de automação
 ├── ENVIRONMENT.md  ← Manifesto canônico de arquitetura
