@@ -20,5 +20,5 @@ A camada de shell no host expõe funções utilitárias opcionais para delegar c
 
 - `linux-host` (aliases: `linux`, `lx`, `debian`, `deb`): Executa comandos no guest com resolução automática de diretório correspondente e fallback para `${HOME}`.
 - `agy-bhyve` (alias: `agy-lx`): Despacho opcional de `agy` para o guest Bhyve; ativado como padrão de `agy()` com `SHELL_RUNTIME=vm` (`runtime vm` / `install.sh -r vm`) ou fallback de `auto` quando não houver binário local e `BHYVE_LINUX_IP`/`LINUX_HOST_IP` estiver definido.
-- `agy-compat` (alias: `agy-cp`) & `linux-compat` (`compat-run`): Executa o binário via Linuxulator (`/compat/linux`) confinado dinamicamente aos E-cores (`cpuset` via `kern.sched.topology_spec`) e limites Go controlados (`GOMAXPROCS=2`, `GOGC=50`, `GOMEMLIMIT=2GiB`), padrão de `agy()` no FreeBSD quando `SHELL_RUNTIME=auto|compat`.
+- `agy-compat` (alias: `agy-cp`) & `linux-compat` (`compat-run`): Executa o binário via Linuxulator (`/compat/linux`) confinado dinamicamente em cluster de E-cores (`COMPAT_CORES=4` via `kern.sched.topology_spec`, `cpuset`) e limites Go balanceados (`GOMAXPROCS=3`, `GOGC=100`, `GOMEMLIMIT=2GiB`, `GODEBUG=netdns=go`, `nice -n 4`), padrão de `agy()` no FreeBSD quando `SHELL_RUNTIME=auto|compat`.
 - `update-linux` (aliases: `uplx`, `updeb`): Atualiza pacotes no guest via SSH, integrando-se ao comando global `upall`.

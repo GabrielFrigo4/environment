@@ -70,11 +70,11 @@ linux-compat /caminho/para/binario-linux
 
 Parâmetros padrão de contenção aplicados por execução (sem poluir o ambiente global com `export`):
 
-- `COMPAT_GODEBUG="netdns=go,http2client=0,asyncpreemptoff=1"`
-- `COMPAT_GOMAXPROCS=2`
-- `COMPAT_GOGC=50`
+- `COMPAT_GODEBUG="netdns=go"`
+- `COMPAT_GOMAXPROCS=3`
+- `COMPAT_GOGC=100`
 - `COMPAT_GOMEMLIMIT="2GiB"`
-- Confinamento dinâmico nos E-cores via `kern.sched.topology_spec` (`cpuset -l`) e prioridade rebaixada via `nice -n 10`.
+- Confinamento dinâmico por cluster L2 de E-cores (`COMPAT_CORES=4` via `kern.sched.topology_spec`, `cpuset -l`) e prioridade rebaixada via `nice -n 4`.
 
 ---
 
