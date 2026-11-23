@@ -66,9 +66,9 @@ Originalmente, ferramentas baseadas em runtime Go com uso intensivo de HTTP/2 e 
 
 Atualmente, os agentes e utilitários principais rodam diretamente no host FreeBSD, mantendo o guest Debian como plataforma sob demanda para qualquer carga de trabalho exclusivamente Linux:
 
-### 1. Ferramentas de IA & Coding Agents Opcionais (`agy-lx`)
+### 1. Ferramentas de IA & Coding Agents Opcionais (`agy-bhyve` / `agy-lx`)
 
-- **Despacho Sob Demanda:** Wrappers dedicados (como `agy-lx` / `BHYVE_AGY_DEFAULT=1`) permitem isolar execuções específicas na VM quando desejado, mantendo a execução nativa no host como padrão.
+- **Despacho Sob Demanda:** Wrappers dedicados (`agy-bhyve`/`agy-lx`, selecionáveis via `SHELL_RUNTIME=bhyve` ou `runtime bhyve`) permitem isolar execuções específicas na VM quando desejado, enquanto o modo `auto` usa `agy-compat` (Linuxulator) com fallback automático para Bhyve sem binário local.
 - **Python ML Wheels:** Bibliotecas compiladas com extensões C++/CUDA ou wheels `manylinux` podem rodar no ambiente virtual Debian consumindo dados do ZFS diretamente na pasta compartilhada.
 
 ### 2. Containers OCI & Docker (`docker-lx`, `compose-lx`)

@@ -50,29 +50,31 @@ A integração é implementada de forma modular e em conformidade estrita POSIX 
     lx uname -a
     lx
     ```
-- **`agy-lx`** (despacho opcional para a VM): Executa o `agy` isolado no Debian sob demanda. Por padrão, o comando **`agy`** executa **nativamente no host FreeBSD**; para rotear `agy` para o guest Bhyve automaticamente, defina `BHYVE_AGY_DEFAULT=1` (ou mantenha `BHYVE_LINUX_IP`/`LINUX_HOST_IP` definido sem binário local).
+- **`agy-bhyve`** (alias: `agy-lx`, despacho opcional para a VM): Executa o `agy` isolado no Debian sob demanda. Por padrão (`SHELL_RUNTIME=auto`), o **`agy`** usa `agy-compat` (Linuxulator) com fallback automático para `agy-bhyve` caso o binário local não exista; para rotear `agy` para o guest Bhyve diretamente, defina `SHELL_RUNTIME=bhyve` (ou execute `runtime bhyve` / `install.sh -r bhyve`).
     ```sh
+    agy-bhyve status
     agy-lx status
     ```
 
 ---
 
-## 🛡️ 4. Execução via Linuxulator (`agy-compat`)
+## 🛡️ 4. Execução via Linuxulator (`linux-compat` / `agy-compat`)
 
-Como alternativa nativa no próprio host sem virtualização completa, o ecossistema mantém a rotina de contenção via FreeBSD Linuxulator em [`Shell/target/freebsd/compat.sh`](../../../Shell/target/freebsd/compat.sh):
+Como alternativa nativa no próprio host sem virtualização completa, o ecossistema mantém a rotina genérica `linux-compat` (alias `compat-run`) e o wrapper `agy-compat` (alias `agy-cp`) em [`Shell/target/freebsd/compat.sh`](../../../Shell/target/freebsd/compat.sh):
 
 ```sh
 agy-compat
 agy-cp
+linux-compat /caminho/para/binario-linux
 ```
 
-Parâmetros de contenção aplicados:
+Parâmetros padrão de contenção aplicados por execução (sem poluir o ambiente global com `export`):
 
 - `COMPAT_GODEBUG="netdns=go,http2client=0,asyncpreemptoff=1"`
 - `COMPAT_GOMAXPROCS=2`
-- `COMPAT_GOGC=8`
-- `COMPAT_GOMEMLIMIT="1GiB"`
-- Confinamento via `cpuset -l` e prioridade rebaixada via `nice -n 10`.
+- `COMPAT_GOGC=50`
+- `COMPAT_GOMEMLIMIT="2GiB"`
+- Confinamento dinâmico nos E-cores via `kern.sched.topology_spec` (`cpuset -l`) e prioridade rebaixada via `nice -n 10`.
 
 ---
 
