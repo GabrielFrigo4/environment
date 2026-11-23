@@ -50,7 +50,7 @@ A integração é implementada de forma modular e em conformidade estrita POSIX 
     lx uname -a
     lx
     ```
-- **`agy-bhyve`** (alias: `agy-lx`, despacho opcional para a VM): Executa o `agy` isolado no Debian sob demanda. Por padrão (`SHELL_RUNTIME=auto`), o **`agy`** usa `agy-compat` (Linuxulator) com fallback automático para `agy-bhyve` caso o binário local não exista; para rotear `agy` para o guest Bhyve diretamente, defina `SHELL_RUNTIME=bhyve` (ou execute `runtime bhyve` / `install.sh -r bhyve`).
+- **`agy-bhyve`** (alias: `agy-lx`, despacho opcional para a VM): Executa o `agy` isolado no Debian sob demanda. Por padrão (`SHELL_RUNTIME=auto`), o **`agy`** usa `agy-compat` (Linuxulator) com fallback automático para `agy-bhyve` caso o binário local não exista; para rotear `agy` para o guest Bhyve diretamente, defina `SHELL_RUNTIME=vm` (ou execute `runtime vm` / `install.sh -r vm`).
     ```sh
     agy-bhyve status
     agy-lx status

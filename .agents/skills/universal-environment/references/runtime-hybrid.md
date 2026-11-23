@@ -19,6 +19,6 @@ Este guia documenta os runtimes Linux opcionais sob demanda a partir de uma esta
 A camada de shell no host expõe funções utilitárias opcionais para delegar comandos específicos sem gestão manual de sessões:
 
 - `linux-host` (aliases: `linux`, `lx`, `debian`, `deb`): Executa comandos no guest com resolução automática de diretório correspondente e fallback para `${HOME}`.
-- `agy-bhyve` (alias: `agy-lx`): Despacho opcional de `agy` para o guest Bhyve; ativado como padrão de `agy()` com `SHELL_RUNTIME=bhyve` (`runtime bhyve` / `install.sh -r bhyve`) ou fallback de `auto` quando não houver binário local e `BHYVE_LINUX_IP`/`LINUX_HOST_IP` estiver definido.
+- `agy-bhyve` (alias: `agy-lx`): Despacho opcional de `agy` para o guest Bhyve; ativado como padrão de `agy()` com `SHELL_RUNTIME=vm` (`runtime vm` / `install.sh -r vm`) ou fallback de `auto` quando não houver binário local e `BHYVE_LINUX_IP`/`LINUX_HOST_IP` estiver definido.
 - `agy-compat` (alias: `agy-cp`) & `linux-compat` (`compat-run`): Executa o binário via Linuxulator (`/compat/linux`) confinado dinamicamente aos E-cores (`cpuset` via `kern.sched.topology_spec`) e limites Go controlados (`GOMAXPROCS=2`, `GOGC=50`, `GOMEMLIMIT=2GiB`), padrão de `agy()` no FreeBSD quando `SHELL_RUNTIME=auto|compat`.
 - `update-linux` (aliases: `uplx`, `updeb`): Atualiza pacotes no guest via SSH, integrando-se ao comando global `upall`.
