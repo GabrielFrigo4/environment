@@ -6,14 +6,14 @@
 
 ## 🏛️ A Tese Arquitetural Soberana
 
-> "A ponte transparente FreeBSD (Host Desktop Soberano) + Debian (Guest Linux Runtime no Bhyve) via SSH + NFSv3 (`192.168.8.2`) com compartilhamento de `$PWD`, paridade de UID/GID 1001 e propagação de TTY é um dos divisores de água mais poderosos para quem utiliza o FreeBSD como sistema operacional primário."
+> "A ponte opcional FreeBSD (Host Desktop Soberano) + Debian (Guest Linux Runtime no Bhyve) via SSH + NFSv3 (`<guest-ip>`) com compartilhamento de `$PWD`, paridade de UID/GID e propagação de TTY permite executar cargas dependentes de kernel Linux sob demanda preservando a soberania do FreeBSD."
 
 Historicamente, engenheiros que adotam o FreeBSD enfrentam um dilema binário:
 
 1. **Abrir mão do FreeBSD:** Abandonar a estabilidade, a elegância do OpenZFS nativo, a governança do Packet Filter (PF) e o áudio OSS de baixa latência para adotar uma distribuição Linux convencional; ou
 2. **Sofrer com a carência de binários proprietários:** Tentar executar ferramentas compiladas exclusivamente para o ecossistema glibc/Linux via Linuxulator, esbarrando em limitações inerentes de chamadas de sistema modernas (`epoll`, `inotify` avançado, `pidfd`, sockets HTTP/2).
 
-O **Paradigma Híbrido do Universal Environment** elimina essa falsa dicotomia: o FreeBSD governa a máquina física e a experiência interativa com soberania, enquanto uma máquina virtual Linux minimalista no Bhyve atua como motor de execução headless invisível para qualquer ferramenta que demande o kernel Linux.
+O **Bhyve Linux Runtime do Universal Environment** resolve essa demanda **sob demanda**: terminal, editores e agentes (`agy`) executam **nativamente no host FreeBSD** por padrão, enquanto uma VM Debian minimalista no Bhyve fica disponível via wrappers transparentes sempre que uma carga exigir kernel Linux nativo.
 
 ---
 
@@ -22,29 +22,29 @@ O **Paradigma Híbrido do Universal Environment** elimina essa falsa dicotomia: 
 ```text
 ┌──────────────────────────────────────────────────────────────────┐
 │                   FREEBSD HOST (KDE / ZFS)                       │
-│  Terminal Zsh (<16ms) • Editores (NeoVim, Helix, Emacs) • Áudio  │
+│  Terminal • Editores (NeoVim, Helix, Emacs) • Áudio • Agentes IA │
 └──────────────────────────────┬───────────────────────────────────┘
-                               │ Invocação Transparente (SSH/NFS)
+                               │ Invocação Sob Demanda (SSH/NFS)
                                ▼
 ┌──────────────────────────────────────────────────────────────────┐
-│                   DEBIAN BHYVE VM (Kernel 6.12)                  │
+│                   DEBIAN BHYVE VM (Kernel Linux)                 │
 │  glibc Nativo • Containers Linux • AI Wheels • Cross-Compilation │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
 A transparência da fronteira entre o host e o runtime convidado assenta-se em 4 pilares técnicos fundamentais:
 
-### 1. Paridade de Identidade (UID/GID 1001)
+### 1. Paridade de Identidade (`UID/GID` Alinhados)
 
-O usuário interativo `gabrielf` no host FreeBSD e o usuário `gabriel` no guest Debian compartilham rigorosamente o mesmo identificador numérico (`uid=1001`, `gid=1001`). Isso elimina colisões de permissões POSIX (`0600`/`0700`) e atritos em arquivos de configuração e chaves criptográficas.
+O usuário interativo no host FreeBSD e o usuário correspondente no guest Debian compartilham rigorosamente o mesmo identificador numérico (`uid=1001`, `gid=1001`). Isso elimina colisões de permissões POSIX (`0600`/`0700`) e atritos em arquivos de configuração e chaves criptográficas.
 
 ### 2. Espelhamento de Storage (NFSv3 + ZFS)
 
-O host FreeBSD exporta `/home/gabrielf` com a diretiva `-mapall=gabrielf 192.168.8.2`. O guest Debian monta essa árvore diretamente em `/home/gabrielf` via NFSv3. Toda mutação de arquivos ocorre diretamente no armazenamento seguro OpenZFS do host, sem redundância de sincronização ou clonagem de dados.
+O host FreeBSD exporta `${HOME}` com a diretiva `-mapall=<user> <guest-ip>`. O guest Debian monta essa árvore diretamente em `${HOME}` via NFSv3. Toda mutação de arquivos ocorre diretamente no armazenamento seguro OpenZFS do host, sem redundância de sincronização ou clonagem de dados.
 
 ### 3. Preservação de Contexto de Diretório (`$PWD`)
 
-O despachante interativo [`linux-host`](../../../Shell/target/freebsd/bhyve.sh) e seus derivados capturam a variável `$PWD` do shell no FreeBSD e injetam a navegação no Debian (`cd "$PWD"`), com fallback gracioso para a raiz da home caso o comando seja invocado em diretórios externos do sistema (como `/usr/ports` ou `/tmp`).
+O despachante interativo [`linux-host`](../../../Shell/target/freebsd/bhyve.sh) e seus derivados capturam a variável `$PWD` do shell no FreeBSD (sob `BHYVE_LINUX_WORKDIR`) e injetam a navegação correspondente no Debian (`cd "$PWD"`), com fallback gracioso para o diretório base quando o comando for invocado fora da árvore exportada (como `/usr/ports` ou `/tmp`).
 
 ### 4. Propagação Transparente de TTY e Sinais
 
@@ -52,43 +52,38 @@ A camada de transporte via SSH aloca pseudoterminais (`ssh -t`) quando em sessã
 
 ---
 
-## 🔬 Diagnóstico Forense: Por Que a Virtualização é Necessária?
+## 🔬 Histórico Técnico: Linuxulator vs. Bhyve em Cargas Go
 
-A decisão de adotar uma máquina virtual headless no Bhyve em substituição à emulação Linuxulator (`/compat/linux`) foi motivada por um colapso estrutural documentado durante a execução de ferramentas modernas escritas na linguagem Go (como o **Google Antigravity CLI**):
+Originalmente, ferramentas baseadas em runtime Go com uso intensivo de HTTP/2 e `fsnotify` apresentavam falhas no FreeBSD Linuxulator (`/compat/linux`), motivando tanto ajustes dedicados no wrapper [`agy-compat`](../../../Shell/target/freebsd/compat.sh) (`GODEBUG`, `GOMAXPROCS`, `cpuset`) quanto o isolamento opcional no Bhyve (`agy-lx`):
 
-| Vetor de Falha              | Sintoma no Linuxulator (/compat/linux)                                                                               | Resolução no Bhyve (Debian 13)                                              |
-| :-------------------------- | :------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------- |
-| **Syscalls HTTP/2**         | Falhas contínuas de `setsockopt` inundando o `dmesg` do FreeBSD.                                                     | Suporte nativo completo à pilha de rede do kernel Linux 6.12.               |
-| **Spin-Loop no `fsnotify`** | Mapeamento `inotify`/`epoll` ➔ `kqueue` gerando ~300.000 iterações/s em `read()` não-bloqueante retornando `EAGAIN`. | Implementação canônica de `inotify` no Linux; **0.0% de CPU em repouso**.   |
-| **Degradação de Memória**   | Centenas de milhares de `os.SyscallError` alocados no heap, saturando o Garbage Collector e vazando ~500 MB/min.     | Heap estável do runtime Go; ausência de erros em cascata e consumo contido. |
-| **I/O Throttle no ZFS**     | Gravação massiva de logs de diagnóstico saturando esteiras de transações (TXG), congelando o desktop.                | Logs limpos e ausência de rajadas de escrita descontrolada no host.         |
-| **Sinais `SIGURG`**         | Rajadas de preempção assíncrona interrompendo `nanosleep` e gerando contenção em mutexes/futexes.                    | Tratamento nativo e transparente de preempção de goroutines.                |
+| Vetor de Falha              | Sintoma no Linuxulator (`/compat/linux`)                                                                  | Resolução no Bhyve (Kernel Linux)                                           |
+| :-------------------------- | :-------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------- |
+| **Syscalls HTTP/2**         | Falhas contínuas de `setsockopt` inundando o `dmesg` do FreeBSD.                                          | Suporte nativo completo à pilha de rede do kernel Linux.                    |
+| **Spin-Loop no `fsnotify`** | Mapeamento `inotify`/`epoll` ➔ `kqueue` gerando alta taxa de `read()` não-bloqueante retornando `EAGAIN`. | Implementação canônica de `inotify` no Linux; **0.0% de CPU em repouso**.   |
+| **Degradação de Memória**   | Alocação massiva de `os.SyscallError` no heap, saturando o Garbage Collector.                             | Heap estável do runtime Go; ausência de erros em cascata e consumo contido. |
+| **I/O Throttle no ZFS**     | Gravação massiva de logs de diagnóstico saturando esteiras de transações (TXG), degradando o desktop.     | Logs limpos e ausência de rajadas de escrita descontrolada no host.         |
+| **Sinais `SIGURG`**         | Rajadas de preempção assíncrona interrompendo `nanosleep` e gerando contenção em mutexes/futexes.         | Tratamento nativo e transparente de preempção de goroutines.                |
 
----
+Atualmente, os agentes e utilitários principais rodam diretamente no host FreeBSD, mantendo o guest Debian como plataforma sob demanda para qualquer carga de trabalho exclusivamente Linux:
 
-## 🚀 Matriz de Expansão: O Que Mais Executar no Bhyve?
+### 1. Ferramentas de IA & Coding Agents Opcionais (`agy-lx`)
 
-A infraestrutura estabelecida com o `agy` serve como plataforma universal para qualquer carga de trabalho do ecossistema Linux:
-
-### 1. Ferramentas de IA & Coding Agents (`*-lx`)
-
-- **Agentes CLI:** Utilitários distribuídos como binários Linux pré-empacotados (**Claude Code CLI**, **Aider**, **Gemini CLI**, **Cursor CLI**) executam sem atrito sob wrappers dedicados (`aider-lx`, `claude-lx`).
-- **Python ML Wheels:** Bibliotecas compiladas com extensões C++/CUDA complexas (`torch`, `vllm`, `triton`, `bitsandbytes`) são executadas no ambiente virtual Debian consumindo dados no ZFS via `py-lx`.
+- **Despacho Sob Demanda:** Wrappers dedicados (como `agy-lx` / `BHYVE_AGY_DEFAULT=1`) permitem isolar execuções específicas na VM quando desejado, mantendo a execução nativa no host como padrão.
+- **Python ML Wheels:** Bibliotecas compiladas com extensões C++/CUDA ou wheels `manylinux` podem rodar no ambiente virtual Debian consumindo dados do ZFS diretamente na pasta compartilhada.
 
 ### 2. Containers OCI & Docker (`docker-lx`, `compose-lx`)
 
 - Embora Jails e Bastille atendam com excelência a serviços nativos do FreeBSD, o ecossistema de desenvolvimento corporativo demanda imagens Linux (`linux/amd64`).
-- A VM hospeda a daemon Docker/Podman, permitindo rodar `docker compose up` ou `docker run -v $PWD:/app` com alias transparente no terminal FreeBSD.
+- A VM hospeda o daemon Docker/Podman, permitindo rodar containers e composições com o mesmo diretório de trabalho montado.
 
 ### 3. Testes End-to-End Headless (Playwright & Puppeteer)
 
-- Ferramentas de automação web que realizam download de builds customizadas do Chromium e Firefox com dependências estritas do glibc rodam sem falhas de sandbox dentro da VM.
+- Ferramentas de automação web que realizam download de binários Linux do Chromium e Firefox com dependências estritas do glibc executam sem falhas de sandbox na VM.
 
 ### 4. Toolchains de Sistemas Embarcados & IoT (`pio-lx`)
 
-- Compiladores e utilitários de gravação proprietários para microcontroladores (ESP32/Espressif, STM32, RISC-V, Arduino) raramente disponibilizam suporte para sistemas BSD.
-- Com o PlatformIO instalado no Debian, o desenvolvimento ocorre em editores nativos no FreeBSD (Helix/NeoVim) e a compilação/flash ocorre via despachante na VM.
+- Compiladores e utilitários de gravação proprietários para microcontroladores (ESP32/Espressif, STM32, RISC-V, Arduino) sem binários nativos BSD operam na VM enquanto a edição ocorre no host FreeBSD.
 
 ### 5. Compilação Cruzada Local & Verificação ELF
 
-- Validação rápida de compatibilidade binária: comandos como `lx cargo test` ou `lx ./binario-linux` validam compilações Linux instantaneamente, no mesmo diretório de trabalho, sem trocar de janela ou sessão de terminal.
+- Validação rápida de compatibilidade binária: comandos como `lx cargo test` ou `lx ./binario-linux` validam builds Linux instantaneamente no mesmo diretório de trabalho, sem trocar de janela ou sessão de terminal.

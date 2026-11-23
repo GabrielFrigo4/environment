@@ -94,7 +94,7 @@ sudo vm create -t debian -s 16G -m 1G -c 4 debian
 
 ### Instalação Interativa via ISO:
 
-1. Obtenha a imagem oficial netinst do Debian (armazenada em `/zroot/vm/.iso/debian-13.7.0-amd64-netinst.iso`).
+1. Obtenha a imagem oficial netinst do Debian (armazenada em `/zroot/vm/.iso/debian-<versao>-amd64-netinst.iso`).
 2. Adicione temporariamente os parâmetros gráficos em `/zroot/vm/debian/debian.conf`:
     ```text
     graphics="yes"
@@ -105,7 +105,7 @@ sudo vm create -t debian -s 16G -m 1G -c 4 debian
     ```
 3. Dispare a instalação:
     ```sh
-    sudo vm install debian debian-13.7.0-amd64-netinst.iso
+    sudo vm install debian debian-<versao>-amd64-netinst.iso
     ```
 4. Em outro terminal, conecte o cliente VNC:
     ```sh
@@ -130,28 +130,28 @@ Conecte-se à VM e aplique os parâmetros de governança:
 
 ### Parâmetros de Rede Estática (Debian Guest):
 
-- **IP:** `192.168.8.2/24`
+- **IP:** `<guest-ip>/24` (ex.: `192.168.8.2/24`, configurado via `BHYVE_LINUX_IP` / `LINUX_HOST_IP`)
 - **Gateway:** `192.168.8.1` (Host FreeBSD)
-- **DNS:** `1.1.1.1`, `8.8.8.8`
+- **DNS:** resolvers configurados (ex.: `1.1.1.1`, `8.8.8.8`)
 - **Hostname:** `debian`
 
-### Alinhamento de Identidades POSIX (UID/GID 1001):
+### Alinhamento de Identidades POSIX (`UID/GID 1001`):
 
-O usuário `gabriel` no Debian deve possuir UID/GID idênticos ao usuário `gabrielf` do host:
+O usuário no guest Debian deve possuir UID/GID idênticos ao usuário do host FreeBSD (ex.: `1001`):
 
 ```sh
-sudo sed -i 's/^gabriel:x:1000:1000:/gabriel:x:1001:1001:/' /etc/passwd
-sudo sed -i 's/^gabriel:x:1000:/gabriel:x:1001:/' /etc/group
-sudo chown -R 1001:1001 /home/gabriel
+sudo sed -i "s/^${USER}:x:1000:1000:/${USER}:x:1001:1001:/" /etc/passwd
+sudo sed -i "s/^${USER}:x:1000:/${USER}:x:1001:/" /etc/group
+sudo chown -R 1001:1001 "/home/${USER}"
 ```
 
 ### Escalonamento Administrativo sem Senha:
 
 ```sh
-echo "gabriel ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/gabriel
-sudo chmod 0440 /etc/sudoers.d/gabriel
+echo "${USER} ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee "/etc/sudoers.d/${USER}"
+sudo chmod 0440 "/etc/sudoers.d/${USER}"
 
-echo "permit nopass gabriel as root" | sudo tee /etc/doas.conf
+echo "permit nopass ${USER} as root" | sudo tee /etc/doas.conf
 sudo chmod 0400 /etc/doas.conf
 ```
 
@@ -160,7 +160,7 @@ sudo chmod 0400 /etc/doas.conf
 No host FreeBSD, propague a chave pública para login sem senha:
 
 ```sh
-ssh-copy-id -i ~/.ssh/id_ed25519.pub gabriel@192.168.8.2
+ssh-copy-id -i ~/.ssh/id_ed25519.pub "${USER}@<guest-ip>"
 ```
 
 ---
@@ -173,7 +173,7 @@ A integração de diretórios de desenvolvimento utiliza NFSv3 sobre a rede virt
 
 ```sh
 sudo sysrc rpcbind_enable="YES" nfs_server_enable="YES" mountd_enable="YES"
-echo "/home/gabrielf -alldirs -mapall=gabrielf 192.168.8.2" | sudo tee /etc/exports
+echo "${HOME} -alldirs -mapall=${USER} <guest-ip>" | sudo tee /etc/exports
 sudo service rpcbind start
 sudo service mountd restart
 sudo service nfsd restart
@@ -183,8 +183,8 @@ sudo service nfsd restart
 
 ```sh
 sudo apt update && sudo apt install -y nfs-common
-sudo mkdir -p /home/gabrielf
-sudo chown 1001:1001 /home/gabrielf
-echo "192.168.8.1:/home/gabrielf /home/gabrielf nfs rw,soft,intr,nfsvers=3 0 0" | sudo tee -a /etc/fstab
-sudo mount /home/gabrielf
+sudo mkdir -p "${HOME}"
+sudo chown 1001:1001 "${HOME}"
+echo "192.168.8.1:${HOME} ${HOME} nfs rw,soft,intr,nfsvers=3 0 0" | sudo tee -a /etc/fstab
+sudo mount "${HOME}"
 ```

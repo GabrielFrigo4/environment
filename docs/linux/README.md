@@ -10,7 +10,7 @@ No ecossistema de Gabriel Frigo, o GNU/Linux desempenha um papel cirúrgico e de
 
 Existem dois perfis operacionais de Linux governados pelo Environment:
 
-1. **Linux Runtime Headless (Guest Bhyve):** Instância Debian 13 mínima operando em VM acoplada ao host FreeBSD (`192.168.8.2`), conectada via NFSv3 e despachada de forma transparente pelo terminal (`linux-host`, `agy`).
+1. **Linux Runtime Sob Demanda (Guest Bhyve):** Instância Debian mínima opcional em VM acoplada ao host FreeBSD (sub-rede virtual configurada), conectada via NFSv3 e despachada pelo terminal (`linux-host` / `lx`, e `agy-lx` opcional).
 2. **Estações Bare-Metal Nativas:** Servidores e estações Linux completas provisionadas pelas receitas automatizadas do `Setup/linux/` (Debian, Arch, Fedora, Void e Alpine).
 
 ```mermaid
@@ -18,8 +18,8 @@ flowchart TD
     CORE["🏛️ Universal Environment Hub"]
 
     subgraph PROFILES ["Perfis Operacionais Linux"]
-        VM["1. Guest VM Headless (Bhyve)<br/>• Debian 13.7 x86_64<br/>• Google Antigravity CLI<br/>• Compartilhamento NFSv3"]
-        BM["2. Servidores & Bare-Metal<br/>• Provisionados via Setup/<br/>• Arch, Debian, Fedora, Alpine<br/>• Usuário gabriel / gabrielf"]
+        VM["1. Guest VM Headless (Bhyve)<br/>• Debian Headless x86_64<br/>• Workloads Linux & Cross-Compile<br/>• Compartilhamento NFSv3"]
+        BM["2. Servidores & Bare-Metal<br/>• Provisionados via Setup/<br/>• Arch, Debian, Fedora, Alpine<br/>• Paridade UID/GID POSIX"]
     end
 
     subgraph OCI ["Containers & Virtualização Leve"]
@@ -45,16 +45,9 @@ flowchart TD
 ## ⚡ Comandos Rápidos & Sanity Check
 
 ```sh
-# Verificar versão da distribuição, kernel e arquitetura
 uname -srm
 cat /etc/os-release
-
-# Validar paridade de identidade do usuário
 id -u; id -g
-
-# Checar saúde do subsistema de containers Podman Rootless
 podman info
-
-# Inspecionar montagem e permissões do compartilhamento NFSv3
-df -hT /home/gabrielf
+df -hT "${HOME}"
 ```

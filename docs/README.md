@@ -58,7 +58,7 @@ Documentação do sistema operacional base da estação de trabalho e hipervisor
 
 A tríade de isolamento nativa do FreeBSD:
 
-- **[virtualization/bhyve/](virtualization/bhyve/README.md):** Hipervisor Bhyve com runtime Debian 13 headless, ponte NFSv3 bidirecional e despacho duplo do `agy`.
+- **[virtualization/bhyve/](virtualization/bhyve/README.md):** Hipervisor Bhyve com runtime Debian headless sob demanda, ponte NFSv3 bidirecional e integração opcional via `lx` / `agy-lx`.
 - **[virtualization/jails/](virtualization/jails/README.md):** Jails FreeBSD nativas, pilha de rede virtualizada VNET e regras de segurança devfs.
 - **[virtualization/bastille/](virtualization/bastille/README.md):** Orquestração com BastilleBSD, automação de templates e gestão de containers FreeBSD.
 

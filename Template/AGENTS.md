@@ -32,7 +32,7 @@ Subagentes de execução que identificarem qualquer dúvida de escopo, divergên
 
 ## ⚠️ Regras Críticas & Invariantes Soberanas
 
-1. **Soberania e Isolamento de Repositórios OSS (`**/OSS/**`):** Projetos de terceiros sob diretórios `OSS/` são estritamente somente-leitura para operações globais, templates, formatação ou auditoria, só podendo ser editados sob ordem explícita e nominal do usuário e seguindo as regras do upstream.
+1. **Soberania e Isolamento de Repositórios Open Source (`**/Open Source/**`):** Projetos de terceiros sob diretórios `Open Source/` (ou legados `OSS/`) são estritamente somente-leitura para operações globais, templates, formatação ou auditoria, só podendo ser editados sob ordem explícita e nominal do usuário e seguindo as regras do upstream.
 2. **Desacoplamento Bancada vs. Produção & Zero-Dirty Invariant:** Nunca edite clones de produção diretamente (`~/.local/share/*`, `~/.config/*`, `~/.emacs.d`, etc.). Edite exclusivamente na bancada em `~/Documents/`, valide localmente (`make test`, `make ci`), comite e envie via `git push`. A produção recebe atualizações exclusivamente via `git pull` e DEVE manter `git status` 100% limpo a todo momento (Invariante Zero-Dirty).
 3. **Hermetismo de Produção (`rm -rf .agents`):** O ecossistema é soberano e independente de ferramentas de IA. Código de produção (scripts, Makefiles, hooks, dotfiles, compiladores) não depende de `.agents/` ou `skills/`. Se o diretório `.agents/` for deletado, o repositório opera com 100% de sua integridade.
 4. **Invariante Out-of-the-Box (`0755` / `0644` / `0700` / `0600`):** O repositório deve funcionar imediatamente após um simples `git clone`, sem etapas manuais pós-clone. Permissões octais canônicas devem estar registradas no Git Index (`0755` para executáveis/scripts/hooks, `0644` para arquivos de configuração e documentação, `0700`/`0600` para Vault e chaves). Scripts devem aplicar self-healing de permissões em tempo de execução.
@@ -49,8 +49,8 @@ Subagentes de execução que identificarem qualquer dúvida de escopo, divergên
     - Simetria de escopo e não-assimetria de subgrupo na documentação.
     - Emissão semântica de UI via rotinas canônicas `_ui_*`.
     - **Boy Scout Rule:** Ao identificar qualquer inconformidade com os padrões estabelecidos, notifique concisamente o usuário e aplique a correção de forma proativa.
-7. **Governança Multi-Agente Argos:**
-    - _Gatilho Semântico do Argos:_ Ao identificar menção a "Argos", "gerenciador de agentes", "orquestrador" ou requisições de delegação em subagentes, carregue e siga obrigatoriamente a skill global `argos-multi-agent-orchestrator` (ou a respectiva skill da família Argos) ANTES de invocar qualquer tool de delegação.
+7. **Governança Multi-Agente (Orquestração):**
+    - _Gatilho Semântico de Orquestração:_ Ao identificar requisições de delegação multi-agente ou paralelização de execução em subagentes, carregue e siga obrigatoriamente a skill global `multi-agent-orchestration` ANTES de invocar qualquer tool de delegação.
     - _Bloqueio de `native_swarm` e Polling via Cron:_ É vedado invocar a tool `swarm` por iniciativa própria (restrita a pedidos com a palavra literal `"swarm"`). É proibido utilizar `schedule` (cron) para monitoramento periódico de agentes.
     - _Herança Dinâmica & Papéis Semânticos Agnósticos:_ Em chamadas de delegação (`invoke_subagent`, `swarm`), utilize por padrão a herança nativa do modelo ativo da sessão (`Model: 'inherit'` ou omissão explícita) — ou o tier rápido nativo exposto pelo runtime atual, sem fixar nomes comerciais ou versões. Estruture a delegação nos papéis _Master Orchestrator / Planner Agent_, _Specialist Sub-Agent / Execution Worker_ e _Adversarial Verifier / QA Agent_.
 

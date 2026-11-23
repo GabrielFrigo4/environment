@@ -18,7 +18,7 @@ O repositório `Environment` (`~/Documents/Environment`) funciona **estritamente
 
 1. **Isolamento de Produção:** Nenhum script ou configuração deste diretório deve ser consumido diretamente pelo sistema operacional.
 2. **Vedação de Symlinks para o Hub:** É proibido criar links simbólicos a partir de configurações do sistema apontando para o interior do repositório hub.
-3. **Provisionamento Canônico:** A instalação é realizada via `make install` (ou `./environment.sh install`), que provisiona cada repositório em suas localizações formais (`~/.local/share/shell`, `~/.config/profile`, `~/.vault`, `~/.emacs.d`, etc).
+3. **Provisionamento Canônico:** A instalação é realizada via `make install` (ou `./environment.sh install`), que provisiona cada repositório em suas localizações formais (`~/.local/share/shell`, `~/.config/profile`, `~/.local/share/vault`, `~/.emacs.d`, etc).
 4. **Ciclo Sagrado de Propagação:**
     - Edições são realizadas exclusivamente na bancada, validadas via `make test` e `make audit`, e enviadas ao Git upstream.
     - Runtimes de produção atualizam-se unicamente via `git pull` (ou rotinas de ciclo como `upsh`).
@@ -31,7 +31,7 @@ O repositório `Environment` (`~/Documents/Environment`) funciona **estritamente
 Consulte os manuais técnicos especializados em `references/`:
 
 - [references/operations.md](references/operations.md): Matriz de responsabilidade dos 8 componentes, ciclo de vida de submódulos Git, sincronização de `ENVIRONMENT.md`/`PRINCIPLES.md` e biblioteca semântica de terminal `_ui_*`.
-- [references/runtime-hybrid.md](references/runtime-hybrid.md): Arquitetura de contenção FreeBSD (Host) + Bhyve Debian (Guest) com exportação NFS e wrappers transparentes de shell.
+- [references/runtime-hybrid.md](references/runtime-hybrid.md): Runtime opcional Linux sob demanda no FreeBSD via Bhyve/Linuxulator (execução nativa no host é o padrão).
 
 ---
 

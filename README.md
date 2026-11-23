@@ -6,7 +6,7 @@
 
 ### 🏛️ O Quarteto de Infraestrutura
 
-[![Setup](https://img.shields.io/badge/📦_Setup-Sistema_%26_Cookbook-blue)](https://github.com/GabrielFrigo4/setup)
+[![Setup](https://img.shields.io/badge/📦_Setup-Sistema_%26_Provisionamento-blue)](https://github.com/GabrielFrigo4/setup)
 [![Shell](https://img.shields.io/badge/🐚_Shell-Terminal_Runtime-purple)](https://github.com/GabrielFrigo4/shell)
 ![Vault](https://img.shields.io/badge/🔐_Vault-Cofre_Privado-red)
 [![Profile](https://img.shields.io/badge/🎨_Profile-Dotfiles_%26_IA-green)](https://github.com/GabrielFrigo4/profile)
@@ -38,10 +38,10 @@
 
 O **Environment** é o **meta-repositório e hub orquestrador** que centraliza os 4 componentes do Quarteto de Produtividade e os 4 repositórios da Suíte de Editores. **Ele NÃO é um monorepo e NÃO é uma dependência runtime de produção**:
 
-- **Em Produção (Descentralizado & Soberano):** O Environment **não precisa existir nem ser clonado**. Cada ferramenta (`Shell`, `Emacs`, `NeoVim`, `Profile`, `Vault`) é clonada diretamente em seu caminho canônico (`~/.config/profile`, `~/.vault`, `/usr/local/share/shell`, `~/.emacs.d`, `~/.config/nvim`, etc.) e opera de maneira 100% autônoma e desacoplada.
+- **Em Produção (Descentralizado & Soberano):** O Environment **não precisa existir nem ser clonado**. Cada ferramenta (`Setup`, `Shell`, `Emacs`, `NeoVim`, `Profile`, `Vault`) é clonada diretamente em seu caminho canônico (`~/.local/share/setup`, `~/.local/share/profile`, `~/.local/share/vault`, `/usr/local/share/shell`, `~/.emacs.d`, `~/.config/nvim`, etc.) e opera de maneira 100% autônoma e desacoplada.
 - **No Desenvolvimento (Hub do Arquiteto):** O Environment serve como o quartel-general de engenharia de Gabriel Frigo. Ele reúne os submódulos para permitir manutenção simultânea, auditoria cruzada (`make audit`), testes de sintaxe em lote (`make test`) e propagação da documentação canônica (`make sync-docs`).
 - **O que é o `make bootstrap` (ou `./environment.sh clone`)?** É o orquestrador que clona e provisiona cada componente individual diretamente em suas posições canônicas nativas do sistema operacional, sem criar symlinks frágeis apontando para a pasta de desenvolvimento.
-- **Axioma da Precedência Local sobre Global (Local > Global):** Em todo o ecossistema, o escopo mais específico prevalece: CLI > Variáveis de Ambiente (`$SHELL_REPO_DIR`, `$VAULT_DIR`, `$PROFILE_DIR`) > Projeto Local (`.agents/skills/`) > Usuário (`~/.config/profile`, `~/.vault`, `~/.gemini/config/skills/`) > Sistema Global (`/usr/local/share/`).
+- **Axioma da Precedência Local sobre Global (Local > Global):** Em todo o ecossistema, o escopo mais específico prevalece: CLI > Variáveis de Ambiente (`$SHELL_REPO_DIR`, `$VAULT_DIR`, `$PROFILE_DIR`) > Projeto Local (`.agents/skills/`) > Usuário (`~/.local/share/profile`, `~/.local/share/vault`, `~/.gemini/config/skills/`) > Sistema Global (`/usr/local/share/`).
 
 ```mermaid
 flowchart TD

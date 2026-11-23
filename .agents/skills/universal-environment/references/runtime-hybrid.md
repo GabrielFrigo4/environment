@@ -1,27 +1,24 @@
-# Arquitetura Híbrida Host/Guest (FreeBSD e Bhyve)
+# Virtualização Sob Demanda no FreeBSD (Bhyve e Linuxulator)
 
-Este guia documenta o isolamento de ferramentas baseadas em Go e runtimes dependentes de chamadas do Linux que exigem suporte a epoll e HTTP/2, executadas a partir de uma estação de trabalho FreeBSD.
+Este guia documenta os runtimes Linux opcionais sob demanda a partir de uma estação de trabalho FreeBSD (onde terminal, editores e agentes executam **nativamente no host** por padrão).
 
 ---
 
-## 1. Topologia da Infraestrutura
+## 1. Topologia Opcional Host/Guest
 
 1. **Host Soberano (FreeBSD):**
-    - Atua como estação de trabalho principal, gerenciador de janelas KDE sob Wayland, ZFS nativo (`zroot`) e terminal PTY.
-    - Firewall PF configurado com NAT para a subrede virtual `192.168.8.0/24`.
-    - Servidor NFSv3 exportando `/home/gabrielf` com a flag `-mapall=gabrielf`.
-2. **Guest Linux (Debian em Bhyve):**
-    - Executa no endereço estático `192.168.8.2` sob hypervisor Bhyve.
-    - UID e GID sincronizados em 1001 com montagem automática de `/home/gabrielf` via NFS.
-    - Hospeda ferramentas como o binário `agy` em `/usr/local/bin/agy`.
+    - Atua como estação de trabalho principal (KDE sob Wayland), execução nativa de ferramentas e agentes (`agy`), ZFS (`zroot`) e terminal PTY.
+    - Firewall PF com NAT configurável para a sub-rede virtual (ex.: `192.168.8.0/24`) e exportação NFSv3 opcional de `${HOME}` (`-mapall=<user>`).
+2. **Guest Linux Opcional (Debian em Bhyve):**
+    - Executa sob demanda via `vm-bhyve` em IP virtual configurado (`BHYVE_LINUX_IP` / `LINUX_HOST_IP`), com UID/GID alinhados e montagem NFS em `${HOME}` para workloads ou containers Linux.
 
 ---
 
-## 2. Wrappers de Integração Transparente no Shell
+## 2. Wrappers de Integração Sob Demanda no Shell
 
-A camada de shell no host expõe funções utilitárias para interagir diretamente com o guest sem necessidade de gestão manual de sessões:
+A camada de shell no host expõe funções utilitárias opcionais para delegar comandos específicos sem gestão manual de sessões:
 
-- `linux-host` (aliases: `linux`, `lx`, `debian`, `deb`): Executa comandos no guest com resolução automática de diretório correspondente e fallback para `/home/gabrielf`.
-- `agy-lx` (aliases: `agy`, `agy-bh`): Despacha o agente Antigravity na máquina virtual repassando todos os argumentos.
-- `agy-compat` (alias: `agy-cp`): Executa o binário utilizando o emulador de binários Linux do FreeBSD (`/compat/linux`) com afinidade e limites de processo controlados.
-- `update-linux` (aliases: `uplx`, `updeb`): Executa rotina de atualização de pacotes no guest via SSH, integrando-se ao comando global `upall`.
+- `linux-host` (aliases: `linux`, `lx`, `debian`, `deb`): Executa comandos no guest com resolução automática de diretório correspondente e fallback para `${HOME}`.
+- `agy-lx` (alias: `agy-bh`): Despacho opcional de `agy` para o guest Bhyve; ativado como padrão de `agy` somente com `BHYVE_AGY_DEFAULT=1` ou na ausência do binário nativo quando `BHYVE_LINUX_IP`/`LINUX_HOST_IP` estiver definido.
+- `agy-compat` (alias: `agy-cp`): Executa o binário utilizando o Linuxulator (`/compat/linux`) com afinidade (`cpuset`) e limites controlados.
+- `update-linux` (aliases: `uplx`, `updeb`): Atualiza pacotes no guest via SSH, integrando-se ao comando global `upall`.

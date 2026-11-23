@@ -1,6 +1,6 @@
 # 🛠️ Setup: Provisionamento Ativo de Sistema
 
-> Documentação canônica do Setup: receitas de provisionamento idempotentes, modelo zero-clone via GitHub RAW, matriz multi-SO e elevação antifrágil.
+> Documentação canônica do Setup: receitas de provisionamento idempotentes, Clone Soberano via `bootstrap.sh`, matriz multi-SO e elevação antifrágil.
 
 ---
 
@@ -11,9 +11,9 @@ O repositório **Setup** é o **braço executor de privilégios** do ecossistema
 ### Invariantes Fundamentais do Setup:
 
 1. **Idempotência Absoluta:** Qualquer receita do Setup pode ser executada centenas de vezes consecutivas sem corromper arquivos ou falhar caso um pacote já esteja instalado.
-2. **Modelo Zero-Clone:** Qualquer script do Setup pode ser invocado diretamente da web sem a necessidade de clonar o repositório Git localmente:
+2. **Modelo Clone Soberano (`bootstrap.sh`):** Um único bootstrap via web clona ou atualiza o repositório em `~/.local/share/setup` e dispara o orquestrador `./setup.sh` com acesso integral às bibliotecas compartilhadas (`core/`):
     ```sh
-    curl -fsSL https://raw.githubusercontent.com/GabrielFrigo4/setup/main/freebsd/desktop/system/ttys.sh | sudo sh
+    curl -fsSL "https://raw.githubusercontent.com/GabrielFrigo4/setup/main/bootstrap.sh" | sh
     ```
 3. **Resolução Antifrágil de Privilégios (`ELEVATE`):** Scripts que necessitam de privilégios de superusuário resolvem o binário de elevação dinamicamente e suportam execução direta como root, via `sudo` ou via `doas`.
 
@@ -23,23 +23,31 @@ O repositório **Setup** é o **braço executor de privilégios** do ecossistema
 
 ```text
 Setup/
-├── common/             # Receitas universais multi-SO
-│   ├── ai/             # Ollama e aceleração de IA
-│   ├── editors/        # Editores de código (Emacs, Neovim, Vim, Helix, Micro)
-│   ├── graphics/       # Slang, shaders e Vulkan
-│   ├── office/         # Suítes de produtividade (LibreOffice, Collabora)
-│   └── workspace/      # Organização de repositórios e projetos
-├── freebsd/            # Provisionamento FreeBSD
-│   ├── container/      # Bhyve, Jails, Bastille
-│   ├── desktop/        # DRM, áudio, KDE Plasma 6, ttys.sh, Ly
-│   └── server/         # Serviços headless, SSH, ZFS
-├── linux/              # Provisionamento Linux
-│   ├── arch/
-│   ├── debian/
-│   ├── fedora/
-│   └── desktop/
-├── windows/            # Provisionamento Windows via WinGet
-└── .scripts/audit/     # Suíte de auditoria estática (all.py, banners.py)
+├── bootstrap.sh
+├── setup.sh
+├── core/
+├── common/
+│   ├── ai/
+│   ├── cli/
+│   ├── docs/
+│   ├── editors/
+│   ├── fonts/
+│   ├── graphics/
+│   ├── iso/
+│   ├── languages/
+│   ├── linters/
+│   ├── media/
+│   ├── office/
+│   ├── security/
+│   ├── system/
+│   ├── vcs/
+│   ├── wasm/
+│   └── web/
+├── freebsd/
+├── linux/
+├── windows/
+├── hosts/
+└── .scripts/audit/
 ```
 
 ---
@@ -81,13 +89,9 @@ A receita universal de escritório automatiza a instalação e integração adap
 - **Higienização de Sessão (`environment.d` / `systemd`):** Remove `~/.config/environment.d/gtk-dark.conf`, limpa variáveis estáticas `GTK_THEME` e `GTK_APPLICATION_PREFER_DARK_THEME` no `systemctl --user`, e propaga apenas `SAL_USE_VCLPLUGIN=gtk3` via `systemctl --user` e `dbus-update-activation-environment`.
 - **Runtimes Flatpak:** Executa `flatpak override --unset-env=GTK_THEME` (usuário e sistema) e instala `org.gtk.Gtk3theme.adw-gtk3` e `org.gtk.Gtk3theme.adw-gtk3-dark` do Flathub para que aplicativos empacotados sigam automaticamente o esquema ativo do sistema.
 
-### Preservação e Lançador Adaptativo do Emacs (`common/editors/editors.sh`)
+### Preservação de Dotfiles & Pacotes de Editores (`common/editors/install.sh`)
 
-A receita de editores padroniza a integração desktop do GNU Emacs sem sobrescrever configurações gerenciadas pelo **Profile**:
-
-- **Preservação do Profile & Fallback `emacs.desktop`:** Mantém intactos symlinks e lançadores já sincronizados pelo **Profile**. Quando ausente (ou caso detecte arquivo legado contendo `GTK_THEME=`), cria `emacs.desktop` adaptativo (em `~/.local/share/applications/` e `/usr/local/share/applications/` quando elevado) invocando `emacs-client` ou `emacsclient --create-frame --alternate-editor="" "$@"` sem forçar `GTK_THEME`.
-- **Ocultação de Entradas Redundantes:** Gera arquivos com `NoDisplay=true` para `emacsclient.desktop`, `emacs-mail.desktop` e `emacsclient-mail.desktop` apenas quando ainda não existem, evitando duplicidade no menu de aplicativos.
-- **Editores Adicionais:** Clona e sincroniza repositórios soberanos para Neovim (`~/.config/nvim`), Vim (`~/.vim` e `.vimrc`), Helix (`~/.config/helix`) e Micro com tema Dracula (`~/.config/micro`).
+Os dotfiles, temas e lançadores de editores pertencem exclusivamente ao **Profile** e aos repositórios autônomos de editores (`Editor/*`). O Setup instala estritamente os binários de sistema via `common/editors/install.sh`.
 
 ---
 

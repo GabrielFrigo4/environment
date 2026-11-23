@@ -223,7 +223,11 @@ sync-docs: sync-template
 	for r in $(ALL_REPOS); do \
 		if [ -d "$$r" ]; then \
 			cp ENVIRONMENT.md "$$r/ENVIRONMENT.md"; \
-			chmod 0644 "$$r/ENVIRONMENT.md" 2> "/dev/null" || true; \
+			if [ "$$r" = "Vault" ]; then \
+				chmod 0600 "$$r/ENVIRONMENT.md" 2> "/dev/null" || true; \
+			else \
+				chmod 0644 "$$r/ENVIRONMENT.md" 2> "/dev/null" || true; \
+			fi; \
 			echo "  ✅ $$r: ENVIRONMENT.md sincronizado"; \
 		fi; \
 	done
@@ -289,7 +293,7 @@ format:
 	echo "🎨 Formatando arquivos (MD, JSON, YAML, HTML, CSS) com Prettier recursivamente..."
 	if command -v prettier > "/dev/null" 2>&1; then \
 		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.jsonc" -o -name "*.yml" -o -name "*.yaml" -o -name "*.html" -o -name "*.css" \) \
-			-not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
+			-not -path "*/Open Source/*" -not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
 			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "*/build/*" -not -path "*/dist/*" \
 			-not -path "*/target/*" -not -path "*/.cache/*" -not -path "./Vault/*" \
 			-exec prettier --write {} +; \
@@ -300,7 +304,7 @@ format:
 		echo "✅ Todos os arquivos foram formatados recursivamente!"; \
 	elif command -v npx > "/dev/null" 2>&1; then \
 		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.jsonc" -o -name "*.yml" -o -name "*.yaml" -o -name "*.html" -o -name "*.css" \) \
-			-not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
+			-not -path "*/Open Source/*" -not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
 			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "*/build/*" -not -path "*/dist/*" \
 			-not -path "*/target/*" -not -path "*/.cache/*" -not -path "./Vault/*" \
 			-exec npx --yes prettier --write {} +; \
@@ -313,7 +317,7 @@ lint-format:
 	echo "🔍 Validando formatação (MD, JSON, YAML, HTML, CSS) com Prettier..."
 	if command -v prettier > "/dev/null" 2>&1; then \
 		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.jsonc" -o -name "*.yml" -o -name "*.yaml" -o -name "*.html" -o -name "*.css" \) \
-			-not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
+			-not -path "*/Open Source/*" -not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
 			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "*/build/*" -not -path "*/dist/*" \
 			-not -path "*/target/*" -not -path "*/.cache/*" -not -path "./Vault/*" \
 			-exec prettier --check {} +; \
@@ -324,7 +328,7 @@ lint-format:
 		echo "✅ Formatação 100% em conformidade!"; \
 	elif command -v npx > "/dev/null" 2>&1; then \
 		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.jsonc" -o -name "*.yml" -o -name "*.yaml" -o -name "*.html" -o -name "*.css" \) \
-			-not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
+			-not -path "*/Open Source/*" -not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
 			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "*/build/*" -not -path "*/dist/*" \
 			-not -path "*/target/*" -not -path "*/.cache/*" -not -path "./Vault/*" \
 			-exec npx --yes prettier --check {} +; \

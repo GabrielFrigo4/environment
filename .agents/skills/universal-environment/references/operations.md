@@ -33,7 +33,7 @@ git commit -m "update submodules to latest upstream"
 Inicialização do ambiente de desenvolvimento em novo host:
 
 ```sh
-git clone --recurse-submodules "[https://github.com/GabrielFrigo4/environment](https://github.com/GabrielFrigo4/environment)" "${HOME}/Documents/Environment"
+git clone --recurse-submodules "https://github.com/GabrielFrigo4/environment" "${HOME}/Documents/Environment"
 cd "${HOME}/Documents/Environment"
 make clone
 make install

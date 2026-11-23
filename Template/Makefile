@@ -77,7 +77,7 @@ post-release:
 check:
 	echo "🔍 Validando integridade e sintaxe de shell scripts..."
 	_sh=$$(command -v bash 2> "/dev/null" || command -v zsh 2> "/dev/null" || echo sh); \
-	find . -type f -name "*.sh" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" -not -path "*/OSS/*" -exec "$$_sh" -n {} +
+	find . -type f -name "*.sh" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" -not -path "*/Open Source/*" -not -path "*/OSS/*" -exec "$$_sh" -n {} +
 	echo "✅ Validação estática aprovada!"
 
 test:
@@ -99,13 +99,13 @@ format: prettier
 prettier:
 	if command -v prettier > "/dev/null" 2>&1; then \
 		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.jsonc" -o -name "*.yml" -o -name "*.yaml" -o -name "*.html" -o -name "*.css" \) \
-			-not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
+			-not -path "*/Open Source/*" -not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
 			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "*/build/*" -not -path "*/dist/*" \
 			-not -path "*/target/*" -not -path "*/.cache/*" \
 			-exec prettier --write {} + 2> "/dev/null" || true; \
 	elif command -v npx > "/dev/null" 2>&1; then \
 		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.jsonc" -o -name "*.yml" -o -name "*.yaml" -o -name "*.html" -o -name "*.css" \) \
-			-not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
+			-not -path "*/Open Source/*" -not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
 			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "*/build/*" -not -path "*/dist/*" \
 			-not -path "*/target/*" -not -path "*/.cache/*" \
 			-exec npx --yes prettier --write {} + 2> "/dev/null" || true; \
@@ -115,13 +115,13 @@ lint:
 	echo "🔍 Validando conformidade com Prettier..."
 	if command -v prettier > "/dev/null" 2>&1; then \
 		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.jsonc" -o -name "*.yml" -o -name "*.yaml" -o -name "*.html" -o -name "*.css" \) \
-			-not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
+			-not -path "*/Open Source/*" -not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
 			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "*/build/*" -not -path "*/dist/*" \
 			-not -path "*/target/*" -not -path "*/.cache/*" \
 			-exec prettier --check {} + 2> "/dev/null" || true; \
 	elif command -v npx > "/dev/null" 2>&1; then \
 		find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.jsonc" -o -name "*.yml" -o -name "*.yaml" -o -name "*.html" -o -name "*.css" \) \
-			-not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
+			-not -path "*/Open Source/*" -not -path "*/OSS/*" -not -path "*/.git/*" -not -path "*/.venv/*" -not -path "*/node_modules/*" \
 			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "*/build/*" -not -path "*/dist/*" \
 			-not -path "*/target/*" -not -path "*/.cache/*" \
 			-exec npx --yes prettier --check {} + 2> "/dev/null" || true; \
