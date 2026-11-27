@@ -21,10 +21,7 @@ No Universal Environment, o Helix destaca-se por:
 A configuração do Helix reside em `~/.config/helix/config.toml`:
 
 ```toml
-# ================================================================
-# Helix Editor: Configuração Canônica
-# ================================================================
-theme = "kanagawa"
+theme = "dark_plus"
 
 [editor]
 line-number = "relative"
@@ -51,15 +48,13 @@ display-inlay-hints = true
 
 ## 🌐 Configuração de Linguagens: `languages.toml`
 
-O mapeamento de Language Servers e formatters é definido em `~/.config/helix/languages.toml`:
+O mapeamento de Language Servers e formatters (ex.: `rust-analyzer` para Rust e `bash-language-server` + `shfmt` para POSIX Shell) é definido em `~/.config/helix/languages.toml`:
 
 ```toml
-# Exemplo: Suporte a Rust via rust-analyzer
 [[language]]
 name = "rust"
 auto-format = true
 
-# Exemplo: Suporte a POSIX Shell via bash-language-server e shfmt
 [[language]]
 name = "bash"
 auto-format = true
@@ -70,15 +65,10 @@ formatter = { command = "shfmt", args = ["-i", "4", "-ci"] }
 
 ## 🧪 Diagnóstico de Saúde & Testes
 
-Para validar se os Language Servers e gramáticas Tree-sitter estão instalados e operacionais:
+Para inspecionar a saúde geral dos Language Servers e gramáticas Tree-sitter, checar uma linguagem específica ou executar a suíte de testes do repositório:
 
 ```sh
-# Inspecionar saúde geral de todas as linguagens suportadas
 hx --health
-
-# Checar saúde de uma linguagem específica
 hx --health rust
-
-# Executar suíte de testes do repositório
 make -C Editor/Helix test
 ```

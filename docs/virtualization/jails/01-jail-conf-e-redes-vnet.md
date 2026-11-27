@@ -21,7 +21,7 @@ Com a introdução do **VNET (Virtual Network Stack)**, cada Jail recebe sua pr�
 
 ```mermaid
 flowchart TD
-    PHYS["Interface Física: wlan0 / em0"]
+    PHYS["Interface Física: wlan0 / re0"]
     PF_NAT["Host PF: NAT Masquerade"]
     BRIDGE["Bridge Virtual: bridge0 (192.168.10.1/24)"]
 
@@ -50,38 +50,28 @@ flowchart TD
 
 ## 🗄️ Configuração Declarativa: `/etc/jail.conf`
 
-O utilitário `jail(8)` lê nativamente suas especificações a partir do arquivo `/etc/jail.conf`. O arquivo adota herança hierárquica, onde blocos globais definem parâmetros padrão aplicados a todas as instâncias:
+O utilitário `jail(8)` lê suas especificações a partir do arquivo `/etc/jail.conf` usando herança hierárquica (parâmetros globais de `devfs` e `vnet`, seguidos pelo bloco específico da jail `web01` com `epair0` acoplada à `bridge0`):
 
 ```text
-# ================================================================
-# Parâmetros Globais Aplicados a Todas as Jails
-# ================================================================
 exec.start = "sh /etc/rc";
 exec.stop  = "sh /etc/rc.shutdown";
 exec.clean;
 mount.devfs;
 devfs_ruleset = 4;
 
-# Parâmetros de VNET
 vnet;
 vnet.interface = "vnet0";
 
-# ================================================================
-# Jail: web01 (Exemplo com VNET e Bridge)
-# ================================================================
 web01 {
     host.hostname = "web01.lab.local";
     path = "/usr/jails/web01";
 
-    # Criação dinâmica do par epair antes do boot da jail
     exec.prestart  = "ifconfig epair0 create up";
     exec.prestart += "ifconfig bridge0 addm epair0a up";
     vnet.interface = "epair0b";
 
-    # Destruição do par epair após o encerramento da jail
     exec.poststop  = "ifconfig epair0a destroy";
 
-    # Configuração de rede injetada no início do boot da jail
     exec.start += "ifconfig epair0b name vnet0";
     exec.start += "ifconfig vnet0 inet 192.168.10.10/24 up";
     exec.start += "route add default 192.168.10.1";
@@ -92,48 +82,36 @@ web01 {
 
 ## 🛡️ Integração com o Packet Filter (PF) no Host
 
-Para que as Jails VNET acessem a internet através da interface primária do host (por exemplo, `wlan0`), o arquivo `/etc/pf.conf` do host deve realizar NAT da sub-rede das Jails (`192.168.10.0/24`):
+Para que as Jails VNET acessem a internet através da interface primária do host (por exemplo, `wlan0`), o arquivo `/etc/pf.conf` do host realiza o NAT e o encaminhamento da sub-rede das Jails (`192.168.10.0/24`):
 
 ```text
 ext_if = "wlan0"
 jail_net = "192.168.10.0/24"
 
-# NAT para saída das Jails
 nat on $ext_if from $jail_net to any -> ($ext_if)
 
-# Liberação de encaminhamento
 pass in on bridge0 proto { tcp, udp, icmp } from $jail_net to any
 pass out on $ext_if proto { tcp, udp, icmp } from ($ext_if) to any
 ```
 
-Para aplicar no host:
+Para habilitar o roteamento IPv4 no kernel e recarregar as regras do PF:
 
 ```sh
-# Ativar o roteamento de pacotes IPv4 no kernel
-sudo sysctl net.inet.ip.forwarding=1
-
-# Recarregar as regras do PF
-sudo pfctl -f /etc/pf.conf
+doas sysctl net.inet.ip.forwarding=1
+doas pfctl -f /etc/pf.conf
 ```
 
 ---
 
 ## 🚀 Ciclo de Vida & Operação
 
+Sequência de criação do dataset ZFS, extração da base FreeBSD, configuração de DNS, inicialização e acesso interativo:
+
 ```sh
-# Criar diretório base do dataset ZFS para a jail
-sudo zfs create -o mountpoint=/usr/jails/web01 zroot/jails/web01
-
-# Extrair base do sistema na raiz da jail
-sudo fetch -o /tmp/base.txz https://download.freebsd.org/releases/amd64/15.0-CURRENT/base.txz
-sudo tar -xf /tmp/base.txz -C /usr/jails/web01
-
-# Inicializar resolv.conf para resolução de nomes
-echo "nameserver 1.1.1.1" | sudo tee /usr/jails/web01/etc/resolv.conf
-
-# Iniciar a jail em segundo plano
-sudo jail -c web01
-
-# Acessar a jail interativamente
-sudo jexec web01 sh
+doas zfs create -o mountpoint=/usr/jails/web01 zroot/jails/web01
+doas fetch -o /tmp/base.txz https://download.freebsd.org/releases/amd64/15.1-RELEASE/base.txz
+doas tar -xf /tmp/base.txz -C /usr/jails/web01
+echo "nameserver 1.1.1.1" | doas tee /usr/jails/web01/etc/resolv.conf
+doas jail -c web01
+doas jexec web01 sh
 ```

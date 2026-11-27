@@ -38,7 +38,7 @@ flowchart TD
 ### Camada `library/` (5 Dispatchers na Raiz + Subpastas Especializadas)
 
 - **`desktop.sh`** ➔ `library/desktop/` _(exclusivo `SHELL_CONTEXT=desktop`)_: `detect.sh` (DEs/WMs/temas), `theme.sh` (`_propagate_session_theme_env` e `_desktop_apply_theme_context` sem parsear `session.sh` no boot), `emacs.sh` (daemon/cliente Emacs e aliases `ek..esh`), `apps.sh` (`_restore_tty_cursor`, editores, apps e `open-smart`/`o`), além dos submódulos _lazy_ `device.sh`, `kiosk.sh` e `session.sh`.
-- **`system.sh`** ➔ `library/system/`: `packages.sh` (`update-pacman..update-system`), `network.sh` (`update-wifi`, `update-network`, `update-ports`, `update-linux`) e `lifecycle.sh` (`clean-system`, `update-all`, `poweroff`, `reboot`).
+- **`system.sh`** ➔ `library/system/`: `packages.sh` (`update-pacman..update-system`, `update-agy`/`upagy`), `network.sh` (`update-wifi`, `update-network`, `update-ports`, `update-linux`), `firewall.sh` (`pf-*`) e `lifecycle.sh` (`clean-system`, `update-all`/`upall`, `poweroff`, `reboot`).
 - **`functions.sh`** ➔ `library/functions/`: `git.sh` (`update-git`/`upgit`, `push-git`/`psgit`, `_git_pull_resilient` com suporte a submódulos e proteção `0700`/`0600` do `Vault`, `vcs-status`, `vcs-diff`, `got-init`) e `utils.sh` (`clean-cache`, `take-dir`, `cd-git-root`, `hist-search`, `extract-archive`).
 - **`ecosystem.sh`** ➔ `library/ecosystem/`: `shell.sh` (`update-shell`, `reinstall-shell`, `bench-shell`), `profile.sh` (`update-profile`, `sync-extensions`) e `editors.sh` (`update-editors`, `update-emacs-modes`, junction Vim no Windows).
 - **`hypervisor.sh`** ➔ `library/hypervisor/`: `common.sh` (transporte SSH/TTY e helpers KVM/Bhyve/Bastille/Incus) e `managers.sh` (`freebsd`/`fb`, `linux`/`lx`, `openbsd`/`ob`, `netbsd`/`nb`).

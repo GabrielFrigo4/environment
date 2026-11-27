@@ -18,7 +18,7 @@ No Universal Environment, o Bastille opera como a ferramenta ideal para:
 flowchart TD
     HOST["💻 Host FreeBSD Bare-Metal"]
     ZFS["🗄️ ZFS Storage: zroot/bastille"]
-    BASE["📦 Releases Base (14.2-RELEASE, 15-CURRENT)"]
+    BASE["📦 Releases Base (15.1-RELEASE, 16-CURRENT)"]
     TEMPLATES["📝 Bastillefiles (Automação de Templates)"]
 
     ZFS --> BASE
@@ -44,19 +44,12 @@ flowchart TD
 
 ## ⚡ Comandos Rápidos & Sanity Check
 
+Comandos essenciais para listar containers/releases, inspecionar datasets ZFS, iniciar, executar comandos e acessar console no Bastille:
+
 ```sh
-# Listar todos os containers e releases gerenciados pelo Bastille
-sudo bastille list
-
-# Exibir uso de storage e datasets ZFS dos containers
-sudo bastille zfs list
-
-# Iniciar um container específico
-sudo bastille start container01
-
-# Executar comando interativo no container
-sudo bastille cmd container01 uptime
-
-# Acessar console interativo do container
-sudo bastille console container01
+doas bastille list
+doas bastille zfs list
+doas bastille start container01
+doas bastille cmd container01 uptime
+doas bastille console container01
 ```

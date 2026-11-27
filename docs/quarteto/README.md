@@ -51,26 +51,21 @@ Cada repositório obedece a um contrato funcional estrito (Princípios 1 a 4 de 
 
 ## 📚 Índice da Seção
 
-| Arquivo                              | Título                                      | Foco Operacional                                                                                  |
-| :----------------------------------- | :------------------------------------------ | :------------------------------------------------------------------------------------------------ |
-| **[`01-setup.md`](01-setup.md)**     | Setup: Provisionamento Ativo                | Receitas atômicas, modelo zero-clone via GitHub RAW, matriz multi-SO e elevação imune a `set -e`. |
-| **[`02-shell.md`](02-shell.md)**     | Shell: Motor Interativo de Terminal         | Multiplexação de shells, prompts com latência < 16ms, biblioteca `_ui_*` e contextos de SO.       |
-| **[`03-vault.md`](03-vault.md)**     | Vault: O Cofre Criptográfico                | Isolamento de chaves SSH, loaders multi-shell seguros e endurecimento de permissões 0600.         |
-| **[`04-profile.md`](04-profile.md)** | Profile: Identidade & Dotfiles Declarativos | Gestão de dotfiles no `$HOME`, links simbólicos defensivos, XDG e AI skills portáteis.            |
+| Arquivo                              | Título                                      | Foco Operacional                                                                                   |
+| :----------------------------------- | :------------------------------------------ | :------------------------------------------------------------------------------------------------- |
+| **[`01-setup.md`](01-setup.md)**     | Setup: Provisionamento Ativo                | Receitas atômicas, Clone Soberano via `bootstrap.sh`, matriz multi-SO e elevação imune a `set -e`. |
+| **[`02-shell.md`](02-shell.md)**     | Shell: Motor Interativo de Terminal         | Multiplexação de shells, prompts com latência < 16ms, biblioteca `_ui_*` e contextos de SO.        |
+| **[`03-vault.md`](03-vault.md)**     | Vault: O Cofre Criptográfico                | Isolamento de chaves SSH, loaders multi-shell seguros e endurecimento de permissões 0600.          |
+| **[`04-profile.md`](04-profile.md)** | Profile: Identidade & Dotfiles Declarativos | Gestão de dotfiles no `$HOME`, links simbólicos defensivos, XDG e AI skills portáteis.             |
 
 ---
 
 ## ⚡ Comandos de Orquestração
 
-A partir da raiz do Environment, o Makefile orquestra operações simultâneas sobre o Quarteto:
+A partir da raiz do Environment, o Makefile orquestra operações simultâneas sobre o Quarteto (`status`, `test` e `audit`):
 
 ```sh
-# Auditar status de versão de todos os componentes
 make status
-
-# Executar suíte completa de testes de qualidade
 make test
-
-# Executar todas as auditorias estáticas de código
 make audit
 ```

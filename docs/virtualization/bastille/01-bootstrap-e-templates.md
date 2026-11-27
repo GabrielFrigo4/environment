@@ -6,21 +6,17 @@
 
 ## 🧭 Instalação & Configuração Inicial
 
-O BastilleBSD é distribuído diretamente pela árvore de pacotes oficial do FreeBSD:
+O BastilleBSD é distribuído diretamente pela árvore de pacotes oficial do FreeBSD (`sysutils/bastille`):
 
 ```sh
-# Instalação via gerenciador de pacotes pkg
-sudo pkg install -y sysutils/bastille
+doas pkg install --yes sysutils/bastille
 ```
 
 ### Arquivo de Configuração: `/usr/local/etc/bastille/bastille.conf`
 
-O arquivo de configuração define os parâmetros centrais de armazenamento, rede e comportamento do daemon. Em ambientes baseados em ZFS, certifique-se de configurar:
+O arquivo define armazenamento (com integração nativa a clones ZFS COW sobre `zroot/bastille`), diretórios de releases/templates e a interface de loopback padrão (`bastille0`):
 
 ```text
-# ================================================================
-# Configuração Canônica do BastilleBSD
-# ================================================================
 bastille_prefix="/usr/local/bastille"
 bastille_backupsdir="${bastille_prefix}/backups"
 bastille_cachedir="${bastille_prefix}/cache"
@@ -28,12 +24,10 @@ bastille_jailsdir="${bastille_prefix}/jails"
 bastille_releasesdir="${bastille_prefix}/releases"
 bastille_templatesdir="${bastille_prefix}/templates"
 
-# Integração Nativa com ZFS (Clones COW instantâneos)
 bastille_zfs_enable="YES"
 bastille_zfs_zpool="zroot"
 bastille_zfs_prefix="bastille"
 
-# Rede Padrão
 bastille_network_loopback="bastille0"
 bastille_network_shared=""
 ```
@@ -41,21 +35,18 @@ bastille_network_shared=""
 Após ajustar a configuração, habilite o serviço no `/etc/rc.conf`:
 
 ```sh
-sudo sysrc bastille_enable="YES"
+doas sysrc bastille_enable="YES"
 ```
 
 ---
 
 ## 📦 Bootstrapping de Releases Base
 
-Antes de criar qualquer container, o Bastille precisa fazer o _bootstrap_ de uma release do FreeBSD. Esse processo baixa os binários do sistema operacional oficial e os armazena em um dataset ZFS de leitura imutável:
+Antes de criar qualquer container, o Bastille faz o _bootstrap_ da release oficial do FreeBSD em um dataset ZFS imutável e lista as bases disponíveis no host:
 
 ```sh
-# Fazer bootstrap da release atual do FreeBSD
-sudo bastille bootstrap 14.2-RELEASE update
-
-# Listar as bases instaladas e disponíveis no host
-sudo bastille list release
+doas bastille bootstrap 15.1-RELEASE update
+doas bastille list release
 ```
 
 Quando um container é criado a partir dessa release, o Bastille realiza um clone instantâneo em ZFS (_Copy-on-Write_), consumindo zero megabytes adicionais de disco até que arquivos comecem a ser modificados dentro do container.
@@ -87,26 +78,23 @@ nginx/
 └── nginx.conf
 ```
 
-Conteúdo do `Bastillefile`:
+Conteúdo do `Bastillefile` (instala `nginx` e `curl`, copia a configuração, habilita o serviço e valida a resposta HTTP):
 
 ```dockerfile
-# Instalar servidor Nginx
 PKG nginx curl
 
-# Copiar arquivo de configuração pré-testado
 CP nginx.conf /usr/local/etc/nginx/nginx.conf
 
-# Habilitar e iniciar o daemon
 SYSRC nginx_enable=YES
 SERVICE nginx start
 
-# Testar saúde da instalação
 CMD curl -I http://localhost
 ```
 
 ### Aplicando o Template em um Container:
 
+Aplique o template diretamente ao container alvo (`web01`):
+
 ```sh
-# Aplicar template diretamente ao container web01
-sudo bastille template web01 my-templates/nginx
+doas bastille template web01 my-templates/nginx
 ```

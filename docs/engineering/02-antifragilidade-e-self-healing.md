@@ -71,18 +71,17 @@ Toda operação de escrita verifica o estado atual antes de aplicar alterações
 
 ### Pilar 6: Elevação Imune a `set -e` (`ELEVATE`)
 
-Subshells emulando ternários (`ELEVATE="$( [ cond ] && ... )"`) encerram imediatamente o interpretador sob `set -e` quando a condição é falsa. O ecossistema impõe a substituição definitiva pelo bloco explícito:
+Subshells emulando ternários (`ELEVATE="$( [ cond ] && ... )"`) encerram imediatamente o interpretador sob `set -e` quando a condição é falsa. O ecossistema impõe a resolução explícita na precedência `doas > sudo`:
 
 ```sh
-# Padrão Antifrágil Canônico:
 ELEVATE=""
 if [ "$(id -u)" -ne 0 ]; then
-    if command -v sudo > "/dev/null" 2>&1; then
-        ELEVATE="sudo"
-    elif command -v doas > "/dev/null" 2>&1; then
+    if command -v doas > "/dev/null" 2>&1; then
         ELEVATE="doas"
+    elif command -v sudo > "/dev/null" 2>&1; then
+        ELEVATE="sudo"
     else
-        echo "❌ Privilégios de superusuário necessários." >&2
+        echo "Privilégios de superusuário necessários." >&2
         exit 1
     fi
 fi
@@ -93,7 +92,6 @@ fi
 Sob `set -e` em POSIX `sh`, executar `shift N` quando o número de argumentos disponíveis for menor que $N$ resulta em encerramento fatal imediato da execução, mesmo se acompanhado de `|| true`. Todo comando `shift` deve ser protegido pela validação de contagem:
 
 ```sh
-# Padrão Antifrágil Canônico:
 [ "$#" -ge 1 ] && shift
 [ "$#" -ge 2 ] && shift 2
 ```

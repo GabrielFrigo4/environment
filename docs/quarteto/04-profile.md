@@ -17,7 +17,7 @@ O repositório **Profile** é a **identidade do usuário**. Ele cuida de tudo o 
 
 ```mermaid
 flowchart TD
-    PROF["👤 Profile Repository (~/.config/profile)"]
+    PROF["👤 Profile Repository (~/.local/share/profile)"]
     CORE["core/ (sync.sh, perms.sh, ui.sh)"]
 
     subgraph DOTFILES ["Dotfiles do Usuário"]
@@ -26,7 +26,7 @@ flowchart TD
     end
 
     subgraph AI ["Agentes Cognitivos"]
-        SKILLS["skills/ (28 Portable AI Skills)"]
+        SKILLS["agents/skills/ (19 Portable AI Skills)"]
         RULES[".agents/rules/ (Regras Constitucionais)"]
     end
 
@@ -41,17 +41,12 @@ flowchart TD
 
 ## 🔗 O Motor de Sincronização: `profile.sh`
 
-O motor foi modularizado sob `core/` para assegurar legibilidade e performance:
+O motor modularizado sob `core/` permite aplicar os dotfiles (`profile.sh sync`), auditar divergências (`--status`) e reconciliar alterações locais de volta para o repositório (`--pull`):
 
 ```sh
-# Sincronizar e aplicar dotfiles no sistema operacional
-sh ~/.config/profile/profile.sh
-
-# Auditar divergências entre o repositório Git e os arquivos do sistema
-sh ~/.config/profile/profile.sh --status
-
-# Puxar modificações locais de volta para o repositório Git
-sh ~/.config/profile/profile.sh --pull
+sh "${XDG_DATA_HOME:-${HOME}/.local/share}/profile/profile.sh" sync
+sh "${XDG_DATA_HOME:-${HOME}/.local/share}/profile/profile.sh" --status
+sh "${XDG_DATA_HOME:-${HOME}/.local/share}/profile/profile.sh" --pull
 ```
 
 No Windows, o motor opera via MSYS2/Bash aproveitando o suporte a links simbólicos nativos do NTFS (`MSYS=winsymlinks:nativestrict`), com fallback para cópia física apenas quando restrições de privilégios impedem links.
@@ -60,11 +55,11 @@ No Windows, o motor opera via MSYS2/Bash aproveitando o suporte a links simbóli
 
 ## 🧠 O Catálogo de Portable AI Skills
 
-O Profile mantém 28 runbooks cognitivos compactos que ensinam agentes autônomos a operar sob a filosofia do ecossistema:
+O Profile mantém 19 runbooks cognitivos compactos em `agents/skills/` (expostos via `~/.gemini/config/skills`) que ensinam agentes autônomos a operar sob a filosofia do ecossistema:
 
 - **`antifragile-engineering`:** Auto-cura em tempo de execução e resolução em cascata.
-- **`clean-break-refactoring`:** Refatorações atômicas sem carregar dívida técnica.
+- **`clean-code-refactor`:** Refatorações Clean-Break sem carregar legado ou duplicação.
 - **`technical-writing-standards`:** Regras para diagramas Mermaid, formatação Prettier e documentação canônica.
-- **`agentic-governance-standards`:** Governança constitucional e precedência de regras.
+- **`agentic-repo-governance`:** Governança constitucional, curadoria C.A.R.P. e precedência de regras.
 
 A integridade desse catálogo é fiscalizada pelo auditor automatizado em Python `Profile/.scripts/audit/skills.py`.

@@ -80,8 +80,7 @@ silent! colorscheme codedark
 O repositório `Editor/Vim` valida o carregamento de configurações sem interatividade do usuário:
 
 ```sh
-# Executar verificação batch do Vim
 make -C Editor/Vim test
 ```
 
-Esse comando inicia o Vim com as flags `-Nu .vimrc -c "q"`, assegurando que não existam erros de sintaxe ou comandos obsoletos no `.vimrc`.
+Esse comando inicia o Vim em modo batch (`-Nu`), assegurando que não existam erros de sintaxe ou comandos obsoletos no `.vimrc`.

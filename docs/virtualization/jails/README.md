@@ -52,20 +52,13 @@ flowchart TD
 
 ## ⚡ Comandos Rápidos & Sanity Check
 
+Inspeção de jails em execução (`jls`), conexão interativa via `jexec` e controle declarativo via `/etc/jail.conf`:
+
 ```sh
-# Listar todas as jails ativas com detalhes de VNET e paths
 jls -v
-
-# Exibir parâmetros configurados de uma jail específica
 jls -j minha_jail -n
-
-# Conectar uma sessão de shell interativa dentro da jail
-sudo jexec minha_jail sh
-
-# Iniciar ou reiniciar uma jail declarada no /etc/jail.conf
-sudo jail -c minha_jail
-sudo jail -r minha_jail
-
-# Destruir e parar uma jail forçadamente
-sudo jail -r -f minha_jail
+doas jexec minha_jail sh
+doas jail -c minha_jail
+doas jail -r minha_jail
+doas jail -r -f minha_jail
 ```

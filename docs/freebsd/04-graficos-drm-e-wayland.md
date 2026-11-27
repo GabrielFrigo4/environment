@@ -69,7 +69,7 @@ drmn0: [drm] GPU HANG: ecode 12:1:86d8ffe0, in CanvasRenderer [104369]
 
 ## 🛡️ A Solução Definitiva no `/boot/loader.conf`
 
-Para neutralizar tanto a instabilidade do pipeline de energia (perda de sinal e tela preta) quanto o timeout de preempção do motor `rcs0` nos gráficos Iris Xe Alder Lake, os cinco parâmetros abaixo são aplicados no `/boot/loader.conf` via [`Setup/freebsd/desktop/system/system.sh`](../../Setup/freebsd/desktop/system/system.sh):
+Para neutralizar tanto a instabilidade do pipeline de energia (perda de sinal e tela preta) quanto o timeout de preempção do motor `rcs0` nos gráficos Iris Xe Alder Lake, os cinco parâmetros abaixo são aplicados no `/boot/loader.conf` via perfil opt-in [`Setup/hosts/vostro3520-freebsd.sh`](../../Setup/hosts/vostro3520-freebsd.sh) (que também fixa `graphics/drm-66-kmod` em versões `< 15.2`):
 
 ```text
 compat.linuxkpi.i915_enable_psr="0"
@@ -95,7 +95,7 @@ Provisionado através das receitas do subsistema desktop:
 
 | Pacote                                           | Função no Ecossistema                                                                                   |
 | :----------------------------------------------- | :------------------------------------------------------------------------------------------------------ |
-| **`graphics/drm-kmod`**                          | Metapacote de drivers de kernel (`drm-61-kmod`) para aceleração de vídeo Intel/AMD.                     |
+| **`graphics/drm-kmod`**                          | Metapacote de drivers de kernel (`drm-66-kmod` travado em `< 15.2`, `drm-612-kmod` em `>= 15.2`).       |
 | **`graphics/gpu-firmware-intel-kmod-alderlake`** | Binários de microcódigo essenciais para 12ª Geração (`adlp_dmc.bin`, `adlp_guc_70.bin`, `tgl_huc.bin`). |
 | **`x11/plasma6-plasma-desktop`**                 | Núcleo do ambiente gráfico KDE Plasma 6 Wayland.                                                        |
 | **`x11/wl-clipboard`**                           | Utilitários de linha de comando para manipular a área de transferência Wayland (`wl-copy`, `wl-paste`). |

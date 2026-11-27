@@ -24,7 +24,7 @@
 
 - **Zero Pendências:** 100% dos épicos (Otimização do Shell, Lapidação do Profile, Invariante Out-of-the-Box, AI Skills, Paridade Windows Tripartite, Modularização de Scripts, Virtualização Híbrida Bhyve, Portal Canônico de Docs, Refatoração do Setup e GNU Emacs Sensorial) foram integralmente concluídos e verificados.
 - **Suíte LibreOffice Completa e Integração Adaptativa GTK3 (`office.sh`):** Provisão declarativa de todos os 6 aplicativos oficiais (`Writer`, `Calc`, `Impress`, `Draw`, `Math`, `Base`) juntamente com `libreoffice-gtk3` e `libreoffice-gtk4`, habilitando o lançador genérico oficial (`libreoffice-startcenter.desktop` com `NoDisplay=false`). Injeção de `SAL_USE_VCLPLUGIN=gtk3` nos `.desktop` locais sem fixar `GTK_THEME`, remoção de `~/.config/environment.d/gtk-dark.conf` e variáveis estáticas no `systemctl --user`, propagação de `SAL_USE_VCLPLUGIN=gtk3` via D-Bus/systemd e, no Flatpak, `--unset-env=GTK_THEME` com instalação dos runtimes `org.gtk.Gtk3theme.adw-gtk3` e `adw-gtk3-dark`.
-- **Padronização de Editores e Lançador Adaptativo do Emacs (`editors.sh`):** Preservação de lançadores (`emacs.desktop` / `emacsclient.desktop`) gerenciados pelo **Profile**, provendo fallback adaptativo em `emacs.desktop` apontando para `emacs-client` / `emacsclient --create-frame --alternate-editor="" %F` sem forçar `GTK_THEME`, ocultando entradas secundárias redundantes (`emacsclient.desktop`, `emacs-mail.desktop`, `emacsclient-mail.desktop`) via `NoDisplay=true` quando ausentes.
+- **Padronização de Editores e Lançador Adaptativo do Emacs (`common/editors/install.sh`):** Preservação de lançadores (`emacs.desktop` / `emacsclient.desktop`) gerenciados pelo **Profile**, provendo fallback adaptativo em `emacs.desktop` apontando para `emacs-client` / `emacsclient --create-frame --alternate-editor="" %F` sem forçar `GTK_THEME`, ocultando entradas secundárias redundantes (`emacsclient.desktop`, `emacs-mail.desktop`, `emacsclient-mail.desktop`) via `NoDisplay=true` quando ausentes.
 - **Dimensionamento Dinâmico de Memória Proporcional 16 Partes:** Cálculo automático baseado na memória física real (`hw.realmem || hw.physmem`) em `zfs-arc.sh` e `bhyve.sh`: alocação de `1/16` para máquinas virtuais (mínimo 1 GB, teto 2 GB), `4/16` para o ZFS ARC (mínimo 1 GB, teto 4 GB) e preservação de `11/16` para o host gráfico e subsistema DRM.
 - **Dicionários Bilíngues e Fontes de Alta Densidade no FreeBSD:** Instalação oficial dos dicionários Hunspell em inglês e português do Brasil (`hunspell`, `en-hunspell`, `pt_BR-hunspell`) e tipografia de alta densidade (`jetbrains-mono`, `nerd-fonts`).
 - **Despachante Universal de Display Server (`_dispatch_display_server`):** Arquitetura desacoplada onde comandos universais (`window-manager`, `graphical-launcher`, `emacs-window-manager`) despacham transparentemente para variantes `-wayland` ou `-x11`, com autocompletion semântico unificado e aliases ergonômicos (`wm`, `win`, `wwm`, `way`, `xwm`, `xorg`, `x11`, `gui`, `wgui`, `xgui`, `ewm`, `wewm`, `xewm`).
@@ -40,10 +40,6 @@
 - **Paridade de Mouse e Cursor em Raw TTY:** Protocolo SGR 1006 no console FreeBSD para Vim e NeoVim, cursor colorido em bloco por modo no TTY e `:terminal` embutido sincronizado com 16 cores.
 - **Suíte Tripartite Windows Hardened:** Resolução da inconsistência dual `Path`/`PATH` no NuShell, eliminação de recursão de aliases circulares no PowerShell (`Clean-System`) e paridade total de atalhos do Antigravity CLI (`agy`).
 - **Hermetismo e Soberania:** O ecossistema é 100% autônomo e opera sem qualquer dependência externa ou intervenção manual pós-clone.
-
----
-
-## 📌 Histórico de Entregas & Backlog Concluído (100% Entregue)
 
 ---
 

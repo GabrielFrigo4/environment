@@ -49,7 +49,7 @@ Documentação do sistema operacional base da estação de trabalho e hipervisor
 
 - **[01-kernel-boot-e-loader.md](freebsd/01-kernel-boot-e-loader.md):** Inicialização modular, `/boot/loader.conf` e tuning em `/etc/sysctl.conf`.
 - **[02-zfs-storage-e-arc.md](freebsd/02-zfs-storage-e-arc.md):** Storage ZFS, pools, datasets dedicados, governança de ARC e snapshots atômicos.
-- **[03-redes-e-firewall-pf.md](freebsd/03-redes-e-firewall-pf.md):** Interfaces físicas (`wlan0`, `em0`), pontes virtuais, NAT e regras estritas do Packet Filter.
+- **[03-redes-e-firewall-pf.md](freebsd/03-redes-e-firewall-pf.md):** Interfaces físicas (`wlan0`, `re0`), isolamento `net-auto-switch`, NAT e regras do Packet Filter.
 - **[04-graficos-drm-e-wayland.md](freebsd/04-graficos-drm-e-wayland.md):** Intel Alder Lake-P (12ª Geração), `drm-kmod`, mitigação de PSR/FBC e KDE Plasma 6 Wayland.
 - **[05-consoles-e-display-managers.md](freebsd/05-consoles-e-display-managers.md):** Formatação tabular simétrica do `/etc/ttys`, Ly TUI Display Manager e fontes Spleen.
 - **[06-dispositivos-e-audio.md](freebsd/06-dispositivos-e-audio.md):** Áudio USB (`hw.snd`), roteamento RTP, daemon de vídeo USB `webcamd` e permissões devfs.
@@ -89,7 +89,7 @@ Editores modais e ambientes de desenvolvimento soberanos:
 
 Arquitetura detalhada dos 4 repositórios complementares:
 
-- **01-setup.md:** Provisionamento de SO, cookbooks modulares e invariante zero-clone.
+- **01-setup.md:** Provisionamento de SO, receitas modulares e modelo Clone Soberano (`bootstrap.sh`).
 - **02-shell.md:** Motor interativo de terminal, prompts < 64ms e UI semântica.
 - **03-vault.md:** Cofre criptográfico, isolamento de chaves SSH e loaders multi-shell.
 - **04-profile.md:** Dotfiles declarativos, links simbólicos seguros e skills de IA.

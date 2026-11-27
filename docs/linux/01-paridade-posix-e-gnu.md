@@ -18,9 +18,8 @@ Se um arquivo for criado no Linux com `UID 1000` sobre um diretório compartilha
 No Universal Environment, **todos os ambientes Linux (guests Bhyve e bare-metal) devem registrar o desenvolvedor sob `UID=1001` e `GID=1001`**:
 
 ```sh
-# Comando canônico de provisionamento de usuário no Debian/Linux:
-sudo groupadd -g 1001 gabrielf 2>/dev/null || true
-sudo useradd -u 1001 -g 1001 -m -s /bin/bash gabrielf
+sudo groupadd -g 1001 "${USER}" 2> "/dev/null" || true
+sudo useradd -u 1001 -g 1001 -m -s /bin/bash "${USER}"
 ```
 
 ---

@@ -41,23 +41,15 @@ Esse perfil:
 
 ## 🔧 Criando Rulesets Customizados em `/etc/devfs.rules`
 
-Quando uma Jail necessita de dispositivos adicionais (por exemplo, acesso a aceleração de vídeo, placas de som ou soquetes BPF controlados), deve-se criar um ruleset derivado em `/etc/devfs.rules`:
+Quando uma Jail necessita de dispositivos adicionais (por exemplo, BPF no ruleset `10` para rede/monitoramento ou nós `dri*`/`drm*` no ruleset `20` para aceleração de GPU), cria-se um ruleset derivado em `/etc/devfs.rules`:
 
 ```text
-# ================================================================
-# Arquivo: /etc/devfs.rules
-# ================================================================
-
-# Ruleset 10: Jail para ferramentas de rede ou monitoramento
 [devfsrules_jail_network=10]
 add include $devfsrules_jail
-# Permite Berkeley Packet Filter estritamente na jail
 add path 'bpf*' unhide
 
-# Ruleset 20: Jail com acesso a GPU para transcodificação de mídia
 [devfsrules_jail_gpu=20]
 add include $devfsrules_jail
-# Expor nós DRM Intel para aceleração de vídeo por hardware
 add path 'dri*' unhide
 add path 'drm*' unhide
 ```
@@ -74,7 +66,7 @@ devfs_load_rulesets="YES"
 E recarregue as regras:
 
 ```sh
-sudo service devfs restart
+doas service devfs restart
 ```
 
 ---
@@ -95,12 +87,9 @@ Além do `/dev`, o `/etc/jail.conf` permite modular os privilégios concedidos a
 
 ## ⚡ Verificação & Auditoria
 
-Para inspecionar quais dispositivos estão efetivamente visíveis dentro da Jail:
+Para inspecionar os nós expostos em `/dev` dentro da Jail e validar o ruleset aplicado:
 
 ```sh
-# Inspecionar nós montados no devfs da jail ativa
-sudo jexec web01 ls -la /dev
-
-# Conferir ruleset ativo aplicado na jail
-sudo devfs -m /usr/jails/web01/dev rule show
+doas jexec web01 ls -la /dev
+doas devfs -m /usr/jails/web01/dev rule show
 ```

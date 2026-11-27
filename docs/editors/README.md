@@ -58,8 +58,9 @@ flowchart TD
 
 ## ⚡ Comandos de Auditoria da Suíte
 
+Para testar todos os 4 editores a partir da raiz do repositório `Environment`:
+
 ```sh
-# Testar a suíte completa a partir do repositório Environment
 make -C Editor/Helix test
 make -C Editor/NeoVim test
 make -C Editor/Vim test

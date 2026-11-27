@@ -75,9 +75,8 @@ Para usuários que preferem um pipeline de dados tipado e nativo em Rust, o **Nu
 
 - Pipelines que operam sobre tabelas e registros JSON/YAML em vez de fluxos de bytes puros.
 - Prompt assíncrono com tema Kanagawa integrado.
-- Funções compatíveis para sincronização do ambiente:
+- Funções compatíveis para sincronização recursiva de repositórios Git:
     ```nu
-    # Atualizar repositórios com Nushell
     def upgit [] {
         print "🔄 Atualizando repositórios Git recursivamente..."
         ls **/.git | each { |it|

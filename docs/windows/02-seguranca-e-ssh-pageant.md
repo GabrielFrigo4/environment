@@ -23,17 +23,13 @@ O utilitário `vault-perms` do ecossistema provê implementação nativa para Wi
 
 ### Comando Canônico de Endurecimento:
 
+Quebra heranças de ACL, concede acesso exclusivo ao usuário atual e remove grupos genéricos (`Authenticated Users` e `BUILTIN\Users`):
+
 ```powershell
-# Definir caminho do diretório de chaves do Vault
 $VaultPath = "$HOME\.local\share\vault"
 
-# 1. Quebrar e remover qualquer herança de permissões da pasta pai
 icacls $VaultPath /inheritance:r
-
-# 2. Conceder Controle Total (F) exclusivamente ao usuário atual
 icacls $VaultPath /grant:r "${env:USERNAME}:(OI)(CI)F"
-
-# 3. Remover explicitamente grupos genéricos de sistema caso presentes
 icacls $VaultPath /remove:g "Authenticated Users" 2>$null
 icacls $VaultPath /remove:g "BUILTIN\Users" 2>$null
 ```
@@ -46,10 +42,9 @@ Diferente de sistemas UNIX (onde o formato OpenSSH puro reina universalmente), f
 
 ### Conversão Automatizada via `puttygen`:
 
-O ecossistema mantém conversão determinística e bidirecional:
+Para gerar a versão `.ppk` a partir da chave privada OpenSSH:
 
 ```sh
-# Gerar versão .ppk a partir da chave privada OpenSSH
 puttygen ~/.local/share/vault/ssh/id_ed25519 -O private -o ~/.local/share/vault/ssh/id_ed25519.ppk
 ```
 
@@ -64,10 +59,9 @@ O agente **Pageant (PuTTY Authentication Agent)** armazena as chaves descriptogr
 
 ## 🌉 A Ponte Pageant $\longleftrightarrow$ Windows OpenSSH
 
-Para permitir que o binário nativo `ssh.exe` do Windows utilize as chaves residentes na memória do Pageant, utiliza-se a ponte de soquete compatível com AF_UNIX (`wsl-ssh-pageant` ou ponte Pageant do Git for Windows):
+Para permitir que o binário nativo `ssh.exe` do Windows utilize as chaves residentes na memória do Pageant, exporta-se a variável `SSH_AUTH_SOCK` apontando para o pipe nomeado do agente (`wsl-ssh-pageant` ou ponte do Git for Windows):
 
 ```powershell
-# Exportar variável de soquete de autenticação para o OpenSSH do Windows
 $env:SSH_AUTH_SOCK = "\\.\pipe\ssh-pageant"
 ```
 

@@ -44,11 +44,10 @@ O utilitário `vault-perms` (implementado em `core/perms.sh`) é executado autom
 ### Comportamento em Sistemas UNIX (FreeBSD / Linux):
 
 ```sh
-# Aplica permissões octais determinísticas
-chmod 0700 ~/.local/share/vault
-chmod 0700 ~/.local/share/vault/ssh
-chmod 0600 ~/.local/share/vault/ssh/id_*
-chmod 0644 ~/.local/share/vault/ssh/*.pub 2>/dev/null || true
+chmod 0700 "${HOME}/.local/share/vault"
+chmod 0700 "${HOME}/.local/share/vault/ssh"
+chmod 0600 "${HOME}/.local/share/vault/ssh/id_"*
+chmod 0644 "${HOME}/.local/share/vault/ssh/"*.pub 2> "/dev/null" || true
 ```
 
 ### Comportamento no Windows (PowerShell / MSYS2):

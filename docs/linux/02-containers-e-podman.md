@@ -35,14 +35,12 @@ flowchart LR
 Para que o usuário possa mapear UIDs internos do container sem ser root, o sistema operacional necessita de faixas alocadas em `/etc/subuid` e `/etc/subgid`:
 
 ```text
-# /etc/subuid e /etc/subgid
-gabrielf:100000:65536
+<user>:100000:65536
 ```
 
-Para aplicar e inicializar as faixas:
+Para aplicar e inicializar as faixas após alterar os arquivos:
 
 ```sh
-# Migrar namespaces do usuário se alterados recentemente
 podman system migrate
 ```
 
@@ -50,13 +48,10 @@ podman system migrate
 
 ## 🔌 Emulação do Docker Socket para Ferramentas Externas
 
-Determinadas ferramentas de build e IDEs esperam a presença física de um soquete compatível com a API Docker. O Podman disponibiliza um soquete exclusivo por usuário:
+Determinadas ferramentas de build e IDEs esperam a presença física de um soquete compatível com a API Docker. O Podman disponibiliza um soquete exclusivo por usuário (habilitado no escopo do usuário não-root e exportado via `DOCKER_HOST`):
 
 ```sh
-# Ativar o socket do Podman no escopo do usuário atual (não-root)
 systemctl --user enable --now podman.socket
-
-# Exportar a variável de ambiente para que ferramentas identifiquem o socket
 export DOCKER_HOST="unix://${XDG_RUNTIME_DIR}/podman/podman.sock"
 ```
 
@@ -75,16 +70,11 @@ alias docker-compose="podman-compose"
 
 ### Comandos de Gestão:
 
+Execução de container efêmero interativo, listagem de containers, inspeção de disco e limpeza de artefatos não utilizados:
+
 ```sh
-# Executar container efêmero para testes interativos
 podman run --rm -it alpine:latest sh
-
-# Listar containers em execução e finalizados
 podman ps -a
-
-# Inspecionar uso de disco e recursos
 podman system df
-
-# Limpar containers e imagens órfãs (Zero-Bloat)
 podman system prune -af
 ```

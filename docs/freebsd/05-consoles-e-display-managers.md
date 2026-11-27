@@ -68,12 +68,13 @@ rcons   "/usr/libexec/getty std.115200" vt100   onifconsole secure
 
 O **Ly** é um display manager moderno de interface em modo texto (TUI) com animações matriciais, suporte a Wayland e consumo irrisório de memória RAM (< 5 MB contra 150 MB do SDDM ou GDM).
 
-### Mecanismo de Inicialização:
+### Mecanismo de Inicialização (`Setup/freebsd/desktop/gui/ly.sh`):
 
-1. No FreeBSD, o Ly não roda como serviço autônomo do `rc.d`; ele é instanciado diretamente pelo `init(8)` sobre o terminal virtual `ttyv1`.
+1. No FreeBSD, o Ly não roda como serviço autônomo do `rc.d`; ele é instanciado diretamente pelo `init(8)` sobre o terminal virtual `ttyv1` após `sddm_enable="NO"`.
 2. A linha `ttyv1 "/usr/libexec/getty Ly" xterm on secure` instrui o `init` a invocar o `getty` com a classe `Ly`.
-3. O `/etc/gettytab` redireciona a classe `Ly` para executar o binário `/usr/local/bin/ly`.
-4. Ao autenticar com sucesso, o Ly dispara a sessão do KDE Plasma 6 Wayland (`startplasma-wayland`).
+3. O `/etc/gettytab` define a entrada `Ly:` usando continuações reais `\<newline>` (`cgetent(3)`) para executar o wrapper `/usr/local/bin/ly_wrapper` com `:al=root:`.
+4. Como o emulador de terminal `teken` do `vt(4)` suporta apenas SGR de 8/16/256 cores (sem truecolor 24-bit), [`Setup/freebsd/desktop/gui/ly.sh`](../../Setup/freebsd/desktop/gui/ly.sh) fixa `full_color = false` (paleta de 8 cores no `/usr/local/etc/ly/config.ini`), `start_cmd = null`, `x_vt = 9`, garante `/usr/local/etc/ly/setup.sh` (`0755`) e instala rotação automática de `/var/log/ly.log` em `/usr/local/etc/newsyslog.conf.d/ly.conf`.
+5. Ao autenticar com sucesso, o Ly inicia a sessão do KDE Plasma 6 Wayland (`startplasma-wayland`).
 
 ---
 
@@ -97,23 +98,27 @@ O serviço persiste automaticamente o resultado em `/etc/rc.conf` via `allscreen
 
 ## 🛠️ Comandos de Manutenção
 
-1. **Executar auto-alinhamento canônico do `/etc/ttys`:**
+1. **Executar auto-alinhamento canônico do `/etc/ttys` e reconfigurar o Ly (via Clone Soberano):**
 
 ```sh
-sudo sh ~/Documents/Environment/Setup/freebsd/desktop/system/ttys.sh
+sh "${XDG_DATA_HOME:-${HOME}/.local/share}/setup/freebsd/desktop/system/ttys.sh"
+sh "${XDG_DATA_HOME:-${HOME}/.local/share}/setup/freebsd/desktop/gui/ly.sh"
 ```
 
 2. **Aplicar escalonamento dinâmico de fonte Spleen e recarregar console em runtime:**
 
 ```sh
-sudo service vt_autofont start
-sudo service syscons restart
+doas service vt_autofont start
+doas service syscons restart
 ```
 
-3. **Recarregar tabela de TTYs sem reiniciar o sistema operacional:**
+3. **Recarregar tabela de TTYs em manutenção fora de sessão gráfica ativa:**
+
+> [!WARNING]
+> Não execute `kill -HUP 1` dentro de uma sessão Wayland/KDE ativa hospedada em `ttyv1`: o sinal reinicia o slot do `getty` no `ttyv1` e pode encerrar a sessão gráfica corrente. Use apenas em manutenção via SSH ou outro TTY, ou aguarde o próximo reboot.
 
 ```sh
-sudo kill -HUP 1
+doas kill -HUP 1
 ```
 
 4. **Testar fonte Spleen na sessão ativa do console:**

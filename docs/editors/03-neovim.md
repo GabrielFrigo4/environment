@@ -86,11 +86,10 @@ require("lazy").setup({
 
 ## 🧪 Testes Automatizados Headless
 
-O repositório `Editor/NeoVim` valida cada modificação através de testes executados sem display gráfico:
+O repositório `Editor/NeoVim` valida cada modificação executando o NeoVim em modo `--headless`:
 
 ```sh
-# Executar suíte de testes de sanidade
 make -C Editor/NeoVim test
 ```
 
-Esse comando roda o NeoVim em modo `--headless`, verifica erros de sintaxe em arquivos Lua e valida se todos os módulos carregam com sucesso.
+Esse comando verifica erros de sintaxe em arquivos Lua e valida se todos os módulos carregam com sucesso.

@@ -54,7 +54,7 @@ Setup/
 
 ## 🔒 O Padrão Canônico de Elevação (`ELEVATE`)
 
-O Setup adota a resolução explícita de `ELEVATE` via condicional POSIX sob `set -eu`, evitando falhas causadas por subshells de teste de comando:
+O Setup adota a resolução explícita de `ELEVATE` (`doas > sudo`) via condicional POSIX sob `set -eu`, evitando falhas causadas por subshells de teste de comando:
 
 ```sh
 #!/usr/bin/env sh
@@ -62,17 +62,17 @@ set -eu
 
 ELEVATE=""
 if [ "$(id -u)" -ne 0 ]; then
-    if command -v sudo > "/dev/null" 2>&1; then
-        ELEVATE="sudo"
-    elif command -v doas > "/dev/null" 2>&1; then
+    if command -v doas > "/dev/null" 2>&1; then
         ELEVATE="doas"
+    elif command -v sudo > "/dev/null" 2>&1; then
+        ELEVATE="sudo"
     else
-        echo "Erro: Privilegios de superusuario necessarios (sudo ou doas)." >&2
+        echo "Erro: Privilegios de superusuario necessarios (doas ou sudo)." >&2
         exit 1
     fi
 fi
 
-$ELEVATE pkg install -y git
+${ELEVATE} pkg install --yes git
 ```
 
 ---

@@ -36,11 +36,14 @@ $$\text{Memória Total} = \frac{4}{16}\text{ (ARC Cache)} + \frac{11}{16}\text{ 
 
 ### Tabela de Dimensionamento Prático (16 GB):
 
-| Componente             | Proporção                             | Memória Alocada (16 GB) | Mecanismo de Aplicação                                       |
-| :--------------------- | :------------------------------------ | :---------------------- | :----------------------------------------------------------- |
-| **ZFS ARC Cache**      | $4/16$ (25%) [piso 1 GB, teto 4 GB]   | **4.096 MB** (4 GB)     | `/boot/loader.conf` (`vfs.zfs.arc.max`) e `/etc/sysctl.conf` |
-| **Host Desktop + GPU** | $11/16$ (68.75%)                      | **11.264 MB** (11 GB)   | Limite operacional do KDE Plasma e drivers DRM               |
-| **Bhyve Linux VM**     | $1/16$ (6.25%) [piso 1 GB, teto 2 GB] | **1.024 MB** (1 GB)     | Configuração da VM (`debian.conf`)                           |
+| Componente             | Proporção                             | Memória Alocada (16 GB) | Mecanismo de Aplicação                                    |
+| :--------------------- | :------------------------------------ | :---------------------- | :-------------------------------------------------------- |
+| **ZFS ARC Cache**      | $4/16$ (25%) [piso 1 GB, teto 4 GB]   | **4.096 MB** (4 GB)     | `/etc/sysctl.conf` (`vfs.zfs.arc.max`, `vfs.zfs.arc.min`) |
+| **Host Desktop + GPU** | $11/16$ (68.75%)                      | **11.264 MB** (11 GB)   | Limite operacional do KDE Plasma e drivers DRM            |
+| **Bhyve Linux VM**     | $1/16$ (6.25%) [piso 1 GB, teto 2 GB] | **1.024 MB** (1 GB)     | Configuração da VM (`debian.conf`)                        |
+
+> [!NOTE]
+> **Swap em ZVOL (`org.freebsd:swap=on`):** Quando o volume `zroot/swap` possui a propriedade ZFS `org.freebsd:swap=on`, o próprio `zvol` rc.d ativa a partição swap no boot. Não adicione `/dev/zvol/zroot/swap` manualmente no `/etc/fstab`, evitando erros `Device already in use` no `swapon -a` (regra automatizada por `zfs-arc.sh`).
 
 ---
 
@@ -53,7 +56,7 @@ zroot/
 ├── ROOT/
 │   └── default
 ├── home/
-│   └── gabrielf
+│   └── <user>
 ├── usr/
 │   ├── ports
 │   └── src
@@ -63,7 +66,7 @@ zroot/
 ```
 
 - **`zroot/ROOT/default`:** Sistema operacional base FreeBSD montado em `/`.
-- **`zroot/home/gabrielf`:** Diretório de usuário exportado via NFS para a VM.
+- **`zroot/home/<user>`:** Diretório de usuário exportado via NFS para a VM.
 - **`zroot/usr/ports` e `zroot/usr/src`:** Árvore oficial de ports (`/usr/ports`) e código-fonte do kernel (`/usr/src`).
 - **`zroot/var`:** Logs e caches temporários.
 - **`zroot/vm`:** Discos virtuais e imagens RAW do Bhyve.
@@ -74,14 +77,14 @@ zroot/
 1. **Ativar compressão ZSTD de alta performance no dataset `home`:**
 
 ```sh
-sudo zfs set compression=zstd zroot/home
+doas zfs set compression=zstd zroot/home
 ```
 
 2. **Desativar gravação desnecessária de access time (`atime`) nos datasets `home` e `vm` para ganho de I/O:**
 
 ```sh
-sudo zfs set atime=off zroot/home
-sudo zfs set atime=off zroot/vm
+doas zfs set atime=off zroot/home
+doas zfs set atime=off zroot/vm
 ```
 
 ---
@@ -95,7 +98,7 @@ Snapshots no ZFS são instantâneos, atômicos e ocupam zero espaço inicial no 
 1. **Criar snapshot atômico antes de atualizações de sistema:**
 
 ```sh
-sudo zfs snapshot zroot/ROOT/default@pre-upgrade-$(date +%Y%m%d)
+doas zfs snapshot zroot/ROOT/default@pre-upgrade-$(date +%Y%m%d)
 ```
 
 2. **Listar snapshots existentes com uso de espaço:**
@@ -107,7 +110,7 @@ zfs list -t snapshot -r zroot
 3. **Executar scrub periódico de integridade (recomenda-se mensalmente):**
 
 ```sh
-sudo zpool scrub zroot
+doas zpool scrub zroot
 ```
 
 4. **Checar status da verificação de integridade:**
