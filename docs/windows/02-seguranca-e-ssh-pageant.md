@@ -45,7 +45,7 @@ Diferente de sistemas UNIX (onde o formato OpenSSH puro reina universalmente), f
 Para gerar a versão `.ppk` a partir da chave privada OpenSSH:
 
 ```sh
-puttygen ~/.local/share/vault/ssh/id_ed25519 -O private -o ~/.local/share/vault/ssh/id_ed25519.ppk
+puttygen ~/.local/share/vault/keys/ssh/github.key -O private -o ~/.local/share/vault/keys/putty/github.ppk
 ```
 
 ### Inicialização do Pageant:

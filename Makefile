@@ -29,8 +29,8 @@ help:
 	cmd "pull"           "Atualiza todos os submódulos e repositórios com o GitHub"; \
 	cmd "install"        "Clona e instala todos os repositórios em suas posições canônicas no SO"; \
 	cmd "update"         "Atualiza todas as instalações soberanas no SO (Shell, Profile, Vault, Editores)"; \
-	cmd "sync-docs"      "Propaga ENVIRONMENT.md para os submódulos e executa sync-template"; \
-	cmd "sync-template"  "Propaga Template estático, githooks e auditoria a todos os repositórios"; \
+	cmd "sync-docs"      "Propaga ENVIRONMENT.md e PRINCIPLES.md canônicos para os submódulos"; \
+	cmd "sync-template"  "Propaga Template estático, githooks e auditoria aos repositórios"; \
 	cmd "scaffold"       "Gera novo repositório a partir de Template (DIR=... NAME=... DESC=...)"; \
 	cmd "uped"           "Atualiza os 4 repositórios da Suíte de Editores com o upstream"; \
 	cmd "upgit"          "Atualiza todos os repositórios Git encontrados recursivamente"; \
@@ -67,12 +67,12 @@ clone:
 		repo=$${entry##*:}; \
 		if [ -e "$$dir/.git" ]; then \
 			echo "  ℹ️  $$dir já clonado."; \
+		elif command -v gh > "/dev/null" 2>&1 && gh repo clone "$$repo" "$$dir" 2> "/dev/null"; then \
+			echo "  ✅ $$dir clonado com sucesso via gh CLI!"; \
 		elif git clone "git@github.com:$$repo.git" "$$dir" 2> "/dev/null"; then \
 			echo "  ✅ $$dir clonado com sucesso via SSH!"; \
-		elif gh repo clone "$$repo" "$$dir" 2> "/dev/null"; then \
-			echo "  ✅ $$dir clonado com sucesso via gh CLI!"; \
 		else \
-			echo "  ⚠️  $$dir: clone falhou (verifique SSH ou login no gh)."; \
+			echo "  ⚠️  $$dir: clone falhou (verifique gh ou chave SSH)."; \
 		fi; \
 	done
 	echo ""
@@ -93,11 +93,15 @@ main:
 	printf "✅ Repositórios ativos configurados na branch main!\n\n"
 
 status:
+	echo "=== 🌐 Hub Orquestrador ==="
+	echo "[$$(git branch --show-current 2> "/dev/null" || echo "detached")] Environment:"
+	git status -s
+	echo ""
 	echo "=== 🏛️ O Quarteto de Infraestrutura ==="
 	for r in $(REPOS); do \
 		if [ -e "$$r/.git" ]; then \
-			echo "[$$(git -C $$r branch --show-current 2> "/dev/null" || echo "detached")] $$r:"; \
-			git -C $$r status -s; \
+			echo "[$$(git -C "$$r" branch --show-current 2> "/dev/null" || echo "detached")] $$r:"; \
+			git -C "$$r" status -s; \
 			echo ""; \
 		else \
 			echo "[não clonado] $$r"; \
@@ -107,8 +111,8 @@ status:
 	echo "=== 📝 A Suíte de Editores ==="
 	for ed in $(EDITORS); do \
 		if [ -e "$$ed/.git" ]; then \
-			echo "[$$(git -C $$ed branch --show-current 2> "/dev/null" || echo "detached")] $$ed:"; \
-			git -C $$ed status -s; \
+			echo "[$$(git -C "$$ed" branch --show-current 2> "/dev/null" || echo "detached")] $$ed:"; \
+			git -C "$$ed" status -s; \
 			echo ""; \
 		else \
 			echo "[não clonado] $$ed"; \
@@ -122,7 +126,7 @@ pull: main
 	for r in $(ALL_REPOS); do \
 		if [ -e "$$r/.git" ]; then \
 			echo "⬇️  Pulling $$r..."; \
-			git -C $$r pull --ff-only || echo "⚠️  $$r: pull falhou."; \
+			git -C "$$r" pull --ff-only || echo "⚠️  $$r: pull falhou."; \
 		fi; \
 	done
 	if [ -d "$${OSH:-$$HOME/.oh-my-bash}" ]; then \
@@ -144,7 +148,7 @@ hooks:
 	git config core.hooksPath .githooks 2> "/dev/null" || true
 	echo "  ✅ Environment: core.hooksPath -> .githooks"
 	for r in $(ALL_REPOS); do \
-		[ -e "$$r/.git" ] && git -C $$r config core.hooksPath .githooks && echo "  ✅ $$r: core.hooksPath -> .githooks"; \
+		[ -e "$$r/.git" ] && git -C "$$r" config core.hooksPath .githooks && echo "  ✅ $$r: core.hooksPath -> .githooks"; \
 	done
 
 ### ================================
@@ -155,7 +159,7 @@ uped:
 	for ed in $(EDITORS); do \
 		if [ -e "$$ed/.git" ]; then \
 			echo "⬇️  Pulling $$ed..."; \
-			git -C $$ed pull --ff-only || echo "⚠️  $$ed: git pull falhou."; \
+			git -C "$$ed" pull --ff-only || echo "⚠️  $$ed: git pull falhou."; \
 		else \
 			echo "⏭️  $$ed: não inicializado, pulando."; \
 		fi; \
@@ -189,9 +193,11 @@ sync-template:
 		cp Template/.editorconfig "$$repo_dir/.editorconfig"; \
 		if [ "$$repo_name" != "Environment" ]; then \
 			cp Template/PRINCIPLES.md "$$repo_dir/PRINCIPLES.md"; \
-			cp Template/AGENTS.md "$$repo_dir/AGENTS.md"; \
 			cp Template/CONTRIBUTING.md "$$repo_dir/CONTRIBUTING.md"; \
 			cp Template/LICENSE "$$repo_dir/LICENSE"; \
+			if [ ! -f "$$repo_dir/AGENTS.md" ] || grep -Fq "<!-- template:sync -->" "$$repo_dir/AGENTS.md" 2> "/dev/null"; then \
+				cp Template/AGENTS.md "$$repo_dir/AGENTS.md"; \
+			fi; \
 		fi; \
 		if [ -f "$$repo_dir/.prettierrc" ] && grep -q "svelte" "$$repo_dir/.prettierrc" 2> "/dev/null"; then \
 			: ; \
@@ -218,17 +224,18 @@ sync-template:
 	done
 	echo "✅ Todos os repositórios foram sincronizados com o Template!"
 
-sync-docs: sync-template
-	echo "📖 Sincronizando documentação canônica do hub (ENVIRONMENT.md)..."
+sync-docs:
+	echo "📖 Sincronizando documentação canônica do hub (ENVIRONMENT.md e PRINCIPLES.md)..."
 	for r in $(ALL_REPOS); do \
 		if [ -d "$$r" ]; then \
 			cp ENVIRONMENT.md "$$r/ENVIRONMENT.md"; \
+			cp PRINCIPLES.md "$$r/PRINCIPLES.md"; \
 			if [ "$$r" = "Vault" ]; then \
-				chmod 0600 "$$r/ENVIRONMENT.md" 2> "/dev/null" || true; \
+				chmod 0600 "$$r/ENVIRONMENT.md" "$$r/PRINCIPLES.md" 2> "/dev/null" || true; \
 			else \
-				chmod 0644 "$$r/ENVIRONMENT.md" 2> "/dev/null" || true; \
+				chmod 0644 "$$r/ENVIRONMENT.md" "$$r/PRINCIPLES.md" 2> "/dev/null" || true; \
 			fi; \
-			echo "  ✅ $$r: ENVIRONMENT.md sincronizado"; \
+			echo "  ✅ $$r: ENVIRONMENT.md e PRINCIPLES.md sincronizados"; \
 		fi; \
 	done
 	echo "🎉 Documentação do ecossistema sincronizada com sucesso!"
@@ -323,7 +330,7 @@ lint-format:
 			-exec prettier --check {} +; \
 		if [ -d "Vault" ]; then \
 			(cd Vault && find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.jsonc" -o -name "*.yml" -o -name "*.yaml" -o -name "*.html" -o -name "*.css" \) \
-				-not -path "*/.git/*" -exec prettier --check {} + 2> "/dev/null" || true); \
+				-not -path "*/.git/*" -exec prettier --check {} +); \
 		fi; \
 		echo "✅ Formatação 100% em conformidade!"; \
 	elif command -v npx > "/dev/null" 2>&1; then \
@@ -332,23 +339,33 @@ lint-format:
 			-not -path "*/var/*" -not -path "*/tmp/*" -not -path "*/build/*" -not -path "*/dist/*" \
 			-not -path "*/target/*" -not -path "*/.cache/*" -not -path "./Vault/*" \
 			-exec npx --yes prettier --check {} +; \
+		if [ -d "Vault" ]; then \
+			(cd Vault && find . -type f \( -name "*.md" -o -name "*.json" -o -name "*.jsonc" -o -name "*.yml" -o -name "*.yaml" -o -name "*.html" -o -name "*.css" \) \
+				-not -path "*/.git/*" -exec npx --yes prettier --check {} +); \
+		fi; \
 		echo "✅ Formatação 100% em conformidade!"; \
 	else \
 		echo "ℹ️ Prettier não instalado; pulando validação."; \
 	fi
 
 audit:
+	_sh=$$(command -v bash 2> "/dev/null" || command -v zsh 2> "/dev/null" || echo sh); \
+	"$$_sh" -n environment.sh
 	echo "🔍 [1/6] Auditando Setup..."
 	PYTHONPYCACHEPREFIX="$${PYTHONPYCACHEPREFIX:-$$HOME/.cache/pycache}" PYTHONDONTWRITEBYTECODE=1 python3 Setup/.scripts/audit/all.py
 	echo "🔍 [2/6] Auditando Profile..."
 	PYTHONPYCACHEPREFIX="$${PYTHONPYCACHEPREFIX:-$$HOME/.cache/pycache}" PYTHONDONTWRITEBYTECODE=1 python3 Profile/.scripts/audit/all.py
 	echo "🔍 [3/6] Validando sintaxe do Shell..."
 	_sh=$$(command -v bash 2> "/dev/null" || command -v zsh 2> "/dev/null" || echo sh); \
-	find Shell -name "*.sh" -not -path "*/.git/*" -exec "$$_sh" -n {} +
-	echo "🔍 [4/6] Validando sintaxe do Vault..."
+	find Shell -name "*.sh" -not -path "*/.git/*" -exec "$$_sh" -n {} +; \
+	if command -v luac > "/dev/null" 2>&1 && [ -f "Shell/target/windows/cmd/profile.lua" ]; then \
+		luac -p Shell/target/windows/cmd/profile.lua; \
+	fi
+	echo "🔍 [4/6] Validando sintaxe e auditoria do Vault..."
 	_sh=$$(command -v bash 2> "/dev/null" || command -v zsh 2> "/dev/null" || echo sh); \
 	if [ -f "Vault/vault.sh" ]; then \
-		"$$_sh" -n Vault/vault.sh; \
+		find Vault -name "*.sh" -not -path "*/.git/*" -exec "$$_sh" -n {} +; \
+		sh Vault/vault.sh audit; \
 	else \
 		echo "  ⏭️  Vault privado ausente neste clone; pulando."; \
 	fi

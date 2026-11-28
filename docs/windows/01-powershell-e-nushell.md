@@ -11,21 +11,18 @@ Ambientes Windows frequentemente sofrem com scripts de terminal rústicos que ab
 No Universal Environment, os terminais da **Classe 3 (Bronze)** compartilham:
 
 1. **Biblioteca de Emissão Semântica `_ui_*`:** Funções padronizadas que replicam a experiência visual do Universal Shell UNIX (`_ui_step`, `_ui_ok`, `_ui_warn`, `_ui_err`, `_ui_info`, `_ui_banner`).
-2. **Atalhos Simétricos da Família `up*`:** Comandos universais de atualização (`upall`, `upgit`, `upsys`, `sync-profile`).
+2. **Atalhos Simétricos da Família `up*`:** Comandos universais de atualização (`upall`, `upgit`, `upsys`, `upsh`, `upstp`, `upvt`, `upagy`, `uped`, `upext`, `sync-profile`).
 3. **Prompt Git Resiliente em NTFS:** O prompt de terminal utiliza `git status --porcelain=v1` em vez de chamadas de baixo nível de índice (`git diff-index`), prevenindo falsos positivos decorrentes de granularidade de timestamps no NTFS.
 
 ---
 
 ## 🔷 PowerShell 7: O Perfil Canônico (`profile.ps1`)
 
-O arquivo de perfil reside em `$HOME\Documents\PowerShell\Microsoft.PowerShell_profile.ps1` (ou no diretório `$XDG_CONFIG_HOME\powershell\profile.ps1`).
+O arquivo de perfil reside em `$HOME\Documents\PowerShell\Microsoft.PowerShell_profile.ps1` (carregando `%USERPROFILE%\.local\share\shell\target\windows\powershell\profile.ps1`).
 
 ### A Biblioteca Semântica `_ui_*` em PowerShell:
 
 ```powershell
-# ================================================================
-# Funções Semânticas de Interface (_ui_*)
-# ================================================================
 function _ui_banner([string]$Text) {
     $line = "=" * 60
     Write-Host "`n$line" -ForegroundColor DarkCyan
@@ -89,10 +86,10 @@ Para usuários que preferem um pipeline de dados tipado e nativo em Rust, o **Nu
 
 ---
 
-## 📟 CMD Clássico Aprimorado com Clink (`clink.lua`)
+## 📟 CMD Clássico Aprimorado com Clink (`profile.lua`)
 
 Mesmo o interpretador clássico `cmd.exe` recebe tratamento de primeira linha através do **Clink** (motor de emulação GNU Readline injetado na memória do CMD):
 
 - Histórico pesquisável via `Ctrl + R`.
 - Auto-completar inteligente com suporte a flags de comandos modernos (`git`, `winget`, `podman`).
-- Script Lua `clink.lua` que provê o tema de prompt com status de branch Git sem atraso perceptível de digitação.
+- Script Lua `Shell/target/windows/cmd/profile.lua` que provê o tema de prompt com status de branch Git e atalhos `up*` (`upall`, `upgit`, `upsh`, `upstp`, `upvt`, `upagy`, `uped`, `upext`, `uprc`) sem atraso perceptível de digitação.

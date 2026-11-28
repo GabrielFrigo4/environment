@@ -16,25 +16,25 @@ Essas diretrizes são de aplicação obrigatória para qualquer modificação ou
 - O `ENVIRONMENT.md` e `PRINCIPLES.md` **nesta raiz** são as versões autoritativas do ecossistema.
 - Os sub-repos contêm cópias sincronizadas que referenciam estas versões.
 - Ao atualizar princípios ou arquitetura, execute `make sync-docs` para propagar automaticamente para todos os submódulos.
+- `make sync-template` propaga `Template/AGENTS.md` uniforme aos repositórios com marcador `<!-- template:sync -->` no topo e preserva arquivos sem esse marcador (como este hub).
 
 ## 3. Makefile como Orquestrador
 
 - Todas as operações globais (`make clone`, `make install`, `make pull`, `make status`, `make audit`, `make sync-docs`, `make ci`) são executadas via Makefile.
-- O `make clone` inicializa submódulos de desenvolvimento + clone defensivo do Vault via SSH.
+- O `make clone` inicializa submódulos de desenvolvimento + clone defensivo do Vault (priorizando `gh`, fallback SSH).
 - O `make install` clona e provisiona os runtimes soberanos nos caminhos canônicos do sistema.
 - O `make pull` atualiza submódulos + pull de todos os repos.
-- `make sync` não pertence ao Makefile do Environment; a sincronização de dotfiles ocorre exclusivamente no clone de produção do Profile (`~/.config/profile/profile.sh sync`).
+- `make sync` não pertence ao Makefile do Environment; a sincronização de dotfiles ocorre exclusivamente no clone de produção do Profile (`~/.local/share/profile/profile.sh sync`).
 
 ## 4. Modelo Híbrido de Submódulos
 
 - **Submódulos Públicos (Setup, Shell, Profile):** Rastreados pelo `.gitmodules` via URLs HTTPS públicas.
-- **Vault Privado:** Clonado via SSH (`git@github.com:GabrielFrigo4/vault.git`) com tratativa defensiva/tolerante a falhas.
+- **Vault Privado:** Clonado via `gh` (preferencial) ou SSH (`git@github.com:GabrielFrigo4/vault.git`) com tratativa defensiva/tolerante a falhas.
 - Ao atualizar submódulos, use `git submodule update --remote --merge`.
 
 ## 5. Permissões e Segurança
 
-- `chmod 0644` para arquivos de documentação e configuração do Environment.
-- `chmod 0755` para o Makefile.
+- `chmod 0644` para `Makefile`, arquivos de documentação e configuração do Environment (`0755` apenas para `.githooks/*` e scripts executáveis com shebang `#!`, como `environment.sh`).
 - NUNCA commite ou mencione conteúdos do Vault no Environment.
 
 ## 6. Padrão Universal de Documentação

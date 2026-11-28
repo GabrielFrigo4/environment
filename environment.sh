@@ -47,6 +47,19 @@ _ui_info() { _ui_has_color && printf "%s  ℹ️ %s %s\n" "${_ui_magenta}" "${_u
 ### ================================
 ### PERMISSION RECOVERY
 ### ================================
+_add_safe_directory() {
+	_scope="${1}" _dir="${2}" _use_elevate="${3:-0}"
+	if [ "${_use_elevate}" -eq 1 ] && [ -n "${ELEVATE}" ]; then
+		if ! ${ELEVATE} git config "${_scope}" --get-all safe.directory 2> "/dev/null" | grep -Fxq -- "${_dir}"; then
+			${ELEVATE} git config "${_scope}" --add safe.directory "${_dir}" 2> "/dev/null" || true
+		fi
+	else
+		if ! git config "${_scope}" --get-all safe.directory 2> "/dev/null" | grep -Fxq -- "${_dir}"; then
+			git config "${_scope}" --add safe.directory "${_dir}" 2> "/dev/null" || true
+		fi
+	fi
+}
+
 _fix_shell_perms() {
 	_target="/usr/local/share/shell"
 	[ -d "${_target}" ] || return 0
@@ -57,8 +70,8 @@ _fix_shell_perms() {
 		[ -n "${ELEVATE}" ] && ${ELEVATE} chown -R "${_u}:${_g}" "${_target}" 2> "/dev/null" || true
 		[ "$(id -u)" -eq 0 ] && chown -R "${_u}:${_g}" "${_target}" 2> "/dev/null" || true
 	fi
-	git config --global --add safe.directory "${_target}" 2> "/dev/null" || true
-	[ -n "${ELEVATE}" ] && ${ELEVATE} git config --system --add safe.directory "${_target}" 2> "/dev/null" || true
+	_add_safe_directory "--global" "${_target}" 0
+	[ -n "${ELEVATE}" ] && _add_safe_directory "--system" "${_target}" 1
 }
 
 _find_repo() {
@@ -108,9 +121,10 @@ _env_test() {
 	if command -v make > "/dev/null" 2>&1; then
 		make -C "${_ENV_ROOT}" test
 	else
-		for _s in Setup/setup.sh Shell/shell.sh Profile/profile.sh Vault/vault.sh Editor/*/*.sh; do
+		for _s in Setup/setup.sh Shell/shell.sh Profile/profile.sh Editor/*/*.sh; do
 			[ -f "${_ENV_ROOT}/${_s}" ] && sh "${_ENV_ROOT}/${_s}" test || true
 		done
+		[ -f "${_ENV_ROOT}/Vault/vault.sh" ] && sh "${_ENV_ROOT}/Vault/vault.sh" audit || true
 	fi
 	_ui_ok "Todos os testes concluídos com sucesso!"
 }
@@ -124,9 +138,30 @@ _env_doctor() {
 	[ -f "${_ENV_ROOT}/Setup/.scripts/audit/doctor.sh" ] && sh "${_ENV_ROOT}/Setup/.scripts/audit/doctor.sh"
 }
 
+_clone_repo() {
+	_slug="${1}" _dest="${2}" _ssh_url="${3:-}"
+	if command -v gh > "/dev/null" 2>&1 && gh repo clone "${_slug}" "${_dest}" 2> "/dev/null"; then
+		return 0
+	fi
+	if [ -n "${_ssh_url}" ]; then
+		git clone "${_ssh_url}" "${_dest}"
+	else
+		git clone "https://github.com/${_slug}.git" "${_dest}"
+	fi
+}
+
 _env_update() {
 	_ui_step "Atualizando ecossistema soberano no sistema operacional..."
 	_fix_shell_perms
+
+	_stp="$(_find_repo "${HOME}/.local/share/setup" "${HOME}/.config/setup" "${HOME}/.setup" "/usr/local/share/setup" || true)"
+	if [ -n "${_stp}" ]; then
+		_ui_step "Atualizando Universal Setup em ${_stp}..."
+		git -C "${_stp}" pull --ff-only 2> "/dev/null" || git -C "${_stp}" pull || _ui_warn "Setup: git pull falhou."
+		chmod 0755 "${_stp}/setup.sh" "${_stp}/bootstrap.sh" "${_stp}/.githooks/"* 2> "/dev/null" || true
+	else
+		_ui_info "Setup: nenhum clone soberano encontrado."
+	fi
 
 	_st="$(_find_repo "/usr/local/share/shell" "${HOME}/.local/share/shell" "${HOME}/.config/shell" "${HOME}/.shell" || true)"
 	if [ -n "${_st}" ]; then
@@ -146,10 +181,12 @@ _env_update() {
 		_ui_info "Profile: nenhum clone soberano encontrado."
 	fi
 
-	_vt="$(_find_repo "${HOME}/.local/share/vault" "${HOME}/.config/vault" "${HOME}/.vault" "/usr/local/share/vault" || true)"
+	_vt="$(_find_repo "${HOME}/.local/share/vault" "${HOME}/.config/vault" "${HOME}/.vault" || true)"
 	if [ -n "${_vt}" ]; then
 		_ui_step "Atualizando Universal Vault em ${_vt}..."
 		git -C "${_vt}" pull --ff-only 2> "/dev/null" || git -C "${_vt}" pull || _ui_warn "Vault: git pull falhou."
+		[ -f "${_vt}/vault.sh" ] && sh "${_vt}/vault.sh" perms > "/dev/null" 2>&1 || true
+		[ -f "${_vt}/vault.sh" ] && sh "${_vt}/vault.sh" keys --quiet > "/dev/null" 2>&1 || true
 	else
 		_ui_info "Vault: nenhum clone soberano encontrado."
 	fi
@@ -168,12 +205,22 @@ _env_update() {
 _env_install_sovereign() {
 	_ui_step "Instalando ecossistema nas posições canônicas do sistema..."
 
+	_setup_target="${HOME}/.local/share/setup"
+	if [ ! -d "${_setup_target}/.git" ]; then
+		_ui_step "Clonando Universal Setup em ${_setup_target}..."
+		mkdir -p "${HOME}/.local/share"
+		_clone_repo "GabrielFrigo4/setup" "${_setup_target}" "git@github.com:GabrielFrigo4/setup.git" || _ui_warn "Setup clone falhou."
+		chmod 0755 "${_setup_target}/setup.sh" "${_setup_target}/bootstrap.sh" "${_setup_target}/.githooks/"* 2> "/dev/null" || true
+	else
+		_ui_info "Setup já presente em ${_setup_target}."
+	fi
+
 	_shell_target="/usr/local/share/shell"
 	if [ ! -d "${_shell_target}/.git" ]; then
 		if [ -w "/usr/local/share" ] || [ "$(id -u)" -eq 0 ]; then
 			mkdir -p "/usr/local/share" 2> "/dev/null" || true
 			_ui_step "Clonando Universal Shell em ${_shell_target}..."
-			git clone "https://github.com/GabrielFrigo4/shell.git" "${_shell_target}"
+			_clone_repo "GabrielFrigo4/shell" "${_shell_target}" "git@github.com:GabrielFrigo4/shell.git"
 		elif [ -n "${ELEVATE}" ]; then
 			${ELEVATE} mkdir -p "/usr/local/share" 2> "/dev/null" || true
 			_ui_step "Clonando Universal Shell em ${_shell_target} via ${ELEVATE}..."
@@ -183,7 +230,7 @@ _env_install_sovereign() {
 			if [ ! -d "${_shell_target}/.git" ]; then
 				_ui_step "Clonando Universal Shell em ${_shell_target} (rootless)..."
 				mkdir -p "${HOME}/.local/share"
-				git clone "https://github.com/GabrielFrigo4/shell.git" "${_shell_target}"
+				_clone_repo "GabrielFrigo4/shell" "${_shell_target}" "git@github.com:GabrielFrigo4/shell.git"
 			fi
 		fi
 	fi
@@ -198,30 +245,38 @@ _env_install_sovereign() {
 	_profile_target="${HOME}/.local/share/profile"
 	if [ ! -d "${_profile_target}/.git" ]; then
 		_ui_step "Clonando Profile em ${_profile_target}..."
-		mkdir -p "${HOME}/.local/share" && git clone "https://github.com/GabrielFrigo4/profile.git" "${_profile_target}"
+		mkdir -p "${HOME}/.local/share" && _clone_repo "GabrielFrigo4/profile" "${_profile_target}" "git@github.com:GabrielFrigo4/profile.git"
 	else
 		_ui_info "Profile já presente em ${_profile_target}."
 	fi
 
 	_vault_target="${HOME}/.local/share/vault"
 	if [ ! -d "${_vault_target}/.git" ]; then
-		_ui_step "Clonando Vault (via SSH) em ${_vault_target}..."
+		_ui_step "Clonando Vault em ${_vault_target}..."
 		mkdir -p "${HOME}/.local/share"
-		git clone "git@github.com:GabrielFrigo4/vault.git" "${_vault_target}" 2> "/dev/null" || _ui_warn "Vault clone SSH falhou. Configure sua chave SSH."
+		_clone_repo "GabrielFrigo4/vault" "${_vault_target}" "git@github.com:GabrielFrigo4/vault.git" 2> "/dev/null" || _ui_warn "Vault clone falhou. Verifique autenticação gh ou chave SSH."
 	else
 		_ui_info "Vault já presente em ${_vault_target}."
 	fi
+	if [ -d "${_vault_target}" ]; then
+		chmod 0700 "${_vault_target}" 2> "/dev/null" || true
+		[ -f "${_vault_target}/vault.sh" ] && sh "${_vault_target}/vault.sh" perms > "/dev/null" 2>&1 || true
+	fi
 
-	for _ed in "emacs:${HOME}/.emacs.d:GabrielFrigo4/.emacs.d.git" "helix:${HOME}/.config/helix:GabrielFrigo4/helix.git" "nvim:${HOME}/.config/nvim:GabrielFrigo4/nvim.git" "vim:${HOME}/.vim:GabrielFrigo4/vim.git"; do
+	for _ed in "emacs:${HOME}/.emacs.d:GabrielFrigo4/emacs" "helix:${HOME}/.config/helix:GabrielFrigo4/helix" "nvim:${HOME}/.config/nvim:GabrielFrigo4/neovim" "vim:${HOME}/.vim:GabrielFrigo4/vim"; do
 		_repo="${_ed%%:*}"; _rest="${_ed#*:}"; _dest="${_rest%%:*}"; _slug="${_rest##*:}"
 		if [ ! -d "${_dest}/.git" ]; then
 			mkdir -p "$(dirname "${_dest}")"
 			_ui_step "Clonando ${_repo} em ${_dest}..."
-			git clone "https://github.com/${_slug}" "${_dest}" || true
+			_clone_repo "${_slug}" "${_dest}" "git@github.com:${_slug}.git" || true
 		else
 			_ui_info "${_repo} já presente em ${_dest}."
 		fi
 	done
+
+	if [ -f "${HOME}/.vim/vimrc" ] && [ ! -e "${HOME}/.vimrc" ]; then
+		ln -sf "${HOME}/.vim/vimrc" "${HOME}/.vimrc" 2> "/dev/null" || true
+	fi
 
 	[ -f "${_profile_target}/profile.sh" ] && _ui_step "Disparando sincronização do Profile..." && sh "${_profile_target}/profile.sh" sync
 

@@ -106,15 +106,16 @@ flowchart TD
 
 Cada módulo opera de forma totalmente independente e pode ser clonado isoladamente sem qualquer dependência obrigatória ou aviso de erro:
 
-| Módulo      | Comando de Instalação Rápida (One-Liner)                                                                                                   | Destino Canônico                                                                    |
-| :---------- | :----------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------- |
-| **Shell**   | `git clone "https://github.com/GabrielFrigo4/shell" "${HOME}/.local/share/shell" && sh "${HOME}/.local/share/shell/install.sh" --pure`     | `~/.local/share/shell` (recomendado), `~/.config/shell` ou `/usr/local/share/shell` |
-| **Profile** | `git clone "https://github.com/GabrielFrigo4/profile" "${HOME}/.local/share/profile" && sh "${HOME}/.local/share/profile/profile.sh sync"` | `~/.local/share/profile` (recomendado), `~/.config/profile` ou `~/.profile`         |
-| **Emacs**   | `git clone "https://github.com/GabrielFrigo4/emacs" "${HOME}/.emacs.d"`                                                                    | `~/.emacs.d`                                                                        |
-| **NeoVim**  | `git clone "https://github.com/GabrielFrigo4/neovim" "${HOME}/.config/nvim"`                                                               | `~/.config/nvim`                                                                    |
-| **Helix**   | `git clone "https://github.com/GabrielFrigo4/helix" "${HOME}/.config/helix"`                                                               | `~/.config/helix`                                                                   |
-| **Vim**     | `git clone "https://github.com/GabrielFrigo4/vim" "${HOME}/.vim" && ln -sf "${HOME}/.vim/vimrc" "${HOME}/.vimrc"`                          | `~/.vim` e `~/.vimrc` (ou `~/vimfiles` no Windows)                                  |
-| **Vault**   | `git clone "git@github.com:GabrielFrigo4/vault" "${HOME}/.local/share/vault" && chmod 0700 "${HOME}/.local/share/vault"`                   | `~/.local/share/vault` (recomendado), `~/.config/vault` ou `~/.vault`               |
+| Módulo      | Comando de Instalação Rápida (One-Liner)                                                                                                                         | Destino Canônico                                                                    |
+| :---------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------- |
+| **Setup**   | `curl -fsSL https://raw.githubusercontent.com/GabrielFrigo4/setup/main/bootstrap.sh \| sh` (ou `gh repo clone GabrielFrigo4/setup "${HOME}/.local/share/setup"`) | `~/.local/share/setup` (recomendado), `~/.config/setup` ou `~/.setup`               |
+| **Shell**   | `git clone "https://github.com/GabrielFrigo4/shell" "${HOME}/.local/share/shell" && sh "${HOME}/.local/share/shell/install.sh" --pure`                           | `~/.local/share/shell` (recomendado), `~/.config/shell` ou `/usr/local/share/shell` |
+| **Profile** | `git clone "https://github.com/GabrielFrigo4/profile" "${HOME}/.local/share/profile" && sh "${HOME}/.local/share/profile/profile.sh sync"`                       | `~/.local/share/profile` (recomendado), `~/.config/profile` ou `~/.profile`         |
+| **Emacs**   | `git clone "https://github.com/GabrielFrigo4/emacs" "${HOME}/.emacs.d"`                                                                                          | `~/.emacs.d`                                                                        |
+| **NeoVim**  | `git clone "https://github.com/GabrielFrigo4/neovim" "${HOME}/.config/nvim"`                                                                                     | `~/.config/nvim`                                                                    |
+| **Helix**   | `git clone "https://github.com/GabrielFrigo4/helix" "${HOME}/.config/helix"`                                                                                     | `~/.config/helix`                                                                   |
+| **Vim**     | `git clone "https://github.com/GabrielFrigo4/vim" "${HOME}/.vim" && ln -sf "${HOME}/.vim/vimrc" "${HOME}/.vimrc"`                                                | `~/.vim` e `~/.vimrc` (ou `~/vimfiles` no Windows)                                  |
+| **Vault**   | `gh repo clone GabrielFrigo4/vault "${HOME}/.local/share/vault"` (fallback: `git clone "git@github.com:GabrielFrigo4/vault" "${HOME}/.local/share/vault"`)       | `~/.local/share/vault` (recomendado), `~/.config/vault` ou `~/.vault`               |
 
 ### 🏛️ Modo 2: Hub Central (Bancada de Desenvolvimento & Orquestração)
 
@@ -143,8 +144,8 @@ make install
 | `make deploy`        | Alias para `make install` (conveniência e compatibilidade)               |
 | `make update`        | Atualiza todas as instalações soberanas no SO (Shell, Profile, etc.)     |
 | `make pull`          | Atualiza submódulos e sincroniza todos os repos com o upstream           |
-| `make sync-docs`     | Propaga ENVIRONMENT.md para os submódulos e executa sync-template        |
-| `make sync-template` | Propaga Template estático, githooks e auditoria a todos os repositórios  |
+| `make sync-docs`     | Propaga ENVIRONMENT.md e PRINCIPLES.md para os submódulos                |
+| `make sync-template` | Propaga Template estático, AGENTS.md (`<!-- template:sync -->`) e hooks  |
 | `make scaffold`      | Gera novo repositório a partir de Template (`DIR=...` `NAME=...`)        |
 | `make uped`          | Atualiza individualmente os 4 repositórios da Suíte de Editores          |
 | `make upgit`         | Atualiza recursivamente todos os repositórios Git encontrados            |
