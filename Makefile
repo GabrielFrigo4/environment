@@ -180,8 +180,8 @@ upgit:
 
 sync-template:
 	echo "🔄 Sincronizando arquétipo Template em todos os repositórios Git..."
-	_docs_root="$${DOCS_ROOT:-$$(cd .. && pwd)}"; \
-	find "$${_docs_root}" \
+	_workspace_root="$${WORKSPACE_ROOT:-$$(cd .. && pwd)}"; \
+	find "$${_workspace_root}" \
 		\( -name "OSS" -o -name "Open Source" -o -name "usr" -o -name "elpaca" -o -name "node_modules" -o -name ".venv" -o -name "var" -o -name "tmp" \) -prune \
 		-o \( -name ".git" \) -print | while read -r git_entry; do \
 		repo_dir="$$(dirname "$$git_entry")"; \

@@ -119,13 +119,13 @@ Cada módulo opera de forma totalmente independente e pode ser clonado isoladame
 
 ### 🏛️ Modo 2: Hub Central (Bancada de Desenvolvimento & Orquestração)
 
-O repositório **Environment** (`~/Documents/Environment`) é estritamente uma **bancada de desenvolvimento e orquestração**. Absolutamente **nada** em seu diretório deve ser consumido diretamente pelo SO hospedeiro como runtime.
+O repositório **Environment** (`~/Workspace/Environment`) é estritamente uma **bancada de desenvolvimento e orquestração**. Absolutamente **nada** em seu diretório deve ser consumido diretamente pelo SO hospedeiro como runtime.
 
 Para inicializar a bancada e em seguida provisionar todos os runtimes soberanos em seus caminhos canônicos no sistema operacional:
 
 ```sh
-git clone --recurse-submodules "https://github.com/GabrielFrigo4/environment" "${HOME}/Documents/Environment"
-cd "${HOME}/Documents/Environment"
+git clone --recurse-submodules "https://github.com/GabrielFrigo4/environment" "${HOME}/Workspace/Environment"
+cd "${HOME}/Workspace/Environment"
 make clone
 make test
 make ci

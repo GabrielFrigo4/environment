@@ -1,6 +1,6 @@
 # 🏛️ Bancada de Desenvolvimento vs. Runtimes de Produção
 
-> O ciclo soberano de trabalho no Universal Environment: separação física entre a bancada de desenvolvimento (`~/Documents/Environment`) e os clones de produção no sistema operacional.
+> O ciclo soberano de trabalho no Universal Environment: separação física entre a bancada de desenvolvimento (`~/Workspace/Environment`) e os clones de produção no sistema operacional.
 
 ---
 
@@ -20,19 +20,19 @@ Isso introduz fragilidades severas:
 
 No ecossistema de Gabriel Frigo, essa separação é uma regra constitucional (Regras 6 e 11 de `AGENTS.md`):
 
-> **O repositório `Environment` (`~/Documents/Environment`) é EXCLUSIVAMENTE uma bancada de desenvolvimento e orquestração.** Nenhum artefato no diretório do Environment é consumido diretamente pelo sistema operacional hospedeiro.
+> **O repositório `Environment` (`~/Workspace/Environment`) é EXCLUSIVAMENTE uma bancada de desenvolvimento e orquestração.** Nenhum artefato no diretório do Environment é consumido diretamente pelo sistema operacional hospedeiro.
 
 ### Localizações Canônicas Soberanas em Produção:
 
 | Componente    | Localização na Bancada                   | Localização Canônica em Produção no SO             |
 | :------------ | :--------------------------------------- | :------------------------------------------------- |
-| **Shell**     | `~/Documents/Environment/Shell/`         | `/usr/local/share/shell` ou `~/.local/share/shell` |
-| **Profile**   | `~/Documents/Environment/Profile/`       | `~/.config/profile`                                |
-| **Vault**     | `~/Documents/Environment/Vault/`         | `~/.local/share/vault`                             |
-| **GNU Emacs** | `~/Documents/Environment/Editor/Emacs/`  | `~/.emacs.d`                                       |
-| **NeoVim**    | `~/Documents/Environment/Editor/NeoVim/` | `~/.config/nvim`                                   |
-| **Helix**     | `~/Documents/Environment/Editor/Helix/`  | `~/.config/helix`                                  |
-| **Vim**       | `~/Documents/Environment/Editor/Vim/`    | `~/.vim` e `~/.vimrc`                              |
+| **Shell**     | `~/Workspace/Environment/Shell/`         | `/usr/local/share/shell` ou `~/.local/share/shell` |
+| **Profile**   | `~/Workspace/Environment/Profile/`       | `~/.config/profile`                                |
+| **Vault**     | `~/Workspace/Environment/Vault/`         | `~/.local/share/vault`                             |
+| **GNU Emacs** | `~/Workspace/Environment/Editor/Emacs/`  | `~/.emacs.d`                                       |
+| **NeoVim**    | `~/Workspace/Environment/Editor/NeoVim/` | `~/.config/nvim`                                   |
+| **Helix**     | `~/Workspace/Environment/Editor/Helix/`  | `~/.config/helix`                                  |
+| **Vim**       | `~/Workspace/Environment/Editor/Vim/`    | `~/.vim` e `~/.vimrc`                              |
 
 ---
 
@@ -42,12 +42,12 @@ A atualização de qualquer ferramenta obedece estritamente ao fluxo unidirecion
 
 ```mermaid
 flowchart LR
-    DEV["1. Bancada<br/>(~/Documents/Environment)"] -->|Testes & Audits| PASS["make test & make audit"]
+    DEV["1. Bancada<br/>(~/Workspace/Environment)"] -->|Testes & Audits| PASS["make test & make audit"]
     PASS -->|Git Push| GH["2. Repositórios Remotos<br/>(GitHub)"]
     GH -->|Git Pull / make update| PROD["3. Runtimes de Produção<br/>(~/.config, /usr/local/share)"]
 ```
 
-1. **Edição & Experimentação na Bancada:** Todas as alterações em código, scripts ou documentação são implementadas e testadas sob `~/Documents/Environment/<Componente>`.
+1. **Edição & Experimentação na Bancada:** Todas as alterações em código, scripts ou documentação são implementadas e testadas sob `~/Workspace/Environment/<Componente>`.
 2. **Quality Gates Locais:** Antes do envio, os testes e linters são aprovados (`make test`, `make audit`, `make ci`).
 3. **Commit & Push na Bancada:** Os commits são registrados no submódulo correspondente e enviados ao GitHub (`git push`).
 4. **Atualização em Produção via Git Pull:** Os clones de produção recebem as atualizações exclusivamente através de `git pull` limpo (acionado pelo comando universal `make update` no Environment ou `upall`/`update-all` no terminal).
