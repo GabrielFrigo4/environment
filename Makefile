@@ -187,9 +187,10 @@ sync-template:
 		repo_dir="$$(dirname "$$git_entry")"; \
 		repo_name="$$(basename "$$repo_dir")"; \
 		echo "  📦 Sincronizando: $$repo_name ($$repo_dir)"; \
-		mkdir -p "$$repo_dir/.githooks"; \
+		mkdir -p "$$repo_dir/.githooks" "$$repo_dir/.github/workflows"; \
 		cp Template/.githooks/pre-commit "$$repo_dir/.githooks/pre-commit"; \
 		cp Template/.githooks/commit-msg "$$repo_dir/.githooks/commit-msg"; \
+		cp Template/.github/workflows/ci.yml "$$repo_dir/.github/workflows/ci.yml"; \
 		cp Template/.editorconfig "$$repo_dir/.editorconfig"; \
 		if [ "$$repo_name" != "Environment" ]; then \
 			cp Template/PRINCIPLES.md "$$repo_dir/PRINCIPLES.md"; \
@@ -204,7 +205,7 @@ sync-template:
 		else \
 			cp Template/.prettierrc "$$repo_dir/.prettierrc"; \
 		fi; \
-		if [ -f "$$repo_dir/.gitattributes" ] && grep -E -q "(git-crypt|dataset)" "$$repo_dir/.gitattributes" 2> "/dev/null"; then \
+		if [ -f "$$repo_dir/.gitattributes" ] && grep -E -q "(git-crypt|dataset|emacs-client)" "$$repo_dir/.gitattributes" 2> "/dev/null"; then \
 			: ; \
 		else \
 			cp Template/.gitattributes "$$repo_dir/.gitattributes"; \
@@ -215,10 +216,10 @@ sync-template:
 		fi; \
 		if [ "$$repo_name" = "Vault" ]; then \
 			chmod 0700 "$$repo_dir"/.githooks/* 2> "/dev/null" || true; \
-			chmod 0600 "$$repo_dir"/*.md "$$repo_dir"/.editorconfig "$$repo_dir"/.gitattributes "$$repo_dir"/.prettierrc "$$repo_dir"/LICENSE 2> "/dev/null" || true; \
+			chmod 0600 "$$repo_dir"/*.md "$$repo_dir"/.editorconfig "$$repo_dir"/.gitattributes "$$repo_dir"/.prettierrc "$$repo_dir"/.github/workflows/ci.yml "$$repo_dir"/LICENSE 2> "/dev/null" || true; \
 		else \
 			chmod 0755 "$$repo_dir"/.githooks/* 2> "/dev/null" || true; \
-			chmod 0644 "$$repo_dir"/*.md "$$repo_dir"/.editorconfig "$$repo_dir"/.gitattributes "$$repo_dir"/.prettierrc "$$repo_dir"/LICENSE 2> "/dev/null" || true; \
+			chmod 0644 "$$repo_dir"/*.md "$$repo_dir"/.editorconfig "$$repo_dir"/.gitattributes "$$repo_dir"/.prettierrc "$$repo_dir"/.github/workflows/ci.yml "$$repo_dir"/LICENSE 2> "/dev/null" || true; \
 		fi; \
 		git -C "$$repo_dir" config core.hooksPath .githooks 2> "/dev/null" || true; \
 	done
